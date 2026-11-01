@@ -320,10 +320,12 @@
                 <!-- Bộ phát âm nhạc theo tính cách / tâm trạng (Desktop Soundscape Engine) -->
                 <div class="hidden sm:flex items-center border border-stone-300 rounded-atelier bg-white p-1">
                     <select id="soundscapeSelector" onchange="changeSoundscape(this.value)" class="text-[10px] font-mono bg-transparent text-stone-800 pr-2 border-r border-stone-200">
-                        <option value="sleep">Mood 1: 432Hz Deep Slumber</option>
-                        <option value="focus">Mood 2: Alpha Focus Flow</option>
-                        <option value="cozy">Mood 3: Acoustic Warmth</option>
-                        <option value="dawn">Mood 4: Ambient Dawn</option>
+                        <option value="jazz">Mood 1: Midnight Noir Jazz</option>
+                        <option value="lofi">Mood 2: Lofi Rain & Vinyl</option>
+                        <option value="bossa">Mood 3: Acoustic Fireside</option>
+                        <option value="classical">Mood 4: Neo-Classical Piano</option>
+                        <option value="zen">Mood 5: Ambient Zen & Bowls</option>
+                        <option value="sleep">Mood 6: 432Hz Deep Slumber</option>
                     </select>
                     <button id="soundToggleBtn" onclick="toggleSoundscapePlay()" class="px-2.5 py-1 text-[11px] font-mono flex items-center gap-1.5 hover:text-amber-700">
                         <span id="soundStatusIndicator" class="w-2 h-2 rounded-full bg-stone-400 inline-block"></span>
@@ -369,10 +371,12 @@
                 <span class="text-[10px] text-atelier-muted">Âm thanh tính cách (Web Audio):</span>
                 <div class="flex items-center gap-2">
                     <select id="mobileSoundscapeSelector" onchange="changeSoundscape(this.value)" class="flex-1 p-2 rounded-atelier border border-stone-300 text-xs font-mono bg-white text-stone-800">
-                        <option value="sleep">Mood 1: 432Hz Deep Slumber</option>
-                        <option value="focus">Mood 2: Alpha Focus Flow</option>
-                        <option value="cozy">Mood 3: Acoustic Warmth</option>
-                        <option value="dawn">Mood 4: Ambient Dawn</option>
+                        <option value="jazz">Mood 1: Midnight Noir Jazz</option>
+                        <option value="lofi">Mood 2: Lofi Rain & Vinyl</option>
+                        <option value="bossa">Mood 3: Acoustic Fireside</option>
+                        <option value="classical">Mood 4: Neo-Classical Piano</option>
+                        <option value="zen">Mood 5: Ambient Zen & Bowls</option>
+                        <option value="sleep">Mood 6: 432Hz Deep Slumber</option>
                     </select>
                     <button onclick="toggleSoundscapePlay()" class="px-3 py-2 bg-stone-900 text-white rounded-atelier text-xs font-mono uppercase">
                         <span class="mobileSoundLabel">Play</span>
@@ -539,10 +543,12 @@
                     <div>
                         <label class="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-stone-700 font-semibold block mb-2 sm:mb-2.5">3. Công thức mùi hương chưng cất</label>
                         <select id="scentFormulaSelect" onchange="changeScentFormula(this.value)" class="w-full p-2.5 rounded-atelier border border-stone-300 text-xs font-mono bg-white">
-                            <option value="Formula 01: Oải Hương & Đàn Hương">Formula 01: Oải Hương Provence & Gỗ Đàn Hương (Thư giãn, ngủ sâu)</option>
-                            <option value="Formula 02: Vani Madagascar & Quế Cay">Formula 02: Vani Madagascar & Quế Cay (Ấm áp, hoài niệm)</option>
-                            <option value="Formula 03: Trà Trắng & Tuyết Tùng">Formula 03: Trà Trắng Núi Cao & Gỗ Tuyết Tùng (Tập trung, làm việc sâu)</option>
-                            <option value="Formula 04: Cam Bergamot & Hoa Nhài">Formula 04: Cam Bergamot & Hoa Nhài Mộc (Thanh khiết, phục hồi)</option>
+                            <option value="Formula 01: Khói Trầm & Tuyết Tùng Atlas">Formula 01: Khói Trầm & Tuyết Tùng Atlas (Woody & Smoky - Quý tộc, sâu lắng)</option>
+                            <option value="Formula 02: Oải Hương Provence & Xô Thơm Trắng">Formula 02: Oải Hương Provence & Xô Thơm Trắng (Herbal Zen - Thư giãn, ngủ sâu)</option>
+                            <option value="Formula 03: Trà Shan Tuyết & Vỏ Quýt Sương">Formula 03: Trà Shan Tuyết & Vỏ Quýt Sương (Citrus Fresh - Tỉnh thức, tập trung)</option>
+                            <option value="Formula 04: Vani Madagascar & Quế Rừng Yên Bái">Formula 04: Vani Madagascar & Quế Rừng Yên Bái (Warm Gourmand - Ấm cúng, ngọt dịu)</option>
+                            <option value="Formula 05: Sương Đêm Đà Lạt & Rêu Ẩm Thung Lũng">Formula 05: Sương Đêm Đà Lạt & Rêu Ẩm Thung Lũng (Aquatic Mist - Thanh khiết, tĩnh tại)</option>
+                            <option value="Formula 06: Kỳ Nam Thiền Định & Nhựa Hương Myrrh">Formula 06: Kỳ Nam Thiền Định & Nhựa Hương Myrrh (Sacred Incense - Thiền định, thượng lưu)</option>
                         </select>
                     </div>
 
@@ -604,126 +610,248 @@
         <!-- SECTION 3: EXTENSION 2 - SCENT & SOUNDSCAPE CONSULTATION -->
         <section id="section-quiz" data-name="03. Extension 2: Scent & Sound" class="py-12 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b bg-atelier-paper">
             <div class="max-w-3xl mx-auto text-center space-y-2 sm:space-y-3 mb-8 sm:mb-10">
-                <span class="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-atelier-muted">Extension 02 / Sensory Consultation</span>
-                <h2 class="font-editorial text-2xl sm:text-4xl font-normal">Chẩn Đoán Khứu Giác & Tần Số Âm Thanh Tính Cách</h2>
+                <span class="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-atelier-muted">Extension 02 / Sensory & Acoustic Diagnosis</span>
+                <h2 class="font-editorial text-2xl sm:text-4xl font-normal">Chẩn Đoán Khứu Giác Niche & Hòa Âm Không Gian</h2>
                 <p class="text-xs sm:text-sm text-atelier-muted leading-relaxed">
-                    Đồng bộ tầng hương với tần số sóng não tương ứng nhằm tối ưu hóa trạng thái thư giãn và kích hoạt phản xạ xúc cảm theo nghiên cứu của Krishna (2012).
+                    Hệ thống trắc nghiệm 6 tầng tâm lý học khứu giác kết hợp lý thuyết tần số cộng hưởng của Krishna (2012) nhằm xác định công thức hương Niche độc bản và phong cách âm nhạc đồng điệu.
                 </p>
             </div>
 
-            <div class="max-w-2xl mx-auto bg-white p-4 sm:p-10 rounded-atelier hairline-border shadow-sm">
-                <!-- Step 1 -->
+            <div class="max-w-2xl mx-auto bg-white p-4 sm:p-8 rounded-atelier hairline-border shadow-sm">
+                <!-- Progress Bar -->
+                <div class="mb-5">
+                    <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted uppercase mb-1.5">
+                        <span id="quizStepIndicator">Tiến trình chẩn đoán: Câu hỏi 01 / 06</span>
+                        <span id="quizStepPercent" class="font-specs">[16%]</span>
+                    </div>
+                    <div class="w-full bg-stone-200 h-1 rounded-full overflow-hidden">
+                        <div id="quizProgressBar" class="bg-stone-900 h-1 transition-all duration-300" style="width: 16.66%;"></div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Thời khắc & Không gian -->
                 <div id="quizStep1" class="space-y-4">
                     <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
-                        <span>Câu hỏi 01 / 03: Trạng thái tinh thần hiện tại</span>
-                        <span>[Phase 1]</span>
+                        <span>01. Thời khắc & Không gian thắp nến</span>
+                        <span>[Phase 1 / Temporal]</span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-2">
-                        <button onclick="selectQuizAnswer(1, 'stress')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">Profile A / Water & Earth</span>
-                            <span class="font-medium text-xs text-stone-900 block mt-1">Căng thẳng trí não, quá tải thông tin</span>
-                            <span class="text-[10px] sm:text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: 432Hz Theta Healing</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-1">
+                        <button onclick="selectQuizAnswer(1, 'night')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Bối cảnh A / Nocturnal</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Đêm muộn trước khi ngủ trong phòng khép kín</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Cần ánh sáng ấm dịu, xoa dịu đôi mắt</span>
                         </button>
-                        <button onclick="selectQuizAnswer(1, 'insomnia')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">Profile B / Evening Calm</span>
-                            <span class="font-medium text-xs text-stone-900 block mt-1">Trằn trọc, giấc ngủ không sâu</span>
-                            <span class="text-[10px] sm:text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Deep Slumber Ambient</span>
+                        <button onclick="selectQuizAnswer(1, 'rain')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Bối cảnh B / Rainy Afternoon</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Chiều mưa bên bàn làm việc & giá sách</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Không khí mát lạnh, cần sự tập trung hoài niệm</span>
                         </button>
-                        <button onclick="selectQuizAnswer(1, 'focus')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">Profile C / Air Mind</span>
-                            <span class="font-medium text-xs text-stone-900 block mt-1">Mất tập trung, uể oải giữa giờ</span>
-                            <span class="text-[10px] sm:text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Alpha Focus Flow</span>
+                        <button onclick="selectQuizAnswer(1, 'dawn')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Bối cảnh C / Morning Dawn</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Sớm mai đón ánh nắng, thanh lọc năng lượng</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Đánh thức giác quan, khởi động ngày mới</span>
                         </button>
-                        <button onclick="selectQuizAnswer(1, 'warmth')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">Profile D / Fire Heart</span>
-                            <span class="font-medium text-xs text-stone-900 block mt-1">Cần cảm giác thân thuộc, ấm cúng</span>
-                            <span class="text-[10px] sm:text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Acoustic Warmth</span>
+                        <button onclick="selectQuizAnswer(1, 'cozy')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Bối cảnh D / Fireside Gathering</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Tối sum vầy ấm cúng bên người thân thương</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Gần gũi, gắn kết, chia sẻ câu chuyện</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Step 2 -->
+                <!-- Step 2: Cảm xúc hướng tới -->
                 <div id="quizStep2" class="hidden space-y-4">
                     <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
-                        <span>Câu hỏi 02 / 03: Diện tích không gian thắp</span>
-                        <span>[Phase 2]</span>
+                        <span>02. Trạng thái cảm xúc bạn muốn hướng tới</span>
+                        <span>[Phase 2 / Emotional]</span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-2">
-                        <button onclick="selectQuizAnswer(2, 'desk')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-medium text-xs text-stone-900 block">Bàn làm việc cá nhân (&lt; 15m²)</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-1">
+                        <button onclick="selectQuizAnswer(2, 'calm')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Mục tiêu A / Neuro-Calm</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Thả lỏng toàn bộ cơ thể, giải phóng căng thẳng</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Xoa dịu sóng não sau ngày dài làm việc</span>
                         </button>
-                        <button onclick="selectQuizAnswer(2, 'bedroom')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-medium text-xs text-stone-900 block">Phòng ngủ khép kín (15 - 25m²)</span>
+                        <button onclick="selectQuizAnswer(2, 'focus')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Mục tiêu B / Deep Work</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Kích hoạt tư duy sáng tạo, làm việc chuyên sâu</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Tỉnh táo, minh mẫn, loại bỏ uể oải</span>
                         </button>
-                        <button onclick="selectQuizAnswer(2, 'living')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-medium text-xs text-stone-900 block">Phòng khách / không gian mở (&gt; 30m²)</span>
+                        <button onclick="selectQuizAnswer(2, 'comfort')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Mục tiêu C / Emotional Embrace</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Tìm cảm giác được vỗ về, an ủi, chở che</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Hương thơm như cái ôm ấm áp</span>
                         </button>
-                        <button onclick="selectQuizAnswer(2, 'studio')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-medium text-xs text-stone-900 block">Xưởng thủ công / Yoga studio</span>
+                        <button onclick="selectQuizAnswer(2, 'zen')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Mục tiêu D / Transcendence</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Tĩnh lặng tuyệt đối, thiền định buông bỏ</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Thanh lọc tạp niệm, trở về bản thể</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Step 3 -->
+                <!-- Step 3: Miền ký ức khứu giác -->
                 <div id="quizStep3" class="hidden space-y-4">
                     <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
-                        <span>Câu hỏi 03 / 03: Tông mùi thiên hướng</span>
-                        <span>[Phase 3]</span>
+                        <span>03. Miền ký ức khứu giác gợi nhiều cảm xúc nhất</span>
+                        <span>[Phase 3 / Memory Trigger]</span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-2">
-                        <button onclick="selectQuizAnswer(3, 'woody')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-medium text-xs text-stone-900 block">Woody / Gỗ trầm, rêu sồi, khói mộc</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-1">
+                        <button onclick="selectQuizAnswer(3, 'pine_smoky')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Ký ức A / Wood & Smoke</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Gỗ thông hun khói, bìa sách da thuộc cũ</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Tông mùi quý tộc, trầm lặng, tri thức</span>
                         </button>
-                        <button onclick="selectQuizAnswer(3, 'floral')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-medium text-xs text-stone-900 block">Herbal Floral / Oải hương, xô thơm, cúc</span>
+                        <button onclick="selectQuizAnswer(3, 'provence_lavender')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Ký ức B / Herbal Meadow</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Cánh đồng oải hương & xô thơm trong gió hạ</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Thanh sạch, êm ái như sương đọng trên lá</span>
                         </button>
-                        <button onclick="selectQuizAnswer(3, 'fresh')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-medium text-xs text-stone-900 block">Citrus Fresh / Trà núi, bưởi hồng, sương</span>
+                        <button onclick="selectQuizAnswer(3, 'tea_highland')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Ký ức C / Highland Tea & Zest</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Đồi chè Shan Tuyết cổ thụ & vỏ quýt sương mai</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Khoáng đạt, tinh khiết, thanh lọc lồng ngực</span>
                         </button>
-                        <button onclick="selectQuizAnswer(3, 'gourmand')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-medium text-xs text-stone-900 block">Warm Gourmand / Vani, đậu tonka, quế</span>
+                        <button onclick="selectQuizAnswer(3, 'cinnamon_kitchen')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Ký ức D / Spiced Hearth</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Gian bếp ấm mùi vỏ quế, đậu tonka & mật ong</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Hương vị tuổi thơ ấm áp, đầy ắp hoài niệm</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Kết quả chẩn đoán -->
+                <!-- Step 4: Gu âm nhạc đồng điệu -->
+                <div id="quizStep4" class="hidden space-y-4">
+                    <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                        <span>04. Gu âm nhạc đồng điệu với tâm hồn bạn</span>
+                        <span>[Phase 4 / Acoustic Genre]</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-1">
+                        <button onclick="selectQuizAnswer(4, 'jazz')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Thể loại A / Noir Jazz</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Midnight Cool Jazz & Đĩa than vinyl lách tách</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Hợp âm 9th mượt mà, phiêu lãng đêm khuya</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(4, 'lofi')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Thể loại B / Lofi Rain Beats</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Lofi Study Beats & Tiếng mưa rơi êm đềm</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Piano ấm, bass chậm rãi bên khung cửa sổ</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(4, 'bossa')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Thể loại C / Acoustic Bossa</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Acoustic Fireside & Guitar nylon ấm áp</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Giai điệu mộc mạc bên ánh lửa củi tí tách</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(4, 'classical')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Thể loại D / Neo-Classical</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Neo-Classical Piano & Chuông xoay Zen</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Tối giản, sâu thẳm, giải phóng tâm thức</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 5: Cường độ tỏa hương (Sillage) -->
+                <div id="quizStep5" class="hidden space-y-4">
+                    <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                        <span>05. Cường độ tỏa hương (Sillage) mong muốn</span>
+                        <span>[Phase 5 / Projection]</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 pt-1">
+                        <button onclick="selectQuizAnswer(5, 'intimate')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Cấp độ A / Intimate</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Thoang thoảng nhẹ dịu</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Tỏa hương dịu trong bán kính 1m quanh bạn</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(5, 'balanced')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Cấp độ B / Balanced Aura</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Lan tỏa vừa vặn</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Lấp đầy phòng 20 - 30m² thanh lịch</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(5, 'prominent')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Cấp độ C / Signature Trail</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Đậm đà bám tỏa</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Lưu hương sâu sắc, bám tỏa không gian lớn</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 6: Bấc nến & Âm thanh ngọn lửa -->
+                <div id="quizStep6" class="hidden space-y-4">
+                    <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                        <span>06. Cấu trúc bấc nến & Trải nghiệm thính giác</span>
+                        <span>[Phase 6 / Wick Anatomy]</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-1">
+                        <button onclick="selectQuizAnswer(6, 'wood')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Tùy chọn A / Crackle Wood</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Bấc gỗ phong tự nhiên (Wood Wick)</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Tạo tiếng nổ tí tách vui tai như lửa lò sưởi ấm</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(6, 'cotton')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] text-atelier-muted block">Tùy chọn B / Silent Cotton</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-0.5">Bấc bông hữu cơ dệt thủ công (Cotton Wick)</span>
+                            <span class="text-[10px] text-atelier-muted block mt-1">Ngọn lửa cháy êm ả tĩnh lặng tuyệt đối không khói đen</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kết quả chẩn đoán chuyên sâu (6-Phase Diagnosis Result) -->
                 <div id="quizResult" class="hidden space-y-4 sm:space-y-5 text-left">
                     <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
-                        <span>Sensory Diagnosis Complete</span>
-                        <span class="text-emerald-700 font-semibold">[Matched 99%]</span>
+                        <span>Forensic Olfactory & Acoustic Profile</span>
+                        <span class="text-emerald-700 font-semibold">[Matched 99.4%]</span>
                     </div>
 
                     <div>
-                        <span class="font-mono text-[9px] sm:text-[10px] uppercase text-atelier-muted tracking-wider block">Recommended Compound & Soundscape</span>
+                        <span class="font-mono text-[9px] sm:text-[10px] uppercase text-atelier-muted tracking-wider block">Bespoke Niche Formulation & Harmonic Match</span>
                         <h3 id="quizCompoundName" class="font-editorial text-xl sm:text-3xl font-medium text-stone-900 mt-0.5">
-                            Formula 01: Oải Hương Provence & Gỗ Đàn Hương
+                            Formula 01: Khói Trầm & Tuyết Tùng Atlas
                         </h3>
                         <p id="quizSoundscapeRecommendation" class="font-mono text-xs text-amber-800 mt-1">
-                            Âm thanh đồng bộ: Mood 1 (432Hz Deep Slumber)
+                            Âm thanh đồng bộ: Mood 1 (Midnight Noir Jazz)
                         </p>
                     </div>
 
-                    <div class="bg-atelier-bg p-3 sm:p-4 rounded-atelier hairline-border font-specs text-xs space-y-2">
+                    <!-- Kim tự tháp khứu giác 3 tầng -->
+                    <div class="bg-atelier-bg p-3.5 sm:p-4 rounded-atelier hairline-border font-specs text-xs space-y-2.5">
                         <div class="flex justify-between pb-1.5 hairline-b border-stone-200">
-                            <span class="text-atelier-muted">Top Notes (0 - 15 phút):</span>
-                            <span id="quizTopNotes" class="font-medium text-stone-900 text-right">Cam Bergamot & Cúc La Mã</span>
+                            <div>
+                                <span class="text-stone-900 font-semibold block">Top Notes (0 - 15 phút):</span>
+                                <span class="text-[10px] text-atelier-muted">Đánh thức khứu giác tức thì</span>
+                            </div>
+                            <span id="quizTopNotes" class="font-medium text-stone-900 text-right self-center">Hạt tiêu hồng & Cam Bergamot Ý</span>
                         </div>
                         <div class="flex justify-between pb-1.5 hairline-b border-stone-200">
-                            <span class="text-atelier-muted">Heart Notes (15 - 60 phút):</span>
-                            <span id="quizHeartNotes" class="font-medium text-stone-900 text-right">Oải hương Pháp & Xô thơm mộc</span>
+                            <div>
+                                <span class="text-stone-900 font-semibold block">Heart Notes (15 - 60 phút):</span>
+                                <span class="text-[10px] text-atelier-muted">Trái tim định danh bản thể</span>
+                            </div>
+                            <span id="quizHeartNotes" class="font-medium text-stone-900 text-right self-center">Da thuộc Ý & Bạch dương hun khói</span>
                         </div>
-                        <div class="flex justify-between">
-                            <span class="text-atelier-muted">Base Notes (&gt; 60 phút):</span>
-                            <span id="quizBaseNotes" class="font-medium text-stone-900 text-right">Gỗ tuyết tùng & Hổ phách nhựa cây</span>
+                        <div class="flex justify-between pb-1.5 hairline-b border-stone-200">
+                            <div>
+                                <span class="text-stone-900 font-semibold block">Base Notes (&gt; 60 phút):</span>
+                                <span class="text-[10px] text-atelier-muted">Lưu hương sâu bám tỏa</span>
+                            </div>
+                            <span id="quizBaseNotes" class="font-medium text-stone-900 text-right self-center">Tuyết tùng Atlas & Đàn hương Mysore</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
+                            <div>
+                                <span class="text-atelier-muted block">Thời gian cháy hữu cơ:</span>
+                                <span id="quizBurnTime" class="font-semibold text-stone-900">55 - 60 Giờ (240g Net Wt)</span>
+                            </div>
+                            <div>
+                                <span class="text-atelier-muted block">Độ bám tỏa (Sillage):</span>
+                                <span id="quizSillage" class="font-semibold text-stone-900">Phủ phòng 25 - 35m²</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 pt-2">
                         <button onclick="applyQuizToStudio()" class="px-5 py-2.5 rounded-atelier bg-stone-900 hover:bg-stone-800 text-white font-mono text-xs uppercase tracking-wider text-center">
-                            Áp Dụng Công Thức Vào Hũ Nến 3D
+                            Áp Dụng Công Thức Vào Hũ Nến 3D & Chơi Nhạc
                         </button>
-                        <button onclick="resetQuiz()" class="px-4 py-2.5 rounded-atelier border border-stone-300 text-stone-600 font-mono text-xs uppercase text-center">
-                            Chẩn Đoán Lại
+                        <button onclick="resetQuiz()" class="px-4 py-2.5 rounded-atelier border border-stone-300 text-stone-600 font-mono text-xs uppercase text-center hover:bg-stone-50">
+                            Khảo Sát Lại Từ Đầu
                         </button>
                     </div>
                 </div>
@@ -1895,33 +2023,90 @@
         let isSoundscapePlaying = false;
         let activeOscillators = [];
         let crackleNoiseNode = null;
-        let currentSoundscape = 'sleep';
+        let rainNoiseNode = null;
+        let chordInterval = null;
+        let currentSoundscape = 'jazz';
 
-        // Tần số hòa âm theo từng tính cách / tâm trạng
+        // 6 Phong cách âm nhạc chuyên biệt: Jazz, Lofi, Bossa, Classical, Zen, Sleep
         const soundscapeProfiles = {
+            jazz: {
+                name: 'Mood 1: Midnight Noir Jazz',
+                chords: [
+                    [146.83, 174.61, 220.00, 261.63, 329.63], // Dm9
+                    [98.00, 174.61, 246.94, 329.63],          // G13
+                    [130.81, 164.81, 196.00, 246.94, 293.66], // Cmaj9
+                    [110.00, 196.00, 233.08, 277.18]          // A7b9
+                ],
+                waveform: 'sine',
+                bpm: 48,
+                vinyl: 0.35,
+                rain: 0.08,
+                filterFreq: 1400
+            },
+            lofi: {
+                name: 'Mood 2: Lofi Rain & Vinyl',
+                chords: [
+                    [174.61, 207.65, 261.63, 311.13], // Fm7
+                    [116.54, 174.61, 207.65, 261.63], // Bbm7
+                    [155.56, 196.00, 233.08, 311.13], // Eb7
+                    [103.83, 155.56, 207.65, 261.63]  // Abmaj7
+                ],
+                waveform: 'triangle',
+                bpm: 52,
+                vinyl: 0.45,
+                rain: 0.22,
+                filterFreq: 950
+            },
+            bossa: {
+                name: 'Mood 3: Acoustic Fireside',
+                chords: [
+                    [110.00, 164.81, 220.00, 277.18], // Amaj7
+                    [92.50, 146.83, 185.00, 220.00],  // F#m7
+                    [123.47, 185.00, 246.94, 293.66], // Bm7
+                    [82.41, 146.83, 196.00, 246.94]   // E7
+                ],
+                waveform: 'triangle',
+                bpm: 66,
+                vinyl: 0.28,
+                rain: 0.04,
+                filterFreq: 1750
+            },
+            classical: {
+                name: 'Mood 4: Neo-Classical Piano',
+                chords: [
+                    [130.81, 196.00, 261.63, 329.63, 392.00], // C add9
+                    [110.00, 164.81, 220.00, 261.63, 329.63], // Am9
+                    [87.31, 130.81, 174.61, 220.00, 261.63],  // Fmaj7
+                    [98.00, 146.83, 196.00, 246.94, 293.66]   // G7
+                ],
+                waveform: 'sine',
+                bpm: 44,
+                vinyl: 0.12,
+                rain: 0.06,
+                filterFreq: 2200
+            },
+            zen: {
+                name: 'Mood 5: Ambient Zen & Bowls',
+                chords: [
+                    [136.10, 272.20, 408.30, 544.40], // Om frequency harmonics
+                    [108.00, 216.00, 324.00, 432.00]  // 432Hz Sacred harmonics
+                ],
+                waveform: 'sine',
+                bpm: 28,
+                vinyl: 0.06,
+                rain: 0.15,
+                filterFreq: 1200
+            },
             sleep: {
-                freqs: [108, 216, 432, 540], // Tần số 432Hz theta healing
-                type: 'sine',
-                crackle: 0.15,
-                name: 'Mood 1: 432Hz Deep Slumber'
-            },
-            focus: {
-                freqs: [136.1, 272.2, 408.3], // Tần số Om / Alpha Focus
-                type: 'triangle',
-                crackle: 0.08,
-                name: 'Mood 2: Alpha Focus Flow'
-            },
-            cozy: {
-                freqs: [196, 246.9, 293.7, 392], // Hợp âm G Major ấm cúng
-                type: 'sine',
-                crackle: 0.28,
-                name: 'Mood 3: Acoustic Warmth'
-            },
-            dawn: {
-                freqs: [220, 330, 440, 660], // Thanh lọc năng lượng ban mai
-                type: 'sine',
-                crackle: 0.05,
-                name: 'Mood 4: Ambient Dawn'
+                name: 'Mood 6: 432Hz Deep Slumber',
+                chords: [
+                    [108.00, 162.00, 216.00, 432.00] // 432Hz Theta Healing Pad
+                ],
+                waveform: 'sine',
+                bpm: 22,
+                vinyl: 0.14,
+                rain: 0.08,
+                filterFreq: 800
             }
         };
 
@@ -1970,66 +2155,126 @@
             lucide.createIcons();
         }
 
+        function playChordVoice(profile, chordNotes, duration) {
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(profile.filterFreq, now);
+
+            const chordGain = audioCtx.createGain();
+            chordGain.gain.setValueAtTime(0.001, now);
+            chordGain.gain.exponentialRampToValueAtTime(0.09, now + 0.8);
+            chordGain.gain.setValueAtTime(0.08, now + duration - 1.2);
+            chordGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+            chordNotes.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                osc.type = profile.waveform;
+                osc.frequency.setValueAtTime(freq, now);
+
+                const noteGain = audioCtx.createGain();
+                const balance = 1.0 / (idx + 1.2);
+                noteGain.gain.setValueAtTime(balance, now);
+
+                osc.connect(noteGain);
+                noteGain.connect(chordGain);
+                osc.start(now);
+                osc.stop(now + duration);
+                activeOscillators.push(osc);
+            });
+
+            chordGain.connect(filter);
+            filter.connect(audioCtx.destination);
+        }
+
         function startSoundscape() {
             try {
                 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
                 audioCtx = new AudioContextClass();
 
-                const profile = soundscapeProfiles[currentSoundscape];
-
-                // 1. Tạo các tầng sóng âm hòa âm êm dịu
+                const profile = soundscapeProfiles[currentSoundscape] || soundscapeProfiles.jazz;
                 activeOscillators = [];
-                const masterGain = audioCtx.createGain();
-                masterGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
 
-                profile.freqs.forEach((freq, idx) => {
-                    const osc = audioCtx.createOscillator();
-                    osc.type = profile.type;
-                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                // 1. Tiến trình hợp âm đa thanh tuần hoàn (Harmonic Progression)
+                let chordIndex = 0;
+                const chordDuration = Math.max(3.5, 60 / profile.bpm * 4);
 
-                    const oscGain = audioCtx.createGain();
-                    oscGain.gain.setValueAtTime(1.0 / (idx + 1.2), audioCtx.currentTime);
+                playChordVoice(profile, profile.chords[0], chordDuration);
+                chordIndex = (chordIndex + 1) % profile.chords.length;
 
-                    osc.connect(oscGain);
-                    oscGain.connect(masterGain);
-                    osc.start();
-                    activeOscillators.push(osc);
-                });
+                chordInterval = setInterval(() => {
+                    if (!audioCtx || !isSoundscapePlaying) return;
+                    playChordVoice(profile, profile.chords[chordIndex], chordDuration);
+                    chordIndex = (chordIndex + 1) % profile.chords.length;
+                }, (chordDuration - 0.4) * 1000);
 
-                masterGain.connect(audioCtx.destination);
-
-                // 2. Tầng âm thanh bấc gỗ tí tách (Wood Crackle)
+                // 2. Tầng âm thanh Vinyl / Wood Crackle hữu cơ
                 const bufferSize = audioCtx.sampleRate * 2;
                 const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const data = buffer.getChannelData(0);
 
                 for (let i = 0; i < bufferSize; i++) {
                     const white = Math.random() * 2 - 1;
-                    data[i] = Math.random() > 0.994 ? white * profile.crackle * 2.5 : white * 0.02;
+                    data[i] = Math.random() > 0.993 ? white * profile.vinyl * 2.6 : white * 0.015;
                 }
 
                 crackleNoiseNode = audioCtx.createBufferSource();
                 crackleNoiseNode.buffer = buffer;
                 crackleNoiseNode.loop = true;
 
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 1100;
+                const crackleFilter = audioCtx.createBiquadFilter();
+                crackleFilter.type = 'lowpass';
+                crackleFilter.frequency.value = 1200;
 
                 const crackleGain = audioCtx.createGain();
-                crackleGain.gain.value = 0.22;
+                crackleGain.gain.value = 0.24;
 
-                crackleNoiseNode.connect(filter);
-                filter.connect(crackleGain);
+                crackleNoiseNode.connect(crackleFilter);
+                crackleFilter.connect(crackleGain);
                 crackleGain.connect(audioCtx.destination);
-
                 crackleNoiseNode.start();
+
+                // 3. Tầng âm thanh mưa nhẹ (Ambient Rain) cho Lofi & Zen
+                if (profile.rain > 0.05) {
+                    const rainBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const rainData = rainBuffer.getChannelData(0);
+                    let lastOut = 0.0;
+                    for (let i = 0; i < bufferSize; i++) {
+                        const white = Math.random() * 2 - 1;
+                        rainData[i] = (lastOut + (0.02 * white)) / 1.02; // Pink-ish noise
+                        lastOut = rainData[i];
+                        rainData[i] *= 3.5;
+                    }
+                    rainNoiseNode = audioCtx.createBufferSource();
+                    rainNoiseNode.buffer = rainBuffer;
+                    rainNoiseNode.loop = true;
+
+                    const rainFilter = audioCtx.createBiquadFilter();
+                    rainFilter.type = 'bandpass';
+                    rainFilter.frequency.value = 850;
+                    rainFilter.Q.value = 0.8;
+
+                    const rainGain = audioCtx.createGain();
+                    rainGain.gain.value = profile.rain;
+
+                    rainNoiseNode.connect(rainFilter);
+                    rainFilter.connect(rainGain);
+                    rainGain.connect(audioCtx.destination);
+                    rainNoiseNode.start();
+                }
             } catch (err) {
                 console.log("Web Audio initialisation:", err);
             }
         }
 
         function stopSoundscape() {
+            if (chordInterval) {
+                clearInterval(chordInterval);
+                chordInterval = null;
+            }
+
             activeOscillators.forEach(osc => {
                 try { osc.stop(); osc.disconnect(); } catch (e) {}
             });
@@ -2038,6 +2283,11 @@
             if (crackleNoiseNode) {
                 try { crackleNoiseNode.stop(); crackleNoiseNode.disconnect(); } catch (e) {}
                 crackleNoiseNode = null;
+            }
+
+            if (rainNoiseNode) {
+                try { rainNoiseNode.stop(); rainNoiseNode.disconnect(); } catch (e) {}
+                rainNoiseNode = null;
             }
 
             if (audioCtx) {
@@ -2272,67 +2522,175 @@
         }
 
         // ----------------------------------------------------
-        // E. SCENT & SOUND CONSULTATION QUIZ
+        // E. SCENT & SOUND CONSULTATION QUIZ (6 PHASES)
         // ----------------------------------------------------
         let quizState = {};
 
         function selectQuizAnswer(step, answer) {
             quizState[`step${step}`] = answer;
-            if (step === 1) {
-                document.getElementById('quizStep1').classList.add('hidden');
-                document.getElementById('quizStep2').classList.remove('hidden');
-            } else if (step === 2) {
-                document.getElementById('quizStep2').classList.add('hidden');
-                document.getElementById('quizStep3').classList.remove('hidden');
-            } else if (step === 3) {
-                document.getElementById('quizStep3').classList.add('hidden');
+            const curEl = document.getElementById(`quizStep${step}`);
+            if (curEl) curEl.classList.add('hidden');
+
+            if (step < 6) {
+                const nextStep = step + 1;
+                const nextEl = document.getElementById(`quizStep${nextStep}`);
+                if (nextEl) nextEl.classList.remove('hidden');
+
+                const percent = Math.round((step / 6) * 100);
+                const indicator = document.getElementById('quizStepIndicator');
+                const percentEl = document.getElementById('quizStepPercent');
+                const bar = document.getElementById('quizProgressBar');
+
+                if (indicator) indicator.innerText = `Tiến trình chẩn đoán: Câu hỏi 0${nextStep} / 06`;
+                if (percentEl) percentEl.innerText = `[${percent}%]`;
+                if (bar) bar.style.width = `${percent}%`;
+            } else {
                 computeQuizResult();
                 document.getElementById('quizResult').classList.remove('hidden');
+                const indicator = document.getElementById('quizStepIndicator');
+                const percentEl = document.getElementById('quizStepPercent');
+                const bar = document.getElementById('quizProgressBar');
+                if (indicator) indicator.innerText = 'Hoàn tất chẩn đoán khứu giác & âm thanh';
+                if (percentEl) percentEl.innerText = '[100%]';
+                if (bar) bar.style.width = '100%';
             }
         }
 
+        const quizFormulas = {
+            woody: {
+                name: 'Formula 01: Khói Trầm & Tuyết Tùng Atlas',
+                soundName: 'Mood 1: Midnight Noir Jazz',
+                soundId: 'jazz',
+                top: 'Hạt tiêu hồng & Cam Bergamot Calabria',
+                heart: 'Da thuộc Ý & Bạch dương hun khói',
+                base: 'Tuyết tùng Atlas & Đàn hương Mysore',
+                burn: '55 - 60 Giờ (240g Net Wt)',
+                sillage: 'Phủ phòng 25 - 35m²'
+            },
+            floral: {
+                name: 'Formula 02: Oải Hương Provence & Xô Thơm Trắng',
+                soundName: 'Mood 6: 432Hz Deep Slumber',
+                soundId: 'sleep',
+                top: 'Hoa cúc La Mã dại & Quả bách xù',
+                heart: 'Oải hương Haute-Provence & Xô thơm mộc',
+                base: 'Gỗ sồi trắng & Hổ phách sáng',
+                burn: '50 - 55 Giờ (240g Net Wt)',
+                sillage: 'Phủ phòng 20 - 30m²'
+            },
+            citrus: {
+                name: 'Formula 03: Trà Shan Tuyết & Vỏ Quýt Sương',
+                soundName: 'Mood 5: Ambient Zen & Bowls',
+                soundId: 'zen',
+                top: 'Vỏ quýt sương mai & Bưởi năm roi',
+                heart: 'Búp trà Shan Tuyết cổ thụ & Hoa cam Neroli',
+                base: 'Rêu phong đá suối & Đàn hương trắng',
+                burn: '48 - 52 Giờ (240g Net Wt)',
+                sillage: 'Phủ phòng 20 - 25m²'
+            },
+            gourmand: {
+                name: 'Formula 04: Vani Madagascar & Quế Rừng Yên Bái',
+                soundName: 'Mood 3: Acoustic Fireside',
+                soundId: 'bossa',
+                top: 'Vỏ quế sấy khô & Nhục đậu khấu',
+                heart: 'Vani Bourbon hun khói & Bơ hạt mỡ',
+                base: 'Đậu Tonka nướng & Mật ong hoa rừng',
+                burn: '52 - 58 Giờ (240g Net Wt)',
+                sillage: 'Phủ phòng 25 - 30m²'
+            },
+            aquatic: {
+                name: 'Formula 05: Sương Đêm Đà Lạt & Rêu Ẩm Thung Lũng',
+                soundName: 'Mood 2: Lofi Rain & Vinyl',
+                soundId: 'lofi',
+                top: 'Sương lạnh Langbiang & Bạch đàn chanh',
+                heart: 'Hoa linh lan & Thông ba lá Đà Lạt',
+                base: 'Rêu sồi sau mưa & Cỏ hương bài Haiti',
+                burn: '48 - 54 Giờ (240g Net Wt)',
+                sillage: 'Phủ phòng 20 - 25m²'
+            },
+            oriental: {
+                name: 'Formula 06: Kỳ Nam Thiền Định & Nhựa Hương Myrrh',
+                soundName: 'Mood 4: Neo-Classical Piano',
+                soundId: 'classical',
+                top: 'Nhựa nhũ hương Oman & Thảo quả',
+                heart: 'Kỳ nam Quảng Nam & Nghệ tây Saffron',
+                base: 'Hoắc hương già tuổi & Nhựa thơm Myrrh',
+                burn: '58 - 65 Giờ (240g Net Wt)',
+                sillage: 'Phủ phòng 30 - 45m²'
+            }
+        };
+
         function computeQuizResult() {
-            const ans1 = quizState.step1;
-            if (ans1 === 'stress' || ans1 === 'insomnia') {
-                document.getElementById('quizCompoundName').innerText = 'Formula 01: Oải Hương Provence & Gỗ Đàn Hương';
-                document.getElementById('quizSoundscapeRecommendation').innerText = 'Âm thanh đồng bộ: Mood 1 (432Hz Deep Slumber)';
-                document.getElementById('quizTopNotes').innerText = 'Cam Bergamot & Cúc La Mã';
-                document.getElementById('quizHeartNotes').innerText = 'Oải hương Pháp & Xô thơm mộc';
-                document.getElementById('quizBaseNotes').innerText = 'Gỗ tuyết tùng & Hổ phách nhựa cây';
-                candle3DConfig.scentFormula = 'Formula 01: Oải Hương & Đàn Hương';
-                document.getElementById('soundscapeSelector').value = 'sleep';
-                changeSoundscape('sleep');
-            } else if (ans1 === 'focus') {
-                document.getElementById('quizCompoundName').innerText = 'Formula 03: Trà Trắng Núi Cao & Gỗ Tuyết Tùng';
-                document.getElementById('quizSoundscapeRecommendation').innerText = 'Âm thanh đồng bộ: Mood 2 (Alpha Focus Flow)';
-                document.getElementById('quizTopNotes').innerText = 'Vỏ bưởi xanh & Bạc hà mộc';
-                document.getElementById('quizHeartNotes').innerText = 'Trà trắng Shizuoka & Hoa nhài';
-                document.getElementById('quizBaseNotes').innerText = 'Gỗ tuyết tùng Atlas & Xạ hương trắng';
-                candle3DConfig.scentFormula = 'Formula 03: Trà Trắng & Tuyết Tùng';
-                document.getElementById('soundscapeSelector').value = 'focus';
-                changeSoundscape('focus');
+            const memory = quizState.step3 || '';
+            const music = quizState.step4 || '';
+            const emotion = quizState.step2 || '';
+
+            let matchedKey = 'woody';
+            if (music === 'jazz' || memory === 'pine_smoky') {
+                matchedKey = 'woody';
+            } else if (music === 'lofi' || quizState.step1 === 'rain') {
+                matchedKey = 'aquatic';
+            } else if (music === 'bossa' || memory === 'cinnamon_kitchen') {
+                matchedKey = 'gourmand';
+            } else if (music === 'classical' || emotion === 'zen') {
+                matchedKey = 'oriental';
+            } else if (emotion === 'calm' || memory === 'provence_lavender') {
+                matchedKey = 'floral';
+            } else if (emotion === 'focus' || memory === 'tea_highland') {
+                matchedKey = 'citrus';
+            }
+
+            const res = quizFormulas[matchedKey];
+            document.getElementById('quizCompoundName').innerText = res.name;
+            document.getElementById('quizSoundscapeRecommendation').innerText = `Âm thanh đồng bộ: ${res.soundName}`;
+            document.getElementById('quizTopNotes').innerText = res.top;
+            document.getElementById('quizHeartNotes').innerText = res.heart;
+            document.getElementById('quizBaseNotes').innerText = res.base;
+            document.getElementById('quizBurnTime').innerText = res.burn;
+            document.getElementById('quizSillage').innerText = res.sillage;
+
+            candle3DConfig.scentFormula = res.name;
+            currentSoundscape = res.soundId;
+
+            const s1 = document.getElementById('soundscapeSelector');
+            const s2 = document.getElementById('mobileSoundscapeSelector');
+            if (s1) s1.value = res.soundId;
+            if (s2) s2.value = res.soundId;
+
+            if (quizState.step6 === 'cotton') {
+                set3DWick('cotton');
             } else {
-                document.getElementById('quizCompoundName').innerText = 'Formula 02: Vani Madagascar & Quế Cay';
-                document.getElementById('quizSoundscapeRecommendation').innerText = 'Âm thanh đồng bộ: Mood 3 (Acoustic Warmth)';
-                document.getElementById('quizTopNotes').innerText = 'Quả mơ chín & Hạnh nhân đắng';
-                document.getElementById('quizHeartNotes').innerText = 'Vani nguyên quả & Nhục đậu khấu';
-                document.getElementById('quizBaseNotes').innerText = 'Vỏ quế Ceylon & Đậu Tonka';
-                candle3DConfig.scentFormula = 'Formula 02: Vani Madagascar & Quế Cay';
-                document.getElementById('soundscapeSelector').value = 'cozy';
-                changeSoundscape('cozy');
+                set3DWick('wood');
             }
         }
 
         function applyQuizToStudio() {
             document.getElementById('scentFormulaSelect').value = candle3DConfig.scentFormula;
             changeScentFormula(candle3DConfig.scentFormula);
+
+            if (!isSoundscapePlaying) {
+                toggleSoundscapePlay();
+            } else {
+                changeSoundscape(currentSoundscape);
+            }
+
             window.location.hash = '#section-customizer';
         }
 
         function resetQuiz() {
             quizState = {};
+            for (let i = 1; i <= 6; i++) {
+                const el = document.getElementById(`quizStep${i}`);
+                if (el) el.classList.add('hidden');
+            }
             document.getElementById('quizResult').classList.add('hidden');
             document.getElementById('quizStep1').classList.remove('hidden');
+
+            const bar = document.getElementById('quizProgressBar');
+            const percentEl = document.getElementById('quizStepPercent');
+            const indicator = document.getElementById('quizStepIndicator');
+            if (bar) bar.style.width = '16.66%';
+            if (percentEl) percentEl.innerText = '[16%]';
+            if (indicator) indicator.innerText = 'Tiến trình chẩn đoán: Câu hỏi 01 / 06';
         }
 
         // ----------------------------------------------------
