@@ -67,6 +67,10 @@
             letter-spacing: -0.01em;
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
+            padding-bottom: 4.5rem;
+        }
+        @media (min-width: 768px) {
+            body { padding-bottom: 0; }
         }
 
         .font-editorial { font-family: var(--font-serif); }
@@ -77,10 +81,24 @@
 
         #webglCanvasContainer {
             width: 100%;
-            height: 520px;
+            height: 350px;
             position: relative;
             cursor: grab;
+            touch-action: pan-y;
+        }
+        #webglCanvasContainer.touch-active {
             touch-action: none;
+        }
+        @media (min-width: 640px) {
+            #webglCanvasContainer {
+                height: 440px;
+            }
+        }
+        @media (min-width: 1024px) {
+            #webglCanvasContainer {
+                height: 520px;
+                touch-action: none;
+            }
         }
         #webglCanvasContainer:active {
             cursor: grabbing;
@@ -88,19 +106,28 @@
 
         .viewport-badge {
             position: absolute;
-            top: 16px;
-            left: 16px;
+            top: 12px;
+            left: 12px;
             pointer-events: none;
             background: rgba(28, 25, 23, 0.85);
             backdrop-filter: blur(8px);
-            padding: 6px 12px;
+            padding: 4px 8px;
             border-radius: 4px;
             font-family: var(--font-mono);
-            font-size: 10px;
-            letter-spacing: 0.1em;
+            font-size: 9px;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             color: #d6d0c7;
             border: 1px solid rgba(255,255,255,0.12);
+        }
+        @media (min-width: 640px) {
+            .viewport-badge {
+                top: 16px;
+                left: 16px;
+                padding: 6px 12px;
+                font-size: 10px;
+                letter-spacing: 0.1em;
+            }
         }
 
         .builder-drag-item {
@@ -131,13 +158,14 @@
     <!-- ======================================================== -->
     <!-- 0. STUDIO ĐIỀU KHIỂN HỆ THỐNG (THEME & PAGE BUILDER CỦA GIẢNG VIÊN) -->
     <!-- ======================================================== -->
-    <div id="inspectorWidget" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-        <button onclick="toggleInspector()" class="flex items-center gap-2.5 bg-stone-900 text-stone-100 px-4 py-2.5 rounded-atelier shadow-lg hover:bg-stone-800 border border-stone-700 text-xs font-mono uppercase tracking-wider">
+    <div id="inspectorWidget" class="fixed bottom-20 right-3 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
+        <button onclick="toggleInspector()" class="flex items-center gap-2 bg-stone-900 text-stone-100 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-atelier shadow-lg hover:bg-stone-800 border border-stone-700 text-[11px] sm:text-xs font-mono uppercase tracking-wider">
             <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span>Design System & Layout Inspector</span>
+            <span class="hidden xs:inline">Design System & Layout Inspector</span>
+            <span class="xs:hidden">Inspector</span>
         </button>
 
-        <div id="inspectorPanel" class="hidden mt-3 w-[440px] bg-stone-900 text-stone-100 rounded-atelier shadow-2xl border border-stone-700 p-5 text-xs transition-all max-h-[85vh] overflow-y-auto font-sans">
+        <div id="inspectorPanel" class="hidden mt-3 w-[calc(100vw-1.5rem)] sm:w-[440px] max-w-md bg-stone-900 text-stone-100 rounded-atelier shadow-2xl border border-stone-700 p-4 sm:p-5 text-xs transition-all max-h-[80vh] overflow-y-auto font-sans">
             <div class="flex items-center justify-between pb-3 hairline-b border-stone-700">
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
@@ -261,24 +289,24 @@
     <!-- 1. HEADER & SOUNDSCAPE CONTROL (ADAPTIVE ACOUSTIC ENGINE) -->
     <!-- ======================================================== -->
     <header class="bg-atelier-bg hairline-b sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between text-[11px] font-mono text-atelier-muted hairline-b border-stone-200/60">
-            <div class="flex items-center gap-4">
-                <span>SPEC: 100% SOY WAX</span>
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-1.5 sm:py-2 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-atelier-muted hairline-b border-stone-200/60">
+            <div class="flex items-center gap-3 sm:gap-4 truncate">
+                <span class="truncate">SPEC: 100% SOY WAX</span>
                 <span class="hidden sm:inline">ORIGIN: BEN TRE / VIETNAM</span>
                 <span class="hidden md:inline">CIRCULAR REFILL: -20% VOUCHER [REFILL20]</span>
             </div>
-            <div class="flex items-center gap-3">
-                <span class="text-stone-900 font-medium">BATCH: #2026-AUTUMN</span>
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <span class="text-stone-900 font-medium">#2026-AUTUMN</span>
             </div>
         </div>
 
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <nav class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
             <a href="#" class="flex flex-col">
-                <span class="font-editorial text-2xl sm:text-3xl font-medium tracking-tight uppercase leading-none">LUMEN ATELIER</span>
-                <span class="font-mono text-[10px] tracking-[0.2em] uppercase text-atelier-muted mt-1">Bespoke Olfactory Studio & 3D Lab</span>
+                <span class="font-editorial text-xl sm:text-2xl md:text-3xl font-medium tracking-tight uppercase leading-none">LUMEN ATELIER</span>
+                <span class="font-mono text-[9px] sm:text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-atelier-muted mt-0.5 sm:mt-1 truncate">Bespoke Olfactory & 3D Lab</span>
             </a>
 
-            <div class="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-wider text-stone-700">
+            <div class="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-mono uppercase tracking-wider text-stone-700">
                 <a href="#section-customizer" class="hover:text-atelier-accent transition-colors">01. Bespoke 3D Studio</a>
                 <a href="#section-quiz" class="hover:text-atelier-accent transition-colors">02. Scent & Sound Consultation</a>
                 <a href="#section-bundle" class="hover:text-atelier-accent transition-colors">03. Tooling & Kits</a>
@@ -286,9 +314,9 @@
                 <a href="#section-reviews" class="hover:text-atelier-accent transition-colors">05. Production Archive</a>
             </div>
 
-            <div class="flex items-center gap-3">
-                <!-- Bộ phát âm nhạc theo tính cách / tâm trạng (Soundscape Engine) -->
-                <div class="flex items-center border border-stone-300 rounded-atelier bg-white p-1">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Bộ phát âm nhạc theo tính cách / tâm trạng (Desktop Soundscape Engine) -->
+                <div class="hidden sm:flex items-center border border-stone-300 rounded-atelier bg-white p-1">
                     <select id="soundscapeSelector" onchange="changeSoundscape(this.value)" class="text-[10px] font-mono bg-transparent text-stone-800 pr-2 border-r border-stone-200">
                         <option value="sleep">Mood 1: 432Hz Deep Slumber</option>
                         <option value="focus">Mood 2: Alpha Focus Flow</option>
@@ -301,12 +329,55 @@
                     </button>
                 </div>
 
-                <button onclick="toggleCartDrawer()" class="px-3.5 py-2 rounded-atelier bg-stone-900 text-white text-[11px] font-mono uppercase tracking-wider flex items-center gap-2 hover:bg-stone-800">
+                <button onclick="toggleCartDrawer()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-atelier bg-stone-900 text-white text-[10px] sm:text-[11px] font-mono uppercase tracking-wider flex items-center gap-1.5 sm:gap-2 hover:bg-stone-800 shrink-0">
                     <span>Cart</span>
                     <span id="cartCountBadge" class="font-specs font-semibold text-amber-300">[0]</span>
                 </button>
+
+                <!-- Mobile Hamburger Button -->
+                <button onclick="toggleMobileNav()" class="md:hidden p-2 rounded-atelier border border-stone-300 text-stone-700 hover:bg-stone-100 flex items-center justify-center" aria-label="Menu">
+                    <i data-lucide="menu" class="w-4 h-4"></i>
+                </button>
             </div>
         </nav>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobileNavDrawer" class="hidden md:hidden hairline-t bg-atelier-bg px-4 py-4 space-y-3 font-mono text-xs uppercase tracking-wider border-b border-stone-300 shadow-md">
+            <div class="text-[10px] text-atelier-muted tracking-widest pb-1 border-b border-stone-200">
+                Chuyển Nhanh Khối Tính Năng (5 Extensions)
+            </div>
+            <a href="#section-customizer" onclick="toggleMobileNav()" class="block py-2 text-stone-800 hover:text-atelier-accent border-b border-stone-200/70">
+                01. Bespoke 3D Studio (Tùy Biến Hũ Nến)
+            </a>
+            <a href="#section-quiz" onclick="toggleMobileNav()" class="block py-2 text-stone-800 hover:text-atelier-accent border-b border-stone-200/70">
+                02. Scent & Sound Consultation (Trắc Nghiệm)
+            </a>
+            <a href="#section-bundle" onclick="toggleMobileNav()" class="block py-2 text-stone-800 hover:text-atelier-accent border-b border-stone-200/70">
+                03. Tooling & Kits (Dụng Cụ Chăm Sóc)
+            </a>
+            <a href="#section-delivery" onclick="toggleMobileNav()" class="block py-2 text-stone-800 hover:text-atelier-accent border-b border-stone-200/70">
+                04. Dispatch Protocol (Hẹn Giờ Tặng Quà)
+            </a>
+            <a href="#section-reviews" onclick="toggleMobileNav()" class="block py-2 text-stone-800 hover:text-atelier-accent border-b border-stone-200/70">
+                05. Production Archive (Lưu Trữ Kiểm Định)
+            </a>
+
+            <!-- Mobile Soundscape Controls -->
+            <div class="pt-2 flex flex-col gap-2">
+                <span class="text-[10px] text-atelier-muted">Âm thanh tính cách (Web Audio):</span>
+                <div class="flex items-center gap-2">
+                    <select id="mobileSoundscapeSelector" onchange="changeSoundscape(this.value)" class="flex-1 p-2 rounded-atelier border border-stone-300 text-xs font-mono bg-white text-stone-800">
+                        <option value="sleep">Mood 1: 432Hz Deep Slumber</option>
+                        <option value="focus">Mood 2: Alpha Focus Flow</option>
+                        <option value="cozy">Mood 3: Acoustic Warmth</option>
+                        <option value="dawn">Mood 4: Ambient Dawn</option>
+                    </select>
+                    <button onclick="toggleSoundscapePlay()" class="px-3 py-2 bg-stone-900 text-white rounded-atelier text-xs font-mono uppercase">
+                        <span class="mobileSoundLabel">Play</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- ======================================================== -->
@@ -315,31 +386,31 @@
     <main id="mainSectionsContainer" class="max-w-7xl mx-auto transition-all">
 
         <!-- SECTION 1: HERO -->
-        <section id="sec-hero" data-name="01. Hero & Brand Manifesto" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
-                <div class="lg:col-span-8 space-y-6">
-                    <div class="font-mono text-xs uppercase tracking-[0.25em] text-atelier-muted">
+        <section id="sec-hero" data-name="01. Hero & Brand Manifesto" class="py-12 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+                <div class="lg:col-span-8 space-y-4 sm:space-y-6">
+                    <div class="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.25em] text-atelier-muted">
                         TMA306 E-Commerce Model / Evan Wallace Graphics Paradigm / Sensory Marketing
                     </div>
-                    <h1 class="font-editorial text-4xl sm:text-6xl lg:text-7xl font-normal leading-[1.05] tracking-tight">
+                    <h1 class="font-editorial text-3xl sm:text-5xl lg:text-7xl font-normal leading-[1.1] sm:leading-[1.05] tracking-tight">
                         Hương thơm bản thể, <br>
                         <span class="italic font-normal">định danh bằng quang học và thanh âm.</span>
                     </h1>
-                    <p class="text-base sm:text-lg text-atelier-muted max-w-2xl font-normal leading-relaxed">
+                    <p class="text-sm sm:text-lg text-atelier-muted max-w-2xl font-normal leading-relaxed">
                         Ứng dụng kỹ thuật đồ họa WebGL tiên tiến (Image-Based Lighting & Subsurface Scattering) kết hợp hệ thống âm nhạc đa cảm xúc nhằm bù đắp rào cản khứu giác trong môi trường thương mại điện tử.
                     </p>
-                    <div class="flex flex-wrap items-center gap-4 pt-4">
-                        <a href="#section-customizer" class="px-6 py-3 rounded-atelier bg-stone-900 text-stone-100 hover:bg-stone-800 text-xs font-mono uppercase tracking-wider">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-2 sm:pt-4">
+                        <a href="#section-customizer" class="px-5 sm:px-6 py-2.5 sm:py-3 text-center rounded-atelier bg-stone-900 text-stone-100 hover:bg-stone-800 text-xs font-mono uppercase tracking-wider">
                             Khởi Chạy 3D Studio
                         </a>
-                        <a href="#section-quiz" class="px-6 py-3 rounded-atelier border border-stone-300 hover:border-stone-800 text-stone-900 text-xs font-mono uppercase tracking-wider">
+                        <a href="#section-quiz" class="px-5 sm:px-6 py-2.5 sm:py-3 text-center rounded-atelier border border-stone-300 hover:border-stone-800 text-stone-900 text-xs font-mono uppercase tracking-wider">
                             Trắc Nghiệm Khứu Giác & Âm Nhạc
                         </a>
                     </div>
                 </div>
 
-                <div class="lg:col-span-4 bg-atelier-paper p-6 rounded-atelier hairline-border space-y-4">
-                    <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted uppercase pb-3 hairline-b">
+                <div class="lg:col-span-4 bg-atelier-paper p-5 sm:p-6 rounded-atelier hairline-border space-y-4">
+                    <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted uppercase pb-2 sm:pb-3 hairline-b">
                         <span>Physical Shading Specifications</span>
                         <span>Evan Wallace Paradigm</span>
                     </div>
@@ -361,70 +432,110 @@
                             <span class="font-medium text-stone-900">Harmonic Web Audio Synthesis</span>
                         </div>
                     </div>
-                    <div class="pt-3 hairline-t text-[11px] text-atelier-muted italic">
-                        "Giữ chuột trái để xoay 360 độ, cuộn chuột để phóng to/thu nhỏ hũ nến."
+                    <div class="pt-2 sm:pt-3 hairline-t text-[10px] sm:text-[11px] text-atelier-muted italic">
+                        "Giữ chuột hoặc chạm để xoay 360 độ, cuộn để phóng to/thu nhỏ hũ nến."
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- SECTION 2: EXTENSION 1 - FULL 3D INTERACTIVE CANDLE STUDIO -->
-        <section id="section-customizer" data-name="02. Extension 1: Bespoke 3D Studio" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
-            <div class="max-w-3xl mb-12">
-                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-2">Extension 01 / Three.js 3D Studio</span>
-                <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Bespoke 3D Studio: Trực Quan Hóa Hũ Nến Đơn Bản</h2>
-                <p class="text-sm text-atelier-muted mt-2 leading-relaxed">
+        <section id="section-customizer" data-name="02. Extension 1: Bespoke 3D Studio" class="py-12 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
+            <div class="max-w-3xl mb-8 sm:mb-12">
+                <span class="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-1.5 sm:mb-2">Extension 01 / Three.js 3D Studio</span>
+                <h2 class="font-editorial text-2xl sm:text-4xl font-normal">Bespoke 3D Studio: Trực Quan Hóa Hũ Nến Đơn Bản</h2>
+                <p class="text-xs sm:text-sm text-atelier-muted mt-2 leading-relaxed">
                     Xoay đa góc nhìn 360 độ, chọn chất liệu phôi hũ thực tế và quan sát nhãn in cá nhân hóa được ánh xạ trực tiếp lên bề mặt hình trụ theo thời gian thực.
                 </p>
             </div>
 
-            <div id="customizerGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div id="customizerGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
                 
-                <!-- Cột Form cấu hình thông số -->
-                <div id="customizerFormCol" class="lg:col-span-6 bg-white p-6 sm:p-8 rounded-atelier hairline-border space-y-6">
+                <!-- Cột Khung Render WebGL 3D Tương Tác 360 độ (order-1 trên mobile để xem ngay khi tùy biến) -->
+                <div id="customizerPreviewCol" class="order-1 lg:order-2 lg:col-span-6 bg-[#0f0e0d] text-stone-100 rounded-atelier hairline-border border-stone-800 relative overflow-hidden flex flex-col justify-between shadow-lg">
+                    
+                    <div class="viewport-badge">
+                        <span>Photorealistic WebGL Lab • Evan Wallace Paradigm</span>
+                    </div>
+
+                    <div id="webglCanvasContainer" class="relative">
+                        <!-- Helper gesture hint on mobile -->
+                        <div id="touchGestureHint" class="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none sm:hidden z-10 transition-opacity">
+                            <span class="px-2.5 py-1 bg-stone-900/90 text-stone-300 text-[10px] font-mono rounded-atelier border border-stone-700 shadow-sm flex items-center gap-1.5">
+                                <i data-lucide="hand" class="w-3 h-3 text-amber-400"></i>
+                                <span>Chạm "Xoay 3D" để tương tác</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 sm:p-4 bg-stone-900/90 hairline-t border-stone-800 flex items-center justify-between text-[11px] font-mono text-stone-400">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <button onclick="toggle3DFlame()" id="flameToggleBtn" class="px-2.5 sm:px-3 py-1.5 rounded-atelier bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 flex items-center gap-1.5 text-[10px] sm:text-[11px]">
+                                <span id="flameIndicator" class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                                <span id="flameStatusText">Lửa: Bật</span>
+                            </button>
+                            <button onclick="reset3DCamera()" class="px-2.5 sm:px-3 py-1.5 rounded-atelier bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 text-[10px] sm:text-[11px]">
+                                Đặt Lại Góc
+                            </button>
+                            <!-- Nút chuyển đổi cử chỉ cảm ứng trên điện thoại (Gesture Lock toggle) -->
+                            <button onclick="toggleTouchMode()" id="touchLockBtn" class="px-2.5 py-1.5 rounded-atelier bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 flex items-center gap-1 sm:hidden text-[10px]">
+                                <i data-lucide="move" class="w-3 h-3 text-amber-400"></i>
+                                <span id="touchLockText">Xoay 3D</span>
+                            </button>
+                        </div>
+                        <div class="hidden sm:flex items-center gap-2 text-[10px] text-stone-500">
+                            <span>Kéo chuột để xoay 360°</span>
+                            <span>•</span>
+                            <span>Lăn để zoom</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cột Form cấu hình thông số (order-2 trên mobile) -->
+                <div id="customizerFormCol" class="order-2 lg:order-1 lg:col-span-6 bg-white p-4 sm:p-8 rounded-atelier hairline-border space-y-5 sm:space-y-6">
                     <!-- Bước 1: Chất liệu hũ 3D -->
                     <div>
-                        <div class="flex justify-between items-center mb-2.5">
-                            <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 font-semibold">1. Lựa chọn chất liệu phôi hũ 3D</label>
-                            <span class="font-mono text-[10px] text-atelier-muted">Physical PBR Shaders</span>
+                        <div class="flex justify-between items-center mb-2 sm:mb-2.5">
+                            <label class="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-stone-700 font-semibold">1. Lựa chọn chất liệu phôi hũ 3D</label>
+                            <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted">Physical PBR</span>
                         </div>
-                        <div class="grid grid-cols-3 gap-3">
-                            <button onclick="set3DVessel('amber')" id="vesselBtn-amber" class="vessel-btn p-3 rounded-atelier border-2 border-stone-900 bg-stone-50 text-left">
-                                <span class="font-mono text-[10px] text-atelier-muted block">01 / Glass</span>
-                                <span class="font-medium text-xs text-stone-900 block mt-1">Thủy tinh hổ phách</span>
-                                <span class="font-specs text-[11px] text-stone-600 block mt-1">289.000 đ</span>
+                        <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                            <button onclick="set3DVessel('amber')" id="vesselBtn-amber" class="vessel-btn p-2 sm:p-3 rounded-atelier border-2 border-stone-900 bg-stone-50 text-left">
+                                <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">01 / Glass</span>
+                                <span class="font-medium text-[11px] sm:text-xs text-stone-900 block mt-0.5 sm:mt-1 leading-tight">Hổ phách</span>
+                                <span class="font-specs text-[10px] sm:text-[11px] text-stone-600 block mt-0.5 sm:mt-1">289.000 đ</span>
                             </button>
-                            <button onclick="set3DVessel('ceramic')" id="vesselBtn-ceramic" class="vessel-btn p-3 rounded-atelier border border-stone-300 hover:border-stone-500 text-left">
-                                <span class="font-mono text-[10px] text-atelier-muted block">02 / Ceramic</span>
-                                <span class="font-medium text-xs text-stone-900 block mt-1">Gốm Bát Tràng</span>
-                                <span class="font-specs text-[11px] text-stone-600 block mt-1">+25.000 đ</span>
+                            <button onclick="set3DVessel('ceramic')" id="vesselBtn-ceramic" class="vessel-btn p-2 sm:p-3 rounded-atelier border border-stone-300 hover:border-stone-500 text-left">
+                                <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">02 / Ceramic</span>
+                                <span class="font-medium text-[11px] sm:text-xs text-stone-900 block mt-0.5 sm:mt-1 leading-tight">Gốm mộc</span>
+                                <span class="font-specs text-[10px] sm:text-[11px] text-stone-600 block mt-0.5 sm:mt-1">+25.000 đ</span>
                             </button>
-                            <button onclick="set3DVessel('terrazzo')" id="vesselBtn-terrazzo" class="vessel-btn p-3 rounded-atelier border border-stone-300 hover:border-stone-500 text-left">
-                                <span class="font-mono text-[10px] text-atelier-muted block">03 / Terrazzo</span>
-                                <span class="font-medium text-xs text-stone-900 block mt-1">Khoáng xi măng</span>
-                                <span class="font-specs text-[11px] text-stone-600 block mt-1">+35.000 đ</span>
+                            <button onclick="set3DVessel('terrazzo')" id="vesselBtn-terrazzo" class="vessel-btn p-2 sm:p-3 rounded-atelier border border-stone-300 hover:border-stone-500 text-left">
+                                <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">03 / Terrazzo</span>
+                                <span class="font-medium text-[11px] sm:text-xs text-stone-900 block mt-0.5 sm:mt-1 leading-tight">Khoáng đá</span>
+                                <span class="font-specs text-[10px] sm:text-[11px] text-stone-600 block mt-0.5 sm:mt-1">+35.000 đ</span>
                             </button>
                         </div>
                     </div>
 
                     <!-- Bước 2: Loại bấc nến 3D -->
                     <div>
-                        <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 font-semibold block mb-2.5">2. Cấu trúc bấc nến 3D</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="set3DWick('wood')" id="wickBtn-wood" class="wick-btn p-3 rounded-atelier border-2 border-stone-900 bg-stone-50 text-left">
+                        <label class="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-stone-700 font-semibold block mb-2 sm:mb-2.5">2. Cấu trúc bấc nến 3D</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                            <button onclick="set3DWick('wood')" id="wickBtn-wood" class="wick-btn p-2.5 sm:p-3 rounded-atelier border-2 border-stone-900 bg-stone-50 text-left">
                                 <span class="font-medium text-xs text-stone-900 block">Bấc gỗ tự nhiên (Wood Wick)</span>
-                                <span class="text-[11px] text-atelier-muted block mt-0.5">Tiếng nổ tí tách, bản dẹt gỗ phong</span>
+                                <span class="text-[10px] sm:text-[11px] text-atelier-muted block mt-0.5">Tiếng nổ tí tách, bản dẹt gỗ phong</span>
                             </button>
-                            <button onclick="set3DWick('cotton')" id="wickBtn-cotton" class="wick-btn p-3 rounded-atelier border border-stone-300 hover:border-stone-500 text-left">
+                            <button onclick="set3DWick('cotton')" id="wickBtn-cotton" class="wick-btn p-2.5 sm:p-3 rounded-atelier border border-stone-300 hover:border-stone-500 text-left">
                                 <span class="font-medium text-xs text-stone-900 block">Bấc bông hữu cơ (Cotton)</span>
-                                <span class="text-[11px] text-atelier-muted block mt-0.5">Sợi tròn đan chéo, ngọn lửa đều</span>
+                                <span class="text-[10px] sm:text-[11px] text-atelier-muted block mt-0.5">Sợi tròn đan chéo, ngọn lửa đều</span>
                             </button>
                         </div>
                     </div>
 
                     <!-- Bước 3: Công thức mùi hương -->
                     <div>
-                        <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 font-semibold block mb-2.5">3. Công thức mùi hương chưng cất</label>
+                        <label class="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-stone-700 font-semibold block mb-2 sm:mb-2.5">3. Công thức mùi hương chưng cất</label>
                         <select id="scentFormulaSelect" onchange="changeScentFormula(this.value)" class="w-full p-2.5 rounded-atelier border border-stone-300 text-xs font-mono bg-white">
                             <option value="Formula 01: Oải Hương & Đàn Hương">Formula 01: Oải Hương Provence & Gỗ Đàn Hương (Thư giãn, ngủ sâu)</option>
                             <option value="Formula 02: Vani Madagascar & Quế Cay">Formula 02: Vani Madagascar & Quế Cay (Ấm áp, hoài niệm)</option>
@@ -434,13 +545,13 @@
                     </div>
 
                     <!-- Bước 4: Nhãn in cá nhân hóa -->
-                    <div class="p-4 rounded-atelier bg-atelier-paper hairline-border space-y-3">
+                    <div class="p-3 sm:p-4 rounded-atelier bg-atelier-paper hairline-border space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="font-mono text-[11px] uppercase tracking-wider text-stone-800 font-semibold">4. Định danh nhãn in (Live Dynamic Texture 3D)</span>
-                            <span class="font-mono text-[10px] text-emerald-700 font-semibold">● Realtime Sync</span>
+                            <span class="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-stone-800 font-semibold">4. Định danh nhãn in (Live Dynamic Texture 3D)</span>
+                            <span class="font-mono text-[9px] sm:text-[10px] text-emerald-700 font-semibold">● Realtime Sync</span>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                             <div>
                                 <label class="font-mono text-[10px] uppercase text-atelier-muted block mb-1">Tên người nhận (Recipient):</label>
                                 <input type="text" id="inputRecipient" value="HOÀNG LAN" oninput="update3DLabelTexture()" class="w-full p-2 rounded-atelier border border-stone-300 text-xs font-mono uppercase bg-white">
@@ -471,105 +582,81 @@
                     </div>
 
                     <!-- Nút chốt đơn -->
-                    <div class="pt-2 flex items-center justify-between font-mono">
+                    <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono">
                         <div>
                             <span class="text-[10px] text-atelier-muted uppercase block">Tổng giá trị định hình:</span>
                             <span id="customizerTotalPrice" class="font-specs text-xl text-stone-900 font-bold">289.000 đ</span>
                         </div>
-                        <button onclick="addCustomCandleToCart()" class="px-6 py-3 rounded-atelier bg-stone-900 hover:bg-stone-800 text-white font-mono text-xs uppercase tracking-wider font-semibold">
+                        <button onclick="addCustomCandleToCart()" class="w-full sm:w-auto px-6 py-3 rounded-atelier bg-stone-900 hover:bg-stone-800 text-white font-mono text-xs uppercase tracking-wider font-semibold text-center">
                             Lưu Cấu Hình & Thêm Vào Giỏ
                         </button>
-                    </div>
-                </div>
-
-                <!-- Cột Khung Render WebGL 3D Tương Tác 360 độ -->
-                <div id="customizerPreviewCol" class="lg:col-span-6 bg-[#0f0e0d] text-stone-100 rounded-atelier hairline-border border-stone-800 relative overflow-hidden flex flex-col justify-between">
-                    
-                    <div class="viewport-badge">
-                        <span>Photorealistic WebGL Lab • Evan Wallace Paradigm</span>
-                    </div>
-
-                    <div id="webglCanvasContainer"></div>
-
-                    <div class="p-4 bg-stone-900/90 hairline-t border-stone-800 flex items-center justify-between text-[11px] font-mono text-stone-400">
-                        <div class="flex items-center gap-3">
-                            <button onclick="toggle3DFlame()" id="flameToggleBtn" class="px-3 py-1.5 rounded-atelier bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 flex items-center gap-1.5">
-                                <span id="flameIndicator" class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
-                                <span id="flameStatusText">Ngọn Lửa: Bật</span>
-                            </button>
-                            <button onclick="reset3DCamera()" class="px-3 py-1.5 rounded-atelier bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700">
-                                Đặt Lại Góc Nhìn
-                            </button>
-                        </div>
-                        <div class="hidden sm:flex items-center gap-2 text-[10px] text-stone-500">
-                            <span>Kéo chuột để xoay 360°</span>
-                            <span>•</span>
-                            <span>Lăn chuột để zoom</span>
-                        </div>
                     </div>
                 </div>
 
             </div>
         </section>
 
+            </div>
+        </section>
+
         <!-- SECTION 3: EXTENSION 2 - SCENT & SOUNDSCAPE CONSULTATION -->
-        <section id="section-quiz" data-name="03. Extension 2: Scent & Sound" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b bg-atelier-paper">
-            <div class="max-w-3xl mx-auto text-center space-y-3 mb-10">
-                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted">Extension 02 / Sensory Consultation</span>
-                <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Chẩn Đoán Khứu Giác & Tần Số Âm Thanh Tính Cách</h2>
-                <p class="text-sm text-atelier-muted leading-relaxed">
+        <section id="section-quiz" data-name="03. Extension 2: Scent & Sound" class="py-12 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b bg-atelier-paper">
+            <div class="max-w-3xl mx-auto text-center space-y-2 sm:space-y-3 mb-8 sm:mb-10">
+                <span class="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-atelier-muted">Extension 02 / Sensory Consultation</span>
+                <h2 class="font-editorial text-2xl sm:text-4xl font-normal">Chẩn Đoán Khứu Giác & Tần Số Âm Thanh Tính Cách</h2>
+                <p class="text-xs sm:text-sm text-atelier-muted leading-relaxed">
                     Đồng bộ tầng hương với tần số sóng não tương ứng nhằm tối ưu hóa trạng thái thư giãn và kích hoạt phản xạ xúc cảm theo nghiên cứu của Krishna (2012).
                 </p>
             </div>
 
-            <div class="max-w-2xl mx-auto bg-white p-6 sm:p-10 rounded-atelier hairline-border shadow-sm">
+            <div class="max-w-2xl mx-auto bg-white p-4 sm:p-10 rounded-atelier hairline-border shadow-sm">
                 <!-- Step 1 -->
                 <div id="quizStep1" class="space-y-4">
-                    <div class="flex justify-between items-center font-mono text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                    <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
                         <span>Câu hỏi 01 / 03: Trạng thái tinh thần hiện tại</span>
                         <span>[Phase 1]</span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                        <button onclick="selectQuizAnswer(1, 'stress')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[10px] text-atelier-muted block">Profile A / Water & Earth</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-2">
+                        <button onclick="selectQuizAnswer(1, 'stress')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">Profile A / Water & Earth</span>
                             <span class="font-medium text-xs text-stone-900 block mt-1">Căng thẳng trí não, quá tải thông tin</span>
-                            <span class="text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: 432Hz Theta Healing</span>
+                            <span class="text-[10px] sm:text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: 432Hz Theta Healing</span>
                         </button>
-                        <button onclick="selectQuizAnswer(1, 'insomnia')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[10px] text-atelier-muted block">Profile B / Evening Calm</span>
+                        <button onclick="selectQuizAnswer(1, 'insomnia')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">Profile B / Evening Calm</span>
                             <span class="font-medium text-xs text-stone-900 block mt-1">Trằn trọc, giấc ngủ không sâu</span>
-                            <span class="text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Deep Slumber Ambient</span>
+                            <span class="text-[10px] sm:text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Deep Slumber Ambient</span>
                         </button>
-                        <button onclick="selectQuizAnswer(1, 'focus')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[10px] text-atelier-muted block">Profile C / Air Mind</span>
+                        <button onclick="selectQuizAnswer(1, 'focus')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">Profile C / Air Mind</span>
                             <span class="font-medium text-xs text-stone-900 block mt-1">Mất tập trung, uể oải giữa giờ</span>
-                            <span class="text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Alpha Focus Flow</span>
+                            <span class="text-[10px] sm:text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Alpha Focus Flow</span>
                         </button>
-                        <button onclick="selectQuizAnswer(1, 'warmth')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[10px] text-atelier-muted block">Profile D / Fire Heart</span>
+                        <button onclick="selectQuizAnswer(1, 'warmth')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[9px] sm:text-[10px] text-atelier-muted block">Profile D / Fire Heart</span>
                             <span class="font-medium text-xs text-stone-900 block mt-1">Cần cảm giác thân thuộc, ấm cúng</span>
-                            <span class="text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Acoustic Warmth</span>
+                            <span class="text-[10px] sm:text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Acoustic Warmth</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Step 2 -->
                 <div id="quizStep2" class="hidden space-y-4">
-                    <div class="flex justify-between items-center font-mono text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                    <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
                         <span>Câu hỏi 02 / 03: Diện tích không gian thắp</span>
                         <span>[Phase 2]</span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                        <button onclick="selectQuizAnswer(2, 'desk')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-2">
+                        <button onclick="selectQuizAnswer(2, 'desk')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
                             <span class="font-medium text-xs text-stone-900 block">Bàn làm việc cá nhân (&lt; 15m²)</span>
                         </button>
-                        <button onclick="selectQuizAnswer(2, 'bedroom')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                        <button onclick="selectQuizAnswer(2, 'bedroom')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
                             <span class="font-medium text-xs text-stone-900 block">Phòng ngủ khép kín (15 - 25m²)</span>
                         </button>
-                        <button onclick="selectQuizAnswer(2, 'living')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                        <button onclick="selectQuizAnswer(2, 'living')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
                             <span class="font-medium text-xs text-stone-900 block">Phòng khách / không gian mở (&gt; 30m²)</span>
                         </button>
-                        <button onclick="selectQuizAnswer(2, 'studio')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                        <button onclick="selectQuizAnswer(2, 'studio')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
                             <span class="font-medium text-xs text-stone-900 block">Xưởng thủ công / Yoga studio</span>
                         </button>
                     </div>
@@ -577,36 +664,36 @@
 
                 <!-- Step 3 -->
                 <div id="quizStep3" class="hidden space-y-4">
-                    <div class="flex justify-between items-center font-mono text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                    <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
                         <span>Câu hỏi 03 / 03: Tông mùi thiên hướng</span>
                         <span>[Phase 3]</span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                        <button onclick="selectQuizAnswer(3, 'woody')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-2">
+                        <button onclick="selectQuizAnswer(3, 'woody')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
                             <span class="font-medium text-xs text-stone-900 block">Woody / Gỗ trầm, rêu sồi, khói mộc</span>
                         </button>
-                        <button onclick="selectQuizAnswer(3, 'floral')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                        <button onclick="selectQuizAnswer(3, 'floral')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
                             <span class="font-medium text-xs text-stone-900 block">Herbal Floral / Oải hương, xô thơm, cúc</span>
                         </button>
-                        <button onclick="selectQuizAnswer(3, 'fresh')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                        <button onclick="selectQuizAnswer(3, 'fresh')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
                             <span class="font-medium text-xs text-stone-900 block">Citrus Fresh / Trà núi, bưởi hồng, sương</span>
                         </button>
-                        <button onclick="selectQuizAnswer(3, 'gourmand')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                        <button onclick="selectQuizAnswer(3, 'gourmand')" class="p-3 sm:p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
                             <span class="font-medium text-xs text-stone-900 block">Warm Gourmand / Vani, đậu tonka, quế</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Kết quả chẩn đoán -->
-                <div id="quizResult" class="hidden space-y-5 text-left">
-                    <div class="flex justify-between items-center font-mono text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                <div id="quizResult" class="hidden space-y-4 sm:space-y-5 text-left">
+                    <div class="flex justify-between items-center font-mono text-[10px] sm:text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
                         <span>Sensory Diagnosis Complete</span>
                         <span class="text-emerald-700 font-semibold">[Matched 99%]</span>
                     </div>
 
                     <div>
-                        <span class="font-mono text-[10px] uppercase text-atelier-muted tracking-wider block">Recommended Compound & Soundscape</span>
-                        <h3 id="quizCompoundName" class="font-editorial text-2xl sm:text-3xl font-medium text-stone-900 mt-0.5">
+                        <span class="font-mono text-[9px] sm:text-[10px] uppercase text-atelier-muted tracking-wider block">Recommended Compound & Soundscape</span>
+                        <h3 id="quizCompoundName" class="font-editorial text-xl sm:text-3xl font-medium text-stone-900 mt-0.5">
                             Formula 01: Oải Hương Provence & Gỗ Đàn Hương
                         </h3>
                         <p id="quizSoundscapeRecommendation" class="font-mono text-xs text-amber-800 mt-1">
@@ -614,26 +701,26 @@
                         </p>
                     </div>
 
-                    <div class="bg-atelier-bg p-4 rounded-atelier hairline-border font-specs text-xs space-y-2">
+                    <div class="bg-atelier-bg p-3 sm:p-4 rounded-atelier hairline-border font-specs text-xs space-y-2">
                         <div class="flex justify-between pb-1.5 hairline-b border-stone-200">
                             <span class="text-atelier-muted">Top Notes (0 - 15 phút):</span>
-                            <span id="quizTopNotes" class="font-medium text-stone-900">Cam Bergamot & Cúc La Mã</span>
+                            <span id="quizTopNotes" class="font-medium text-stone-900 text-right">Cam Bergamot & Cúc La Mã</span>
                         </div>
                         <div class="flex justify-between pb-1.5 hairline-b border-stone-200">
                             <span class="text-atelier-muted">Heart Notes (15 - 60 phút):</span>
-                            <span id="quizHeartNotes" class="font-medium text-stone-900">Oải hương Pháp & Xô thơm mộc</span>
+                            <span id="quizHeartNotes" class="font-medium text-stone-900 text-right">Oải hương Pháp & Xô thơm mộc</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-atelier-muted">Base Notes (&gt; 60 phút):</span>
-                            <span id="quizBaseNotes" class="font-medium text-stone-900">Gỗ tuyết tùng & Hổ phách nhựa cây</span>
+                            <span id="quizBaseNotes" class="font-medium text-stone-900 text-right">Gỗ tuyết tùng & Hổ phách nhựa cây</span>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-3 pt-2">
-                        <button onclick="applyQuizToStudio()" class="px-5 py-2.5 rounded-atelier bg-stone-900 hover:bg-stone-800 text-white font-mono text-xs uppercase tracking-wider">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 pt-2">
+                        <button onclick="applyQuizToStudio()" class="px-5 py-2.5 rounded-atelier bg-stone-900 hover:bg-stone-800 text-white font-mono text-xs uppercase tracking-wider text-center">
                             Áp Dụng Công Thức Vào Hũ Nến 3D
                         </button>
-                        <button onclick="resetQuiz()" class="px-4 py-2.5 rounded-atelier border border-stone-300 text-stone-600 font-mono text-xs uppercase">
+                        <button onclick="resetQuiz()" class="px-4 py-2.5 rounded-atelier border border-stone-300 text-stone-600 font-mono text-xs uppercase text-center">
                             Chẩn Đoán Lại
                         </button>
                     </div>
@@ -642,18 +729,18 @@
         </section>
 
         <!-- SECTION 4: EXTENSION 3 - ACCESSORY TOOLING (BUNDLE) -->
-        <section id="section-bundle" data-name="03. Extension 3: Tooling & Bundle" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
-            <div class="max-w-3xl mb-12">
-                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-2">Extension 03 / Tooling & Preservation</span>
-                <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Dụng Cụ Chăm Sóc Nến & Hộp Quà Giấy Dệt</h2>
-                <p class="text-sm text-atelier-muted mt-2 leading-relaxed">
+        <section id="section-bundle" data-name="03. Extension 3: Tooling & Bundle" class="py-12 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
+            <div class="max-w-3xl mb-8 sm:mb-12">
+                <span class="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-1.5 sm:mb-2">Extension 03 / Tooling & Preservation</span>
+                <h2 class="font-editorial text-2xl sm:text-4xl font-normal">Dụng Cụ Chăm Sóc Nến & Hộp Quà Giấy Dệt</h2>
+                <p class="text-xs sm:text-sm text-atelier-muted mt-2 leading-relaxed">
                     Công cụ chuẩn mực để duy trì tuổi thọ bấc nến và triệt tiêu muội than. Chọn thêm dụng cụ để hưởng chính sách chiết khấu 15% gói Bundle.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <!-- Tool 1 -->
-                <div class="p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
+                <div class="p-4 sm:p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
                     <div>
                         <div class="font-mono text-[10px] text-atelier-muted uppercase pb-2 hairline-b mb-3">REF. 01 / BRASS</div>
                         <h4 class="font-medium text-sm text-stone-900">Kéo Cắt Bấc Mạ Đồng Thau</h4>
@@ -669,7 +756,7 @@
                 </div>
 
                 <!-- Tool 2 -->
-                <div class="p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
+                <div class="p-4 sm:p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
                     <div>
                         <div class="font-mono text-[10px] text-atelier-muted uppercase pb-2 hairline-b mb-3">REF. 02 / STEEL</div>
                         <h4 class="font-medium text-sm text-stone-900">Chuông Dập Lửa Khử Khói</h4>
@@ -685,7 +772,7 @@
                 </div>
 
                 <!-- Tool 3 -->
-                <div class="p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
+                <div class="p-4 sm:p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
                     <div>
                         <div class="font-mono text-[10px] text-atelier-muted uppercase pb-2 hairline-b mb-3">REF. 03 / WOOD</div>
                         <h4 class="font-medium text-sm text-stone-900">Diêm Dài Thảo Mộc 10cm</h4>
@@ -701,7 +788,7 @@
                 </div>
 
                 <!-- Tool 4 -->
-                <div class="p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
+                <div class="p-4 sm:p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
                     <div>
                         <div class="font-mono text-[10px] text-atelier-muted uppercase pb-2 hairline-b mb-3">REF. 04 / KRAFT</div>
                         <h4 class="font-medium text-sm text-stone-900">Hộp Carton Dệt & Thiệp Sáp</h4>
@@ -717,13 +804,13 @@
                 </div>
             </div>
 
-            <div class="mt-8 p-5 rounded-atelier bg-atelier-paper hairline-border flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="mt-8 p-4 sm:p-5 rounded-atelier bg-atelier-paper hairline-border flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                 <div class="font-mono text-xs text-stone-700">
                     <span class="text-atelier-muted uppercase">Dụng cụ đã cấu hình: </span>
-                    <span id="bundleSummaryText" class="font-medium">Chưa có phụ kiện nào</span>
+                    <span id="bundleSummaryText" class="font-medium block sm:inline mt-1 sm:mt-0">Chưa có phụ kiện nào</span>
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="text-right font-mono">
+                <div class="flex items-center justify-between sm:justify-end gap-4">
+                    <div class="text-left sm:text-right font-mono">
                         <span class="text-[10px] text-atelier-muted uppercase block">Tổng phụ kiện:</span>
                         <span id="bundleTotalVal" class="font-specs text-base font-semibold text-stone-900">0 đ</span>
                     </div>
@@ -735,23 +822,23 @@
         </section>
 
         <!-- SECTION 5: EXTENSION 5 - DISPATCH SCHEDULE -->
-        <section id="section-delivery" data-name="04. Extension 5: Dispatch Schedule" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
-            <div class="max-w-3xl mb-10">
-                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-2">Extension 05 / Dispatch Protocol</span>
-                <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Đặt Lịch Điều Phối Quà Tặng Theo Thời Điểm</h2>
-                <p class="text-sm text-atelier-muted mt-2 leading-relaxed">
+        <section id="section-delivery" data-name="04. Extension 5: Dispatch Schedule" class="py-12 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
+            <div class="max-w-3xl mb-8 sm:mb-10">
+                <span class="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-1.5 sm:mb-2">Extension 05 / Dispatch Protocol</span>
+                <h2 class="font-editorial text-2xl sm:text-4xl font-normal">Đặt Lịch Điều Phối Quà Tặng Theo Thời Điểm</h2>
+                <p class="text-xs sm:text-sm text-atelier-muted mt-2 leading-relaxed">
                     Xác lập thời điểm bàn giao bưu phẩm chính xác nhằm đảm bảo trải nghiệm quà tặng vào các dịp kỷ niệm hoặc sinh nhật.
                 </p>
             </div>
 
-            <div class="max-w-2xl bg-white p-6 sm:p-8 rounded-atelier hairline-border space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="max-w-2xl bg-white p-4 sm:p-8 rounded-atelier hairline-border space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                        <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 block mb-1.5 font-semibold">Ngày nhận quà ấn định:</label>
+                        <label class="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-stone-700 block mb-1.5 font-semibold">Ngày nhận quà ấn định:</label>
                         <input type="date" id="deliveryDateInput" class="w-full p-2.5 rounded-atelier border border-stone-300 font-mono text-xs bg-white">
                     </div>
                     <div>
-                        <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 block mb-1.5 font-semibold">Khung giờ điều phối:</label>
+                        <label class="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-stone-700 block mb-1.5 font-semibold">Khung giờ điều phối:</label>
                         <select class="w-full p-2.5 rounded-atelier border border-stone-300 font-mono text-xs bg-white">
                             <option>Ca 1: 09:00 - 12:00 (Buổi sáng)</option>
                             <option selected>Ca 2: 14:00 - 17:00 (Giờ hành chính)</option>
@@ -762,7 +849,7 @@
 
                 <div class="pt-2 flex items-center gap-2">
                     <input type="checkbox" id="anonymousDispatch" class="rounded-none text-stone-900 w-4 h-4">
-                    <label for="anonymousDispatch" class="text-xs text-stone-700 font-sans cursor-pointer">
+                    <label for="anonymousDispatch" class="text-xs text-stone-700 font-sans cursor-pointer leading-tight">
                         Giao hàng ẩn danh (Không in thông tin người gửi trên vận đơn bưu cục để tạo bất ngờ).
                     </label>
                 </div>
@@ -770,21 +857,21 @@
         </section>
 
         <!-- SECTION 6: 7C ARCHIVE & EVIDENCE (COMMUNITY) -->
-        <section id="section-reviews" data-name="05. 7C Community: Archive" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b bg-atelier-paper">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <section id="section-reviews" data-name="05. 7C Community: Archive" class="py-12 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b bg-atelier-paper">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12">
                 <div>
-                    <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-2">7C Framework / Community & Verification</span>
-                    <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Lưu Trữ Đánh Giá Từ Đơn Hàng Thực Nghiệm</h2>
+                    <span class="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-1.5 sm:mb-2">7C Framework / Community & Verification</span>
+                    <h2 class="font-editorial text-2xl sm:text-4xl font-normal">Lưu Trữ Đánh Giá Từ Đơn Hàng Thực Nghiệm</h2>
                 </div>
-                <div class="mt-4 md:mt-0 font-mono text-xs text-atelier-muted">
-                    <span class="font-specs font-bold text-stone-900 text-xl">4.92 / 5.0</span>
-                    <span class="block">Tổng số 842 biên bản nghiệm thu sản phẩm</span>
+                <div class="mt-3 md:mt-0 font-mono text-xs text-atelier-muted">
+                    <span class="font-specs font-bold text-stone-900 text-lg sm:text-xl">4.92 / 5.0</span>
+                    <span class="block text-[11px]">Tổng số 842 biên bản nghiệm thu sản phẩm</span>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                 <!-- Review 1 -->
-                <div class="p-6 bg-white rounded-atelier hairline-border space-y-3 font-sans">
+                <div class="p-4 sm:p-6 bg-white rounded-atelier hairline-border space-y-3 font-sans">
                     <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted pb-2 hairline-b">
                         <span>VERIFIED ORDER #VN-8921</span>
                         <span class="font-specs">10/2026</span>
@@ -799,7 +886,7 @@
                 </div>
 
                 <!-- Review 2 -->
-                <div class="p-6 bg-white rounded-atelier hairline-border space-y-3 font-sans">
+                <div class="p-4 sm:p-6 bg-white rounded-atelier hairline-border space-y-3 font-sans">
                     <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted pb-2 hairline-b">
                         <span>VERIFIED ORDER #VN-8874</span>
                         <span class="font-specs">10/2026</span>
@@ -814,7 +901,7 @@
                 </div>
 
                 <!-- Review 3 -->
-                <div class="p-6 bg-white rounded-atelier hairline-border space-y-3 font-sans">
+                <div class="p-4 sm:p-6 bg-white rounded-atelier hairline-border space-y-3 font-sans">
                     <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted pb-2 hairline-b">
                         <span>VERIFIED ORDER #VN-8799</span>
                         <span class="font-specs">09/2026</span>
@@ -831,31 +918,31 @@
         </section>
 
         <!-- SECTION 7: SUSTAINABILITY & CIRCULAR ECONOMY -->
-        <section id="section-story" data-name="06. Sustainability Manifesto" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <section id="section-story" data-name="06. Sustainability Manifesto" class="py-12 md:py-24 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                 <div class="lg:col-span-7 space-y-4">
-                    <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block">Circular Economy / Refill Mandate</span>
-                    <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Kinh Tế Tuần Hoàn & Vòng Đời Vỏ Nến</h2>
-                    <p class="text-sm text-atelier-muted leading-relaxed">
+                    <span class="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-atelier-muted block">Circular Economy / Refill Mandate</span>
+                    <h2 class="font-editorial text-2xl sm:text-4xl font-normal">Kinh Tế Tuần Hoàn & Vòng Đời Vỏ Nến</h2>
+                    <p class="text-xs sm:text-sm text-atelier-muted leading-relaxed">
                         Mỗi vỏ hũ sản xuất ra đều được cam kết thu hồi và nạp lại vĩnh viễn. Khi đốt hết sáp, khách hàng gửi vỏ hũ về atelier để được xử lý vô trùng và rót mẻ sáp mới với mức giá giảm 20% qua mã ưu đãi REFILL20.
                     </p>
-                    <div class="grid grid-cols-2 gap-4 pt-4 font-mono">
-                        <div class="p-4 rounded-atelier border border-stone-300 bg-white">
-                            <span class="font-specs text-2xl font-bold text-stone-900 block">-65%</span>
-                            <span class="text-[11px] text-atelier-muted uppercase block mt-1">Giảm thiểu phát thải rác bao bì</span>
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4 pt-3 sm:pt-4 font-mono">
+                        <div class="p-3 sm:p-4 rounded-atelier border border-stone-300 bg-white">
+                            <span class="font-specs text-xl sm:text-2xl font-bold text-stone-900 block">-65%</span>
+                            <span class="text-[10px] sm:text-[11px] text-atelier-muted uppercase block mt-1">Giảm thiểu rác bao bì</span>
                         </div>
-                        <div class="p-4 rounded-atelier border border-stone-300 bg-white">
-                            <span class="font-specs text-2xl font-bold text-stone-900 block">-20%</span>
-                            <span class="text-[11px] text-atelier-muted uppercase block mt-1">Chiết khấu trực tiếp cho lần refill</span>
+                        <div class="p-3 sm:p-4 rounded-atelier border border-stone-300 bg-white">
+                            <span class="font-specs text-xl sm:text-2xl font-bold text-stone-900 block">-20%</span>
+                            <span class="text-[10px] sm:text-[11px] text-atelier-muted uppercase block mt-1">Chiết khấu refill</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="lg:col-span-5 bg-stone-900 text-stone-100 p-6 sm:p-8 rounded-atelier space-y-4 font-mono text-xs">
+                <div class="lg:col-span-5 bg-stone-900 text-stone-100 p-5 sm:p-8 rounded-atelier space-y-4 font-mono text-xs">
                     <div class="text-[10px] text-stone-400 uppercase tracking-widest pb-2 hairline-b border-stone-800">
                         Protocol Code: REFILL20
                     </div>
-                    <div class="space-y-2 text-stone-300">
+                    <div class="space-y-2 text-stone-300 text-[11px] sm:text-xs">
                         <div>01. Gửi lại vỏ hũ rỗng về xưởng.</div>
                         <div>02. Khử khuẩn nhiệt phân ở 100°C.</div>
                         <div>03. Rót sáp đậu nành mới và bàn giao trong 48h.</div>
@@ -874,9 +961,9 @@
     <!-- ======================================================== -->
     <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden font-sans">
         <div onclick="toggleCartDrawer()" class="absolute inset-0 bg-stone-900/50 backdrop-blur-xs transition-opacity"></div>
-        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
             <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between border-l border-stone-300">
-                <div class="p-6 hairline-b flex items-center justify-between">
+                <div class="p-4 sm:p-6 hairline-b flex items-center justify-between">
                     <div>
                         <h3 class="font-mono text-xs uppercase tracking-wider font-bold">Giỏ Hàng Đơn Hàng (Manifest)</h3>
                         <span class="text-[10px] text-atelier-muted font-mono">Bespoke 3D Production Queue</span>
@@ -886,11 +973,11 @@
                     </button>
                 </div>
 
-                <div id="cartItemsList" class="p-6 overflow-y-auto flex-1 space-y-4 font-mono text-xs">
+                <div id="cartItemsList" class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-3 sm:space-y-4 font-mono text-xs">
                     <div class="text-center py-12 text-atelier-muted">Giỏ hàng chưa ghi nhận sản phẩm nào.</div>
                 </div>
 
-                <div class="p-6 hairline-t bg-stone-50 space-y-4 font-mono text-xs">
+                <div class="p-4 sm:p-6 hairline-t bg-stone-50 space-y-3 sm:space-y-4 font-mono text-xs">
                     <div class="flex gap-2">
                         <input type="text" id="voucherCodeInput" placeholder="MÃ ƯU ĐÃI (REFILL20)" class="w-full p-2 border border-stone-300 uppercase text-xs bg-white rounded-atelier">
                         <button onclick="applyVoucher()" class="px-4 py-2 bg-stone-900 text-white rounded-atelier uppercase">Áp dụng</button>
@@ -922,12 +1009,12 @@
     <!-- ======================================================== -->
     <!-- 9. MODAL VIETQR (COMMERCE CHECKOUT) -->
     <!-- ======================================================== -->
-    <div id="vietqrModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 font-mono">
+    <div id="vietqrModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-4 font-mono">
         <div onclick="closeVietQRModal()" class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs"></div>
-        <div class="relative bg-white max-w-md w-full rounded-atelier p-6 shadow-2xl border border-stone-300 z-10 space-y-4 text-xs">
-            <div class="flex justify-between items-center pb-3 hairline-b">
+        <div class="relative bg-white max-w-md w-full rounded-atelier p-4 sm:p-6 shadow-2xl border border-stone-300 z-10 space-y-3 sm:space-y-4 text-xs max-h-[92vh] overflow-y-auto">
+            <div class="flex justify-between items-center pb-2.5 sm:pb-3 hairline-b">
                 <span class="font-bold uppercase tracking-wider">VietQR Settlement Portal</span>
-                <button onclick="closeVietQRModal()" class="text-stone-400 hover:text-stone-800">
+                <button onclick="closeVietQRModal()" class="text-stone-400 hover:text-stone-800 p-1">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -936,8 +1023,8 @@
                 <p class="text-stone-600 font-sans text-xs">
                     Quét mã thanh toán chuẩn Napas247 để chuyển tiền trực tiếp vào tài khoản xưởng:
                 </p>
-                <div class="w-48 h-48 mx-auto bg-white p-2 border border-stone-300 rounded-[2px] flex flex-col items-center justify-center">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=LUMEN-ATELIER-3D-VERIFIED" alt="VietQR" class="w-40 h-40 object-contain">
+                <div class="w-44 h-44 sm:w-48 sm:h-48 mx-auto bg-white p-2 border border-stone-300 rounded-[2px] flex flex-col items-center justify-center">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=LUMEN-ATELIER-3D-VERIFIED" alt="VietQR" class="w-36 h-36 sm:w-40 sm:h-40 object-contain">
                 </div>
                 <div class="bg-stone-50 p-3 rounded-atelier space-y-1 text-left font-specs">
                     <div class="flex justify-between">
@@ -963,11 +1050,11 @@
     <!-- ======================================================== -->
     <!-- 10. FOOTER -->
     <!-- ======================================================== -->
-    <footer class="bg-stone-950 text-stone-400 py-16 hairline-t border-stone-800 text-xs font-mono">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer class="bg-stone-950 text-stone-400 py-12 sm:py-16 hairline-t border-stone-800 text-xs font-mono">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8">
             <div class="space-y-3">
                 <span class="font-editorial text-xl font-medium text-stone-100 block">LUMEN ATELIER</span>
-                <p class="text-stone-400 leading-relaxed font-sans">
+                <p class="text-stone-400 leading-relaxed font-sans text-xs">
                     Nghiên cứu ứng dụng thương mại điện tử D2C học phần TMA306. Phân khúc nến thơm thủ công định danh, tích hợp 3D WebGL và kinh tế tuần hoàn.
                 </p>
             </div>
@@ -995,11 +1082,34 @@
                 <p class="text-stone-500 mt-2 font-mono">atelier@lumenscent.edu.vn</p>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 hairline-t border-stone-900 text-stone-600 flex justify-between">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 sm:mt-12 pt-6 hairline-t border-stone-900 text-stone-600 flex flex-col sm:flex-row justify-between gap-2">
             <span>© 2026 LUMEN ATELIER. All 3D models recorded.</span>
             <span>WCAG 2.1 AA Compliant</span>
         </div>
     </footer>
+
+    <!-- ======================================================== -->
+    <!-- 11. MOBILE STICKY BOTTOM ACTION BAR -->
+    <!-- ======================================================== -->
+    <div id="mobileBottomBar" class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md hairline-t border-stone-300 px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between md:hidden shadow-[0_-4px_16px_rgba(0,0,0,0.06)] font-mono">
+        <div class="flex flex-col">
+            <span class="text-[9px] uppercase tracking-wider text-atelier-muted">Giá Hũ Nến 3D</span>
+            <span id="mobileBottomPrice" class="font-specs font-bold text-sm sm:text-base text-stone-900">289.000 đ</span>
+        </div>
+        <div class="flex items-center gap-1.5 sm:gap-2">
+            <!-- Nút bật/tắt Soundscape trên thanh đáy -->
+            <button onclick="toggleSoundscapePlay()" id="mobileBottomSoundBtn" class="p-2 rounded-atelier border border-stone-300 text-stone-700 hover:bg-stone-100 flex items-center justify-center" title="Âm thanh thư giãn">
+                <i data-lucide="volume-2" class="w-4 h-4 text-amber-700"></i>
+            </button>
+            <a href="#section-customizer" class="px-2.5 sm:px-3 py-2 rounded-atelier border border-stone-900 text-stone-900 text-[10px] sm:text-[11px] font-semibold uppercase hover:bg-stone-50">
+                Tùy Biến 3D
+            </a>
+            <button onclick="addCustomCandleToCart()" class="px-3 sm:px-3.5 py-2 rounded-atelier bg-stone-900 text-white text-[10px] sm:text-[11px] font-semibold uppercase hover:bg-stone-800 flex items-center gap-1 shadow-sm">
+                <span>Thêm Giỏ</span>
+                <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-amber-400"></i>
+            </button>
+        </div>
+    </div>
 
     <!-- ======================================================== -->
     <!-- LOGIC SCRIPTS: ADVANCED THREE.JS 3D & ADAPTIVE SOUNDSCAPE -->
@@ -1063,8 +1173,22 @@
             controls.target.set(0, 0.45, 0);
             controls.autoRotate = true;
             controls.autoRotateSpeed = 1.0;
+            controls.touches = {
+                ONE: THREE.TOUCH.ROTATE,
+                TWO: THREE.TOUCH.DOLLY_PAN
+            };
 
-            container.addEventListener('pointerdown', () => { controls.autoRotate = false; });
+            // Trên di động: mặc định khóa xoay để người dùng lướt trang bình thường
+            if (window.innerWidth < 640) {
+                controls.enabled = false;
+            }
+
+            container.addEventListener('pointerdown', () => {
+                controls.autoRotate = false;
+                if (window.innerWidth < 640 && !isTouchInteractEnabled) {
+                    toggleTouchMode(true);
+                }
+            });
 
             // 5. Procedural Studio Environment Map (Image-Based Lighting - IBL)
             setupStudioEnvironment();
@@ -1115,6 +1239,7 @@
             buildCandleModel();
 
             window.addEventListener('resize', onWindowResize);
+            window.addEventListener('orientationchange', () => setTimeout(onWindowResize, 150));
             animate3D();
         }
 
@@ -1549,7 +1674,47 @@
 
         function updateCustomizerPricing() {
             const total = candle3DConfig.basePrice + candle3DConfig.vesselExtra;
-            document.getElementById('customizerTotalPrice').innerText = `${total.toLocaleString('vi-VN')} đ`;
+            const formatted = `${total.toLocaleString('vi-VN')} đ`;
+            const el = document.getElementById('customizerTotalPrice');
+            if (el) el.innerText = formatted;
+            const mobileEl = document.getElementById('mobileBottomPrice');
+            if (mobileEl) mobileEl.innerText = formatted;
+        }
+
+        // Chuyển đổi chế độ tương tác cảm ứng 3D trên màn hình di động (Gesture Lock)
+        let isTouchInteractEnabled = false;
+        function toggleTouchMode(forceState) {
+            if (forceState !== undefined) {
+                isTouchInteractEnabled = forceState;
+            } else {
+                isTouchInteractEnabled = !isTouchInteractEnabled;
+            }
+            const container = document.getElementById('webglCanvasContainer');
+            const text = document.getElementById('touchLockText');
+            const hint = document.getElementById('touchGestureHint');
+            const btn = document.getElementById('touchLockBtn');
+
+            if (isTouchInteractEnabled) {
+                if (container) container.classList.add('touch-active');
+                if (controls) controls.enabled = true;
+                if (text) text.innerText = "Khóa Xoay";
+                if (btn) btn.classList.add('border-amber-400', 'text-amber-300');
+                if (hint) hint.classList.add('opacity-0');
+            } else {
+                if (container) container.classList.remove('touch-active');
+                if (controls) controls.enabled = window.innerWidth >= 640;
+                if (text) text.innerText = "Xoay 3D";
+                if (btn) btn.classList.remove('border-amber-400', 'text-amber-300');
+                if (hint) hint.classList.remove('opacity-0');
+            }
+            lucide.createIcons();
+        }
+
+        function toggleMobileNav() {
+            const drawer = document.getElementById('mobileNavDrawer');
+            if (drawer) {
+                drawer.classList.toggle('hidden');
+            }
         }
 
         function toggle3DFlame() {
@@ -1563,10 +1728,10 @@
 
             if (isFlameActive) {
                 indicator.className = "w-2 h-2 rounded-full bg-amber-400 inline-block";
-                statusText.innerText = "Ngọn Lửa: Bật";
+                statusText.innerText = "Lửa: Bật";
             } else {
                 indicator.className = "w-2 h-2 rounded-full bg-stone-500 inline-block";
-                statusText.innerText = "Ngọn Lửa: Đã Tắt";
+                statusText.innerText = "Lửa: Đã Tắt";
                 triggerExtinguishSmoke(); // Kích hoạt dải khói mờ bốc lên
             }
         }
@@ -1582,10 +1747,13 @@
             const container = document.getElementById('webglCanvasContainer');
             if (!container || !renderer || !camera) return;
             const width = container.clientWidth;
-            const height = container.clientHeight || 520;
+            const height = container.clientHeight;
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
             renderer.setSize(width, height);
+            if (controls) {
+                controls.enabled = (window.innerWidth >= 640) || isTouchInteractEnabled;
+            }
         }
 
         let clock = new THREE.Clock();
@@ -1651,6 +1819,11 @@
 
         function changeSoundscape(val) {
             currentSoundscape = val;
+            const s1 = document.getElementById('soundscapeSelector');
+            const s2 = document.getElementById('mobileSoundscapeSelector');
+            if (s1 && s1.value !== val) s1.value = val;
+            if (s2 && s2.value !== val) s2.value = val;
+
             if (isSoundscapePlaying) {
                 stopSoundscape();
                 startSoundscape();
@@ -1660,14 +1833,33 @@
         function toggleSoundscapePlay() {
             if (!isSoundscapePlaying) {
                 startSoundscape();
-                document.getElementById('soundStatusIndicator').className = "w-2 h-2 rounded-full bg-emerald-500 inline-block";
-                document.getElementById('soundLabel').innerText = "Pause";
+                updateSoundscapeUI(true);
             } else {
                 stopSoundscape();
-                document.getElementById('soundStatusIndicator').className = "w-2 h-2 rounded-full bg-stone-400 inline-block";
-                document.getElementById('soundLabel').innerText = "Play";
+                updateSoundscapeUI(false);
             }
             isSoundscapePlaying = !isSoundscapePlaying;
+        }
+
+        function updateSoundscapeUI(isPlaying) {
+            const indicator = document.getElementById('soundStatusIndicator');
+            const soundLabel = document.getElementById('soundLabel');
+            const mobileLabels = document.querySelectorAll('.mobileSoundLabel');
+            const mobileBottomBtn = document.getElementById('mobileBottomSoundBtn');
+
+            if (indicator) {
+                indicator.className = isPlaying ? "w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" : "w-2 h-2 rounded-full bg-stone-400 inline-block";
+            }
+            if (soundLabel) {
+                soundLabel.innerText = isPlaying ? "Pause" : "Play";
+            }
+            mobileLabels.forEach(lbl => {
+                lbl.innerText = isPlaying ? "Pause" : "Play";
+            });
+            if (mobileBottomBtn) {
+                mobileBottomBtn.className = isPlaying ? "p-2 rounded-atelier bg-amber-700 text-white flex items-center justify-center shadow-xs" : "p-2 rounded-atelier border border-stone-300 text-stone-700 hover:bg-stone-100 flex items-center justify-center";
+            }
+            lucide.createIcons();
         }
 
         function startSoundscape() {
@@ -1939,14 +2131,19 @@
 
         let isCustomizerSwapped = false;
         function toggleCustomizerColumns() {
-            const grid = document.getElementById('customizerGrid');
             const formCol = document.getElementById('customizerFormCol');
             const previewCol = document.getElementById('customizerPreviewCol');
             isCustomizerSwapped = !isCustomizerSwapped;
             if (isCustomizerSwapped) {
-                grid.insertBefore(previewCol, formCol);
+                formCol.classList.remove('lg:order-1');
+                formCol.classList.add('lg:order-2');
+                previewCol.classList.remove('lg:order-2');
+                previewCol.classList.add('lg:order-1');
             } else {
-                grid.insertBefore(formCol, previewCol);
+                formCol.classList.remove('lg:order-2');
+                formCol.classList.add('lg:order-1');
+                previewCol.classList.remove('lg:order-1');
+                previewCol.classList.add('lg:order-2');
             }
             onWindowResize();
         }
@@ -2182,6 +2379,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             init3DScene();
+            lucide.createIcons();
         });
     </script>
 </body>
