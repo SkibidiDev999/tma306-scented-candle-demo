@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMEN & SCENT | Nến Thơm Chữa Lành Cá Nhân Hóa (TMA306 Demo)</title>
+    <!-- Google Fonts: Import các font đa dạng để giáo viên và nhóm kiểm tra đổi font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Dancing+Script:wght@600;700&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            primary: 'var(--primary-color)',
+                            primaryHover: 'var(--primary-hover)',
+                            accent: 'var(--accent-color)',
+                            surface: 'var(--surface-color)',
+                            bg: 'var(--bg-color)',
+                            text: 'var(--text-color)',
+                            subtext: 'var(--subtext-color)',
+                            border: 'var(--border-color)',
+                        }
+                    },
+                    borderRadius: {
+                        'custom': 'var(--radius)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            /* Theme Palettes mặc định: Amber & Warm Soy */
+            --primary-color: #b45309;       /* Amber 700 */
+            --primary-hover: #92400e;       /* Amber 800 */
+            --accent-color: #d97706;        /* Amber 600 */
+            --bg-color: #faf8f5;            /* Kem sáp ấm áp */
+            --surface-color: #ffffff;
+            --text-color: #292524;          /* Stone 800 */
+            --subtext-color: #78716c;       /* Stone 500 */
+            --border-color: #e7e5e4;        /* Stone 200 */
+            --radius: 12px;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Be Vietnam Pro', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-body);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: var(--font-heading);
+        }
+
+        .theme-surface {
+            background-color: var(--surface-color);
+            border-color: var(--border-color);
+        }
+
+        /* Hiệu ứng ngọn lửa nến nhấp nháy động */
+        @keyframes flicker {
+            0%, 100% { transform: scale(1) rotate(-1deg); opacity: 0.95; }
+            25% { transform: scale(1.08, 0.95) rotate(1deg); opacity: 0.85; }
+            50% { transform: scale(0.92, 1.05) rotate(-2deg); opacity: 1; }
+            75% { transform: scale(1.05, 0.98) rotate(2deg); opacity: 0.9; }
+        }
+
+        .candle-flame {
+            animation: flicker 1.4s infinite alternate ease-in-out;
+            transform-origin: bottom center;
+            box-shadow: 0 0 25px 8px rgba(245, 158, 11, 0.45);
+        }
+
+        /* Hiệu ứng kính mờ glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .dark .glass-panel {
+            background: rgba(28, 25, 23, 0.88);
+        }
+
+        /* Thanh cuộn mềm */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(160, 150, 140, 0.3); border-radius: 99px; }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative selection:bg-amber-200 selection:text-amber-900">
+
+    <!-- ======================================================== -->
+    <!-- 0. THANH ĐIỀU KHIỂN SỬA FONT & ĐỔI MÀU TRỰC TIẾP (CÔ YÊU CẦU) -->
+    <!-- ======================================================== -->
+    <div id="themeStudio" class="fixed bottom-5 right-5 z-50 flex flex-col items-end">
+        <!-- Nút toggle mở bảng điều khiển -->
+        <button id="toggleStudioBtn" onclick="toggleStudio()" class="flex items-center gap-2 bg-stone-900 text-white px-4 py-3 rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all border border-stone-700">
+            <i data-lucide="palette" class="w-5 h-5 text-amber-400"></i>
+            <span class="font-medium text-sm">Bộ Tùy Biến Giao Diện (Cô Yêu Cầu)</span>
+            <span class="flex h-2.5 w-2.5 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+            </span>
+        </button>
+
+        <!-- Hộp Modal Điều Khiển Giao Diện Trực Tiếp -->
+        <div id="studioPanel" class="hidden mt-3 w-96 glass-panel rounded-2xl shadow-2xl border border-stone-300 dark:border-stone-700 p-5 text-stone-800 dark:text-stone-100 transition-all max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-stone-200 dark:border-stone-700">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-5 h-5 text-amber-600"></i>
+                    <h3 class="font-bold text-base">Live Theme & Typography Studio</h3>
+                </div>
+                <button onclick="toggleStudio()" class="text-stone-400 hover:text-stone-600 p-1">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-stone-500 mt-2 mb-4">
+                *Thay đổi tức thời toàn bộ phông chữ, bảng màu, bo góc trên trang để demo trực quan trước giảng viên.
+            </p>
+
+            <!-- 1. Chọn Bảng Màu Mẫu (Color Presets) -->
+            <div class="mb-4">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">1. Bảng màu thương hiệu (Palettes)</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="setPalette('amber')" class="flex items-center gap-2 p-2 rounded-lg border border-amber-300 bg-amber-50/50 hover:bg-amber-100/50 text-xs font-medium text-left">
+                        <span class="w-4 h-4 rounded-full bg-amber-600 inline-block shadow-sm"></span>
+                        <span>Hổ phách ấm (Mặc định)</span>
+                    </button>
+                    <button onclick="setPalette('sage')" class="flex items-center gap-2 p-2 rounded-lg border border-emerald-300 bg-emerald-50/50 hover:bg-emerald-100/50 text-xs font-medium text-left">
+                        <span class="w-4 h-4 rounded-full bg-emerald-700 inline-block shadow-sm"></span>
+                        <span>Xô thơm & Rêu (Sage Zen)</span>
+                    </button>
+                    <button onclick="setPalette('rose')" class="flex items-center gap-2 p-2 rounded-lg border border-rose-300 bg-rose-50/50 hover:bg-rose-100/50 text-xs font-medium text-left">
+                        <span class="w-4 h-4 rounded-full bg-rose-600 inline-block shadow-sm"></span>
+                        <span>Hoa hồng & Velvet</span>
+                    </button>
+                    <button onclick="setPalette('terracotta')" class="flex items-center gap-2 p-2 rounded-lg border border-orange-300 bg-orange-50/50 hover:bg-orange-100/50 text-xs font-medium text-left">
+                        <span class="w-4 h-4 rounded-full bg-orange-800 inline-block shadow-sm"></span>
+                        <span>Gốm đất nung mộc</span>
+                    </button>
+                    <button onclick="setPalette('midnight')" class="flex items-center gap-2 p-2 rounded-lg border border-indigo-300 bg-indigo-50/50 hover:bg-indigo-100/50 text-xs font-medium text-left col-span-2">
+                        <span class="w-4 h-4 rounded-full bg-indigo-900 inline-block shadow-sm"></span>
+                        <span>Dạ khúc đen & Vàng Gold (Luxury Night)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. Chọn Tự Do Màu Primary & Accent -->
+            <div class="mb-4 pt-3 border-t border-stone-200 dark:border-stone-700">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">Tùy biến mã màu bất kỳ (Color Picker)</label>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <input type="color" id="primaryPicker" value="#b45309" onchange="updateCustomColor('primary', this.value)" class="w-8 h-8 rounded border cursor-pointer">
+                        <span class="text-xs">Màu chủ đạo</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="color" id="accentPicker" value="#d97706" onchange="updateCustomColor('accent', this.value)" class="w-8 h-8 rounded border cursor-pointer">
+                        <span class="text-xs">Màu nhấn</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Chọn Font Tiêu Đề (Heading Fonts) -->
+            <div class="mb-4 pt-3 border-t border-stone-200 dark:border-stone-700">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">2. Font Tiêu đề (Heading Font)</label>
+                <select id="headingFontSelect" onchange="changeHeadingFont(this.value)" class="w-full text-xs p-2.5 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800">
+                    <option value="'Playfair Display', serif" selected>Playfair Display (Sang trọng, Cổ điển)</option>
+                    <option value="'Cormorant Garamond', serif">Cormorant Garamond (Nghệ thuật, Thơ mộng)</option>
+                    <option value="'Dancing Script', cursive">Dancing Script (Thủ công, Chữ viết tay)</option>
+                    <option value="'Montserrat', sans-serif">Montserrat (Trẻ trung, Hiện đại)</option>
+                    <option value="'Be Vietnam Pro', sans-serif">Be Vietnam Pro (Tối giản chuẩn Việt)</option>
+                    <option value="'Space Grotesk', sans-serif">Space Grotesk (Cá tính, Công nghệ)</option>
+                </select>
+            </div>
+
+            <!-- 4. Chọn Font Nội Dung (Body Fonts) -->
+            <div class="mb-4">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">3. Font Văn bản (Body Font)</label>
+                <select id="bodyFontSelect" onchange="changeBodyFont(this.value)" class="w-full text-xs p-2.5 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800">
+                    <option value="'Be Vietnam Pro', sans-serif" selected>Be Vietnam Pro (Dễ đọc tiếng Việt)</option>
+                    <option value="'Inter', sans-serif">Inter (Chuẩn giao diện quốc tế)</option>
+                    <option value="'Montserrat', sans-serif">Montserrat (Rõ nét, Tươi trẻ)</option>
+                </select>
+            </div>
+
+            <!-- 5. Bo góc (Border Radius) -->
+            <div class="mb-4 pt-3 border-t border-stone-200 dark:border-stone-700">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">4. Phong cách bo góc (Corners)</label>
+                <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
+                    <button onclick="setRadius('0px')" class="p-1.5 border rounded border-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800">Vuông (0px)</button>
+                    <button onclick="setRadius('8px')" class="p-1.5 border rounded-lg border-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800">Nhẹ (8px)</button>
+                    <button onclick="setRadius('16px')" class="p-1.5 border rounded-2xl border-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 font-semibold bg-stone-100 dark:bg-stone-700">Mềm (16px)</button>
+                    <button onclick="setRadius('28px')" class="p-1.5 border rounded-full border-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800">Tròn (Pill)</button>
+                </div>
+            </div>
+
+            <!-- 6. Dark / Light Ambient Mode -->
+            <div class="pt-3 border-t border-stone-200 dark:border-stone-700 flex items-center justify-between">
+                <span class="text-xs font-semibold">Chế độ Ánh nến ban đêm (Dark)</span>
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-stone-200 dark:bg-stone-700 hover:scale-105 transition-all">
+                    <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 1. HEADER & NAVIGATION (7C: CONTEXT & CONNECTION) -->
+    <!-- ======================================================== -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-stone-200/80 dark:border-stone-800 transition-all">
+        <!-- Dải thông báo ưu đãi / chính sách bền vững Refill -->
+        <div class="bg-gradient-to-r from-amber-800 via-amber-700 to-amber-900 text-white text-xs py-1.5 px-4 text-center font-medium tracking-wide flex items-center justify-center gap-2">
+            <span class="bg-amber-500/30 text-amber-200 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">ESG / Bền vững</span>
+            <span>Chương trình "Tái sinh hũ cũ": Trả lại vỏ nến cũ nhận voucher giảm 20% mã <strong>REFILL20</strong></span>
+        </div>
+
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-custom flex items-center justify-center text-white shadow-md transition-all" style="background-color: var(--primary-color);">
+                    <i data-lucide="flame" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <span class="font-heading font-bold text-2xl tracking-tight block leading-tight">LUMEN & SCENT</span>
+                    <span class="text-[10px] uppercase tracking-widest text-theme-subtext font-semibold block">Crafted Mood & Zodiac Candles</span>
+                </div>
+            </div>
+
+            <!-- Menu Navigation -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#customizer" class="text-stone-700 dark:text-stone-300 hover:text-amber-600 transition-colors flex items-center gap-1.5">
+                    <i data-lucide="wand-2" class="w-4 h-4 text-amber-600"></i>
+                    <span>Tự Phối Nến 3D</span>
+                </a>
+                <a href="#quiz" class="text-stone-700 dark:text-stone-300 hover:text-amber-600 transition-colors flex items-center gap-1.5">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-amber-600"></i>
+                    <span>Quiz Tìm Mùi Hương</span>
+                </a>
+                <a href="#bundle" class="text-stone-700 dark:text-stone-300 hover:text-amber-600 transition-colors flex items-center gap-1.5">
+                    <i data-lucide="gift" class="w-4 h-4 text-amber-600"></i>
+                    <span>Combo Quà Tặng</span>
+                </a>
+                <a href="#story" class="text-stone-700 dark:text-stone-300 hover:text-amber-600 transition-colors">
+                    Câu Chuyện Lành
+                </a>
+                <a href="#reviews" class="text-stone-700 dark:text-stone-300 hover:text-amber-600 transition-colors">
+                    Đánh Giá (4.9★)
+                </a>
+            </div>
+
+            <!-- Right Actions: Sound Synthesizer + Cart -->
+            <div class="flex items-center gap-3">
+                <!-- Nút bật âm thanh lửa cháy tí tách bấc gỗ (Woodwick Crackle Synthesizer) -->
+                <button id="soundBtn" onclick="toggleFireSound()" title="Nghe tiếng bấc gỗ tí tách (Web Audio)" class="flex items-center gap-2 px-3 py-2 rounded-full border border-stone-300 dark:border-stone-700 hover:border-amber-500 bg-white dark:bg-stone-800 text-xs font-medium transition-all shadow-sm">
+                    <i id="soundIcon" data-lucide="volume-x" class="w-4 h-4 text-stone-500"></i>
+                    <span id="soundText" class="hidden sm:inline">Âm thanh bấc gỗ: Tắt</span>
+                </button>
+
+                <!-- Giỏ hàng -->
+                <button onclick="toggleCartDrawer()" class="relative p-2.5 rounded-full text-white shadow-md hover:scale-105 active:scale-95 transition-all" style="background-color: var(--primary-color);">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-amber-400 text-stone-900 font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ======================================================== -->
+    <!-- 2. HERO SECTION (7C: CONTENT & CONTEXT) -->
+    <!-- ======================================================== -->
+    <section class="relative overflow-hidden py-16 md:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Content Left -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300/60">
+                        <i data-lucide="sparkle" class="w-3.5 h-3.5 text-amber-600"></i>
+                        <span>Đồ án TMĐT TMA306: D2C Personalized Emotional Fragrance</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.15]">
+                        Thắp Sáng Cảm Xúc, <br>
+                        <span class="italic font-normal underline decoration-amber-400 decoration-wavy decoration-2">Khắc Tên Kỷ Niệm</span> Của Riêng Bạn.
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-theme-subtext max-w-xl font-normal leading-relaxed">
+                        Nến thơm thủ công từ 100% sáp đậu nành thiên nhiên. Tự do phối 2 tầng hương theo tâm trạng, khắc tên người nhận, in thông điệp bí mật và chọn ngày giao quà tận tay.
+                    </p>
+
+                    <!-- CTAs -->
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <a href="#customizer" class="px-7 py-3.5 rounded-custom font-semibold text-white shadow-lg shadow-amber-900/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2" style="background-color: var(--primary-color);">
+                            <i data-lucide="wand-2" class="w-5 h-5"></i>
+                            <span>Tự Phối Hũ Nến Của Bạn (Live 3D)</span>
+                        </a>
+                        <a href="#quiz" class="px-6 py-3.5 rounded-custom font-semibold border-2 border-stone-300 dark:border-stone-700 hover:border-amber-600 bg-transparent text-stone-800 dark:text-stone-200 transition-all flex items-center gap-2">
+                            <i data-lucide="compass" class="w-5 h-5 text-amber-600"></i>
+                            <span>Quiz Tìm Mùi Phù Hợp (2 phút)</span>
+                        </a>
+                    </div>
+
+                    <!-- Trust Indicators & Social Proof -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-stone-200 dark:border-stone-800">
+                        <div>
+                            <div class="font-heading font-bold text-2xl text-amber-700 dark:text-amber-400">100%</div>
+                            <div class="text-xs text-stone-500 font-medium">Sáp đậu nành sinh học</div>
+                        </div>
+                        <div>
+                            <div class="font-heading font-bold text-2xl text-amber-700 dark:text-amber-400">0.0 CO₂</div>
+                            <div class="text-xs text-stone-500 font-medium">Bấc gỗ hữu cơ tí tách</div>
+                        </div>
+                        <div>
+                            <div class="font-heading font-bold text-2xl text-amber-700 dark:text-amber-400">&gt;22% CAGR</div>
+                            <div class="text-xs text-stone-500 font-medium">Tăng trưởng ngành nến VN</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Visual Right: Interactive Candle Card Showcase -->
+                <div class="lg:col-span-5 relative flex justify-center">
+                    <div class="w-full max-w-md p-8 rounded-3xl glass-panel shadow-2xl border border-stone-200/80 dark:border-stone-800 text-center relative overflow-hidden">
+                        <!-- Background glow effect -->
+                        <div class="absolute -top-20 -right-20 w-48 h-48 bg-amber-400/20 rounded-full blur-3xl"></div>
+                        <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-rose-400/20 rounded-full blur-3xl"></div>
+
+                        <!-- Candle 3D-like simulation inside Hero -->
+                        <div class="relative py-6 flex flex-col items-center">
+                            <!-- Ngọn lửa -->
+                            <div id="heroFlame" class="w-5 h-10 rounded-full bg-gradient-to-t from-amber-600 via-amber-400 to-yellow-100 candle-flame mb-2 shadow-amber-500/50"></div>
+                            <!-- Bấc gỗ -->
+                            <div class="w-1.5 h-3 bg-amber-950 rounded-sm"></div>
+                            
+                            <!-- Thân hũ nến -->
+                            <div class="w-56 h-64 rounded-2xl bg-gradient-to-br from-amber-800 via-amber-900 to-stone-900 p-4 shadow-2xl border border-amber-700/40 relative flex flex-col justify-center items-center text-amber-50">
+                                <!-- Nhãn nến phong cách Typography cổ điển -->
+                                <div class="w-44 h-48 border border-amber-300/40 p-3 rounded-lg flex flex-col justify-between items-center bg-stone-900/60 backdrop-blur-sm text-center">
+                                    <div class="text-[9px] uppercase tracking-widest text-amber-300/80 font-bold border-b border-amber-300/20 pb-1 w-full">
+                                        LUMEN & SCENT NO. 07
+                                    </div>
+                                    <div class="my-auto space-y-1">
+                                        <div class="text-2xl font-heading italic text-amber-200">Thanh Trúc</div>
+                                        <div class="text-[10px] text-amber-100/90 font-light italic">"Mong mọi mệt mỏi đều tan biến"</div>
+                                        <div class="text-[11px] text-amber-300 flex items-center justify-center gap-1 font-semibold">
+                                            <span>♈ Aries (Bạch Dương)</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-[8px] uppercase tracking-wider text-amber-400/70 border-t border-amber-300/20 pt-1 w-full">
+                                        Lavender & Sandalwood • 200g
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex items-center justify-between text-xs text-stone-500">
+                            <span class="flex items-center gap-1 text-emerald-600 font-semibold">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Live Preview 100% Real
+                            </span>
+                            <span class="italic font-serif">Mẫu nến cá nhân hóa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 3. EXTENSION 1: LIVE 3D/REAL-TIME CANDLE & LABEL CUSTOMIZER -->
+    <!-- ======================================================== -->
+    <section id="customizer" class="py-16 theme-surface border-y border-stone-200 dark:border-stone-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full text-white" style="background-color: var(--primary-color);">
+                    Extension 1: Live Interactive Customizer
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold mt-3 mb-4">Studio Thiết Kế Hũ Nến Độc Bản Của Riêng Bạn</h2>
+                <p class="text-sm sm:text-base text-theme-subtext">
+                    Tùy chỉnh chất liệu hũ, chọn bấc nến, nhập tên người nhận, thông điệp bí mật và chọn biểu tượng Cung hoàng đạo. Bạn có thể xem trước sản phẩm thực tế thời gian thực trước khi đặt hàng.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Cột trái: Bộ điều khiển Customizer -->
+                <div class="lg:col-span-7 bg-white dark:bg-stone-900 rounded-3xl p-6 sm:p-8 shadow-xl border border-stone-200 dark:border-stone-800 space-y-6">
+                    
+                    <!-- Bước 1: Chọn chất liệu hũ nến -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-2.5">
+                            Bước 1: Chọn chất liệu & kiểu dáng hũ nến
+                        </label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="setJarType('amber')" id="jarBtn-amber" class="jar-option-btn p-3 rounded-2xl border-2 border-amber-600 bg-amber-50/50 dark:bg-amber-950/20 text-left transition-all">
+                                <div class="w-6 h-6 rounded-full bg-amber-900 mb-1.5 shadow-sm"></div>
+                                <div class="text-xs font-bold">Thủy tinh hổ phách</div>
+                                <div class="text-[10px] text-stone-500">Kinh điển, ấm áp</div>
+                            </button>
+                            <button onclick="setJarType('ceramic')" id="jarBtn-ceramic" class="jar-option-btn p-3 rounded-2xl border-2 border-stone-200 dark:border-stone-700 hover:border-amber-400 text-left transition-all">
+                                <div class="w-6 h-6 rounded-full bg-stone-300 mb-1.5 shadow-sm"></div>
+                                <div class="text-xs font-bold">Gốm mộc Bát Tràng</div>
+                                <div class="text-[10px] text-stone-500">+25.000đ (Upcycled)</div>
+                            </button>
+                            <button onclick="setJarType('cement')" id="jarBtn-cement" class="jar-option-btn p-3 rounded-2xl border-2 border-stone-200 dark:border-stone-700 hover:border-amber-400 text-left transition-all">
+                                <div class="w-6 h-6 rounded-full bg-stone-600 mb-1.5 shadow-sm"></div>
+                                <div class="text-xs font-bold">Xi măng Terrazzo</div>
+                                <div class="text-[10px] text-stone-500">+30.000đ (Industrial)</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bước 2: Chọn bấc nến -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-2.5">
+                            Bước 2: Chọn loại bấc nến
+                        </label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="setWick('wood')" id="wickBtn-wood" class="wick-option-btn p-3 rounded-2xl border-2 border-amber-600 bg-amber-50/50 dark:bg-amber-950/20 text-left transition-all">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-xs font-bold">Bấc gỗ tự nhiên (Wood Wick)</span>
+                                    <i data-lucide="music" class="w-3.5 h-3.5 text-amber-600"></i>
+                                </div>
+                                <div class="text-[10px] text-stone-500">Cháy nổ tí tách êm dịu, không khói đen</div>
+                            </button>
+                            <button onclick="setWick('cotton')" id="wickBtn-cotton" class="wick-option-btn p-3 rounded-2xl border-2 border-stone-200 dark:border-stone-700 hover:border-amber-400 text-left transition-all">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-xs font-bold">Bấc sợi Cotton Organic</span>
+                                    <i data-lucide="feather" class="w-3.5 h-3.5 text-stone-400"></i>
+                                </div>
+                                <div class="text-[10px] text-stone-500">Cháy tĩnh lặng, ngọn lửa đều</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bước 3: Chọn tầng hương chủ đạo -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-2.5">
+                            Bước 3: Chọn công thức tầng hương chữa lành
+                        </label>
+                        <select id="scentSelect" onchange="updateCustomizerScent(this.value)" class="w-full text-xs p-3 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 font-medium">
+                            <option value="Lavender & Sandalwood">Oải hương êm dịu & Gỗ đàn hương (Thư giãn, ngủ sâu)</option>
+                            <option value="Vanilla & Cinnamon">Vani ngọt ngào & Quế cay ấm (Cảm giác được ôm ấp)</option>
+                            <option value="Citrus & Jasmine">Cam Bergamot & Hoa nhài thanh khiết (Bừng tỉnh năng lượng)</option>
+                            <option value="White Tea & Cedarwood">Trà trắng sương mai & Tuyết tùng (Tập trung làm việc)</option>
+                        </select>
+                    </div>
+
+                    <!-- Bước 4: Nhập nội dung in nhãn cá nhân hóa (Personalized Label) -->
+                    <div class="p-4 rounded-2xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 space-y-3">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400">
+                            Bước 4: Khắc tên & Thông điệp riêng (Live On-Label Preview)
+                        </label>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <span class="text-[11px] text-stone-500 font-medium block mb-1">Tên người nhận / Biệt danh:</span>
+                                <input type="text" id="inputRecipient" value="Hoàng Lan" oninput="updateLiveLabel()" placeholder="Ví dụ: Hoàng Lan / My Dearest" class="w-full text-xs p-2.5 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 font-medium">
+                            </div>
+                            <div>
+                                <span class="text-[11px] text-stone-500 font-medium block mb-1">Cung hoàng đạo (Zodiac Icon):</span>
+                                <select id="inputZodiac" onchange="updateLiveLabel()" class="w-full text-xs p-2.5 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 font-medium">
+                                    <option value="♈ Bạch Dương (Aries)">♈ Bạch Dương (Aries)</option>
+                                    <option value="♉ Kim Ngưu (Taurus)">♉ Kim Ngưu (Taurus)</option>
+                                    <option value="♊ Song Tử (Gemini)">♊ Song Tử (Gemini)</option>
+                                    <option value="♋ Cự Giải (Cancer)">♋ Cự Giải (Cancer)</option>
+                                    <option value="♌ Sư Tử (Leo)">♌ Sư Tử (Leo)</option>
+                                    <option value="♍ Xử Nữ (Virgo)" selected>♍ Xử Nữ (Virgo)</option>
+                                    <option value="♎ Thiên Bình (Libra)">♎ Thiên Bình (Libra)</option>
+                                    <option value="♏ Bọ Cạp (Scorpio)">♏ Bọ Cạp (Scorpio)</option>
+                                    <option value="♐ Nhân Mã (Sagittarius)">♐ Nhân Mã (Sagittarius)</option>
+                                    <option value="♑ Ma Kết (Capricorn)">♑ Ma Kết (Capricorn)</option>
+                                    <option value="♒ Bảo Bình (Aquarius)">♒ Bảo Bình (Aquarius)</option>
+                                    <option value="♓ Song Ngư (Pisces)">♓ Song Ngư (Pisces)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="text-[11px] text-stone-500 font-medium block mb-1">Thông điệp in dưới nhãn:</span>
+                            <input type="text" id="inputMessage" value="Mong bạn luôn an yên và ngập tràn hạnh phúc" oninput="updateLiveLabel()" placeholder="Gõ lời chúc ngọt ngào của bạn..." class="w-full text-xs p-2.5 rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 font-medium">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cột phải: Live Preview Hũ nến trực quan -->
+                <div class="lg:col-span-5 bg-stone-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between relative overflow-hidden border border-stone-700">
+                    <div class="flex items-center justify-between pb-3 border-b border-stone-800">
+                        <span class="text-xs uppercase tracking-widest text-amber-400 font-bold flex items-center gap-1.5">
+                            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                            Live Preview Thời Gian Thực
+                        </span>
+                        <!-- Nút dập / thắp nến -->
+                        <button onclick="toggleCandleFlame()" class="text-xs px-2.5 py-1 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-300 border border-stone-700 transition-all">
+                            Thắp / Thổi tắt ngọn lửa
+                        </button>
+                    </div>
+
+                    <!-- Khung mô phỏng hũ nến thực tế -->
+                    <div class="py-10 flex flex-col items-center justify-center min-h-[340px]">
+                        <!-- Ngọn lửa -->
+                        <div id="customFlame" class="w-6 h-12 rounded-full bg-gradient-to-t from-amber-600 via-amber-400 to-yellow-100 candle-flame mb-2 shadow-amber-500/50"></div>
+                        <!-- Bấc nến -->
+                        <div id="customWickView" class="w-2 h-3.5 bg-amber-950 rounded-sm"></div>
+
+                        <!-- Thân hũ nến tùy biến -->
+                        <div id="candleBody" class="w-64 h-72 rounded-3xl p-4 shadow-2xl border transition-all duration-500 flex flex-col justify-center items-center bg-gradient-to-br from-amber-900 via-stone-900 to-stone-950 border-amber-700/50">
+                            <!-- Nhãn nến thay đổi theo thời gian thực -->
+                            <div class="w-52 h-56 border border-amber-300/40 p-4 rounded-xl flex flex-col justify-between items-center bg-stone-950/80 backdrop-blur-md text-center shadow-inner">
+                                <div class="text-[9px] uppercase tracking-widest text-amber-300 font-bold border-b border-amber-400/20 pb-1.5 w-full">
+                                    LUMEN & SCENT HANDMADE
+                                </div>
+                                <div class="my-auto space-y-1.5 px-1">
+                                    <div id="previewRecipient" class="text-2xl font-heading italic text-amber-200">Hoàng Lan</div>
+                                    <div id="previewMessage" class="text-[10px] text-amber-100/90 font-light italic">"Mong bạn luôn an yên và ngập tràn hạnh phúc"</div>
+                                    <div id="previewZodiac" class="text-xs text-amber-400 font-semibold pt-1">
+                                        ♍ Xử Nữ (Virgo)
+                                    </div>
+                                </div>
+                                <div class="text-[8px] uppercase tracking-wider text-amber-300/70 border-t border-amber-400/20 pt-1.5 w-full">
+                                    <span id="previewScent">Lavender & Sandalwood</span> • 200g
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chi tiết giá & Nút thêm vào giỏ hàng -->
+                    <div class="pt-4 border-t border-stone-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-stone-400">Tổng giá hũ nến custom:</span>
+                            <span id="customizerPrice" class="text-2xl font-bold font-heading text-amber-400">289.000 VNĐ</span>
+                        </div>
+                        <button onclick="addCustomCandleToCart()" class="w-full py-3.5 rounded-custom font-bold text-stone-900 bg-amber-400 hover:bg-amber-300 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg">
+                            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                            <span>Thêm Hũ Nến Custom Này Vào Giỏ Hàng</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 4. EXTENSION 2: SCENT FINDER QUIZ (GỢI Ý MÙI THEO TÂM TRẠNG) -->
+    <!-- ======================================================== -->
+    <section id="quiz" class="py-16 theme-surface">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-br from-amber-900 via-stone-900 to-amber-950 text-white rounded-3xl p-8 sm:p-12 shadow-2xl border border-amber-700/30 relative overflow-hidden">
+                <div class="max-w-2xl mx-auto text-center space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30">
+                        Extension 2: Smart Scent Quiz
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-bold font-heading">Trắc Nghiệm Tâm Trạng: Tìm Hương Thơm "Chữa Lành"</h2>
+                    <p class="text-xs sm:text-sm text-stone-300">
+                        Bạn đang mệt mỏi sau deadline, cần sự lãng mạn hay tìm kiếm giấc ngủ ngon? Hãy để thuật toán matching tầng hương của chúng tôi giúp bạn.
+                    </p>
+                </div>
+
+                <!-- Step Container -->
+                <div id="quizContainer" class="mt-8 bg-stone-900/80 rounded-2xl p-6 sm:p-8 border border-stone-800">
+                    <!-- Câu hỏi 1 -->
+                    <div id="quizStep1" class="space-y-4">
+                        <div class="flex items-center justify-between text-xs text-amber-400 font-semibold mb-2">
+                            <span>Câu hỏi 1 / 3: Tâm trạng của bạn hôm nay?</span>
+                            <span>33%</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="answerQuiz(1, 'stress')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">😫 Stress, ngợp với deadline</div>
+                                <div class="text-xs text-stone-400">Cần thư giãn thần kinh, giảm âu lo</div>
+                            </button>
+                            <button onclick="answerQuiz(1, 'sleep')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">🌙 Mất ngủ, trằn trọc khó vào giấc</div>
+                                <div class="text-xs text-stone-400">Cần không gian êm dịu, vỗ về</div>
+                            </button>
+                            <button onclick="answerQuiz(1, 'focus')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">💡 Cần tập trung cao độ</div>
+                                <div class="text-xs text-stone-400">Học bài, đọc sách, làm việc sâu</div>
+                            </button>
+                            <button onclick="answerQuiz(1, 'romance')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">🌹 Hẹn hò lãng mạn, ấm cúng</div>
+                                <div class="text-xs text-stone-400">Không gian ngọt ngào bên người ấy</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Câu hỏi 2 -->
+                    <div id="quizStep2" class="hidden space-y-4">
+                        <div class="flex items-center justify-between text-xs text-amber-400 font-semibold mb-2">
+                            <span>Câu hỏi 2 / 3: Không gian bạn thắp nến?</span>
+                            <span>66%</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="answerQuiz(2, 'desk')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">🖥️ Bàn làm việc / học tập cá nhân</div>
+                            </button>
+                            <button onclick="answerQuiz(2, 'bedroom')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">🛏️ Phòng ngủ ấm cúng</div>
+                            </button>
+                            <button onclick="answerQuiz(2, 'bath')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">🛁 Bồn tắm thư giãn</div>
+                            </button>
+                            <button onclick="answerQuiz(2, 'living')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">🛋️ Phòng khách / không gian mở</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Câu hỏi 3 -->
+                    <div id="quizStep3" class="hidden space-y-4">
+                        <div class="flex items-center justify-between text-xs text-amber-400 font-semibold mb-2">
+                            <span>Câu hỏi 3 / 3: Tông mùi hương bạn thích nhất?</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="answerQuiz(3, 'wood')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">🌲 Gỗ trầm ấm & Khói nhẹ (Woody)</div>
+                            </button>
+                            <button onclick="answerQuiz(3, 'floral')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">🌸 Hoa cỏ dịu mát tự nhiên (Floral)</div>
+                            </button>
+                            <button onclick="answerQuiz(3, 'sweet')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">🍦 Vani ngọt ngào & Bánh quế (Gourmand)</div>
+                            </button>
+                            <button onclick="answerQuiz(3, 'citrus')" class="quiz-btn p-4 rounded-xl border border-stone-700 hover:border-amber-400 bg-stone-800/50 text-left hover:scale-[1.02] transition-all">
+                                <div class="text-sm font-bold text-white mb-1">🍋 Cam chanh tươi mát & Trà trắng (Fresh)</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Kết quả Quiz -->
+                    <div id="quizResult" class="hidden text-center space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-semibold">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                            Công thức mùi hương được đề xuất cho bạn
+                        </div>
+                        
+                        <h3 id="resultTitle" class="text-2xl sm:text-3xl font-heading font-bold text-amber-300">
+                            "Deep Slumber No.04" (Giấc Ngủ Sâu & Bình Yên)
+                        </h3>
+
+                        <!-- Scent Pyramid (Kim tự tháp 3 tầng hương) -->
+                        <div class="max-w-md mx-auto bg-stone-800/60 p-4 rounded-2xl border border-stone-700 text-xs space-y-2 text-left">
+                            <div class="flex items-center justify-between pb-1.5 border-b border-stone-700">
+                                <span class="text-stone-400 font-semibold">Top Notes (Tầng hương đầu):</span>
+                                <span id="resultTop" class="text-amber-200 font-medium">Cam Bergamot & Hoa cúc La Mã</span>
+                            </div>
+                            <div class="flex items-center justify-between pb-1.5 border-b border-stone-700">
+                                <span class="text-stone-400 font-semibold">Heart Notes (Tầng hương giữa):</span>
+                                <span id="resultHeart" class="text-amber-200 font-medium">Oải hương Pháp & Xô thơm</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-stone-400 font-semibold">Base Notes (Tầng hương cuối):</span>
+                                <span id="resultBase" class="text-amber-200 font-medium">Gỗ tuyết tùng & Hổ phách ấm</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+                            <button onclick="applyQuizToCustomizer()" class="px-6 py-3 rounded-xl font-bold bg-amber-400 text-stone-900 hover:bg-amber-300 transition-all flex items-center gap-2">
+                                <i data-lucide="wand-2" class="w-4 h-4"></i>
+                                <span>Áp dụng công thức này vào Hũ nến Custom</span>
+                            </button>
+                            <button onclick="resetQuiz()" class="px-4 py-3 rounded-xl font-medium text-xs text-stone-400 hover:text-white">
+                                Làm lại trắc nghiệm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 5. EXTENSION 3: GIFT BOX BUNDLE BUILDER (BÁN CHÉO COMBO) -->
+    <!-- ======================================================== -->
+    <section id="bundle" class="py-16 theme-surface border-t border-stone-200 dark:border-stone-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full text-white" style="background-color: var(--primary-color);">
+                    Extension 3: Smart Gift Bundle Builder
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold mt-3 mb-2">Bộ Phụ Kiện & Hộp Quà Tặng Sang Trọng</h2>
+                <p class="text-sm text-theme-subtext">
+                    Nâng niu từng trải nghiệm thắp nến. Thêm phụ kiện chăm sóc nến chuyên dụng để được giảm ngay 15% tổng hóa đơn combo.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Addon 1: Kéo cắt bấc nến -->
+                <div class="addon-card p-5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-md flex flex-col justify-between">
+                    <div>
+                        <div class="w-full h-36 rounded-xl bg-amber-100/60 dark:bg-stone-800 flex items-center justify-center mb-4">
+                            <i data-lucide="scissors" class="w-12 h-12 text-amber-700"></i>
+                        </div>
+                        <h4 class="font-bold text-sm mb-1">Kéo Cắt Bấc Nến Mạ Vàng</h4>
+                        <p class="text-xs text-stone-500 mb-3">Giữ bấc nến dài chuẩn 5mm để ngọn lửa cháy tròn trịa và không sinh muội than.</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-stone-100 dark:border-stone-800">
+                        <span class="font-bold text-amber-700 dark:text-amber-400 text-sm">65.000 VNĐ</span>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-xs font-semibold">
+                            <input type="checkbox" onchange="toggleBundleItem('wickTrimmer', 65000, 'Kéo cắt bấc nến mạ vàng')" class="rounded text-amber-600 focus:ring-amber-500 w-4 h-4">
+                            <span>Thêm vào</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Addon 2: Chuông dập lửa nến -->
+                <div class="addon-card p-5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-md flex flex-col justify-between">
+                    <div>
+                        <div class="w-full h-36 rounded-xl bg-amber-100/60 dark:bg-stone-800 flex items-center justify-center mb-4">
+                            <i data-lucide="bell" class="w-12 h-12 text-amber-700"></i>
+                        </div>
+                        <h4 class="font-bold text-sm mb-1">Chuông Dập Lửa Chống Khói</h4>
+                        <p class="text-xs text-stone-500 mb-3">Tắt nến không cần thổi, ngăn chặn hoàn toàn khói đen và bảo vệ tinh dầu nến.</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-stone-100 dark:border-stone-800">
+                        <span class="font-bold text-amber-700 dark:text-amber-400 text-sm">55.000 VNĐ</span>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-xs font-semibold">
+                            <input type="checkbox" onchange="toggleBundleItem('snuffer', 55000, 'Chuông dập lửa nến')" class="rounded text-amber-600 focus:ring-amber-500 w-4 h-4">
+                            <span>Thêm vào</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Addon 3: Hộp diêm que dài nghệ thuật -->
+                <div class="addon-card p-5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-md flex flex-col justify-between">
+                    <div>
+                        <div class="w-full h-36 rounded-xl bg-amber-100/60 dark:bg-stone-800 flex items-center justify-center mb-4">
+                            <i data-lucide="flame" class="w-12 h-12 text-amber-700"></i>
+                        </div>
+                        <h4 class="font-bold text-sm mb-1">Hộp Diêm Dài Vintage 10cm</h4>
+                        <p class="text-xs text-stone-500 mb-3">Diêm gỗ quẹt êm, que dài 10cm an toàn khi thắp các hũ nến đã cháy sâu xuống đáy.</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-stone-100 dark:border-stone-800">
+                        <span class="font-bold text-amber-700 dark:text-amber-400 text-sm">25.000 VNĐ</span>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-xs font-semibold">
+                            <input type="checkbox" onchange="toggleBundleItem('vintageMatches', 25000, 'Hộp diêm dài vintage 10cm')" class="rounded text-amber-600 focus:ring-amber-500 w-4 h-4">
+                            <span>Thêm vào</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Addon 4: Hộp quà kraft & Thiệp niêm sáp -->
+                <div class="addon-card p-5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-md flex flex-col justify-between">
+                    <div>
+                        <div class="w-full h-36 rounded-xl bg-amber-100/60 dark:bg-stone-800 flex items-center justify-center mb-4">
+                            <i data-lucide="package" class="w-12 h-12 text-amber-700"></i>
+                        </div>
+                        <h4 class="font-bold text-sm mb-1">Set Hộp Quà & Thiệp Niêm Sáp</h4>
+                        <p class="text-xs text-stone-500 mb-3">Hộp quà carton cứng cáp lót rơm gỗ, thắt nơ ruy băng lụa và thiệp viết tay theo yêu cầu.</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-stone-100 dark:border-stone-800">
+                        <span class="font-bold text-amber-700 dark:text-amber-400 text-sm">39.000 VNĐ</span>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-xs font-semibold">
+                            <input type="checkbox" onchange="toggleBundleItem('giftBoxSet', 39000, 'Hộp quà cao cấp & Thiệp niêm sáp')" class="rounded text-amber-600 focus:ring-amber-500 w-4 h-4">
+                            <span>Thêm vào</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thanh tổng kết Combo Bundle -->
+            <div class="mt-8 p-6 rounded-2xl bg-amber-50 dark:bg-stone-900 border border-amber-200 dark:border-amber-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <div class="text-xs text-stone-500 font-medium">Phụ kiện kèm theo đã chọn:</div>
+                    <div id="selectedBundleList" class="text-sm font-semibold text-stone-800 dark:text-stone-200">
+                        Chưa chọn phụ kiện nào
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <div class="text-xs text-stone-500">Tổng phụ kiện:</div>
+                        <div id="bundleTotalPrice" class="text-xl font-bold text-amber-700 dark:text-amber-400">0 VNĐ</div>
+                    </div>
+                    <button onclick="addBundleToCart()" class="px-6 py-3 rounded-xl font-bold bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-950 hover:scale-105 active:scale-95 transition-all text-xs">
+                        Thêm Phụ Kiện Vào Giỏ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 6. EXTENSION 5: DELIVERY DATE & SURPRISE GIFT PLANNER -->
+    <!-- ======================================================== -->
+    <section class="py-14 bg-stone-100 dark:bg-stone-900/50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="bg-white dark:bg-stone-900 rounded-3xl p-6 sm:p-8 shadow-lg border border-stone-200 dark:border-stone-800">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-950 flex items-center justify-center text-amber-700">
+                        <i data-lucide="calendar" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 block">Extension 5: Gift Schedule & Delivery</span>
+                        <h3 class="text-lg font-bold">Đặt Lịch Giao Quà Tặng Đúng Ngày Kỷ Niệm / Sinh Nhật</h3>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+                            Chọn ngày muốn đơn vị giao quà tận tay người nhận:
+                        </label>
+                        <input type="date" id="deliveryDate" class="w-full text-xs p-3 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-600 dark:text-stone-300 mb-1">
+                            Khung giờ giao quà mong muốn:
+                        </label>
+                        <select id="deliveryTimeSlot" class="w-full text-xs p-3 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 font-medium">
+                            <option>Sáng (09:00 - 12:00) - Bất ngờ đầu ngày</option>
+                            <option selected>Chiều (14:00 - 17:00) - Giờ làm việc văn phòng</option>
+                            <option>Tối (18:30 - 21:00) - Bữa tối lãng mạn</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex items-center gap-2">
+                    <input type="checkbox" id="secretDelivery" class="rounded text-amber-600 w-4 h-4">
+                    <label for="secretDelivery" class="text-xs text-stone-600 dark:text-stone-300 font-medium cursor-pointer">
+                        Giao quà ẩn danh / Giấu tên người gửi để tạo bất ngờ trọn vẹn cho đối phương.
+                    </label>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 7. REVIEWS & COMMUNITY (7C: COMMUNITY & COMMERCE) -->
+    <!-- ======================================================== -->
+    <section id="reviews" class="py-16 theme-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-amber-600">7C: Community & Social Proof</span>
+                    <h2 class="text-3xl font-bold font-heading mt-1">Cảm Nhận Từ Những Tâm Hồn Đã Được Chữa Lành</h2>
+                </div>
+                <div class="mt-4 md:mt-0 flex items-center gap-3">
+                    <div class="text-3xl font-bold text-amber-700 dark:text-amber-400 font-heading">4.9 / 5.0</div>
+                    <div class="text-xs text-stone-500">
+                        <div class="flex text-amber-400">★★★★★</div>
+                        <span>Dựa trên 842+ đánh giá đơn hàng</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Review 1 -->
+                <div class="p-6 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-full bg-amber-200 text-amber-800 font-bold flex items-center justify-center text-xs">
+                                MT
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold">Minh Thư</h4>
+                                <span class="text-[10px] text-stone-400">Đã mua nến Hổ phách • Xử Nữ</span>
+                            </div>
+                        </div>
+                        <span class="text-amber-400 text-xs">★★★★★</span>
+                    </div>
+                    <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed italic">
+                        "Mình đặt hũ nến in tên bạn thân dịp tốt nghiệp. Lúc mở hộp ra thơm nức mùi gỗ và hoa lavender, nhãn in tên bạn cực kỳ sắc nét. Bạn mình khóc vì xúc động luôn!"
+                    </p>
+                    <div class="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                        <i data-lucide="check" class="w-3 h-3"></i> Đã xác thực mua hàng qua web
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="p-6 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-full bg-rose-200 text-rose-800 font-bold flex items-center justify-center text-xs">
+                                QA
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold">Quốc Anh</h4>
+                                <span class="text-[10px] text-stone-400">Đã mua Combo quà tặng sinh nhật</span>
+                            </div>
+                        </div>
+                        <span class="text-amber-400 text-xs">★★★★★</span>
+                    </div>
+                    <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed italic">
+                        "Bấc gỗ cháy nổ tanh tách nghe êm tai kinh khủng, ngồi học bài bật kèm playlist lofi của shop gửi qua mã QR là bao tập trung. Rất thích chính sách mang hũ cũ lại refill giảm 20%."
+                    </p>
+                    <div class="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                        <i data-lucide="check" class="w-3 h-3"></i> Đã xác thực mua hàng qua web
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="p-6 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-full bg-emerald-200 text-emerald-800 font-bold flex items-center justify-center text-xs">
+                                HN
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold">Hải Như</h4>
+                                <span class="text-[10px] text-stone-400">Đã mua Hũ gốm mộc Bát Tràng</span>
+                            </div>
+                        </div>
+                        <span class="text-amber-400 text-xs">★★★★★</span>
+                    </div>
+                    <p class="text-xs text-stone-600 dark:text-stone-300 leading-relaxed italic">
+                        "Web trực quan dễ dùng dã man, mình đổi font và màu nhãn xem trước rồi mới chốt mua nên không sợ bị lệch màu. Giao đúng ngày sinh nhật người yêu lúc 19h tối chuẩn từng phút!"
+                    </p>
+                    <div class="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                        <i data-lucide="check" class="w-3 h-3"></i> Đã xác thực mua hàng qua web
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- 8. CART DRAWER (GIỎ HÀNG & THANH TOÁN VIETQR) -->
+    <!-- ======================================================== -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div onclick="toggleCartDrawer()" class="absolute inset-0 bg-stone-900/60 backdrop-blur-sm transition-opacity"></div>
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white dark:bg-stone-900 shadow-2xl flex flex-col justify-between border-l border-stone-200 dark:border-stone-800">
+                <!-- Cart Header -->
+                <div class="p-6 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="shopping-bag" class="w-5 h-5 text-amber-600"></i>
+                        <h3 class="font-bold text-base">Giỏ Hàng Quà Tặng Của Bạn</h3>
+                    </div>
+                    <button onclick="toggleCartDrawer()" class="p-1 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Items List -->
+                <div id="cartItemsContainer" class="p-6 overflow-y-auto flex-1 space-y-4">
+                    <div class="text-center py-12 text-stone-400 text-xs">
+                        <i data-lucide="shopping-basket" class="w-12 h-12 mx-auto mb-2 opacity-50"></i>
+                        Giỏ hàng đang trống. Hãy tạo một hũ nến độc bản ngay nhé!
+                    </div>
+                </div>
+
+                <!-- Cart Footer & Checkout -->
+                <div class="p-6 border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/60 space-y-4">
+                    <!-- Mã giảm giá Refill -->
+                    <div class="flex gap-2">
+                        <input type="text" id="couponCode" placeholder="Mã giảm giá (ví dụ: REFILL20)" class="w-full text-xs p-2.5 rounded-lg border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 font-medium">
+                        <button onclick="applyCoupon()" class="px-3.5 py-2.5 rounded-lg bg-stone-800 dark:bg-stone-700 text-white text-xs font-semibold hover:bg-stone-700">Áp dụng</button>
+                    </div>
+
+                    <div class="space-y-1.5 text-xs">
+                        <div class="flex justify-between text-stone-500">
+                            <span>Tạm tính:</span>
+                            <span id="cartSubtotal">0 VNĐ</span>
+                        </div>
+                        <div class="flex justify-between text-emerald-600 font-medium">
+                            <span>Giảm giá (Voucher):</span>
+                            <span id="cartDiscount">-0 VNĐ</span>
+                        </div>
+                        <div class="flex justify-between text-stone-500">
+                            <span>Phí giao hàng:</span>
+                            <span class="text-emerald-600 font-semibold">Freeship đơn quà tặng</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold pt-2 border-t border-stone-200 dark:border-stone-800">
+                            <span>Tổng thanh toán:</span>
+                            <span id="cartFinalTotal" class="text-amber-700 dark:text-amber-400">0 VNĐ</span>
+                        </div>
+                    </div>
+
+                    <button onclick="openCheckoutModal()" class="w-full py-3.5 rounded-custom font-bold text-white shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2" style="background-color: var(--primary-color);">
+                        <i data-lucide="credit-card" class="w-4 h-4"></i>
+                        <span>Tiến Hành Đặt Hàng & Nhận Mã VietQR</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 9. CHECKOUT & VIETQR MODAL SIMULATION -->
+    <!-- ======================================================== -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center p-4">
+        <div onclick="closeCheckoutModal()" class="fixed inset-0 bg-stone-900/70 backdrop-blur-sm"></div>
+        <div class="relative bg-white dark:bg-stone-900 max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl border border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-100 z-10">
+            <div class="flex justify-between items-center pb-3 border-b border-stone-200 dark:border-stone-800">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="qr-code" class="w-5 h-5 text-amber-600"></i>
+                    <h3 class="font-bold text-base">Thanh Toán Đơn Hàng Qua VietQR</h3>
+                </div>
+                <button onclick="closeCheckoutModal()" class="p-1 text-stone-400 hover:text-stone-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="mt-4 text-center space-y-4">
+                <p class="text-xs text-stone-500">
+                    Quét mã QR bằng ứng dụng ngân hàng bất kỳ để hoàn tất thanh toán tức thời:
+                </p>
+
+                <!-- Giả lập mã VietQR động -->
+                <div class="w-56 h-56 mx-auto bg-white p-3 rounded-2xl shadow-md border-2 border-amber-600/50 flex flex-col items-center justify-center">
+                    <img id="vietqrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=LUMEN-SCENT-TMA306-DEMO-PAYMENT" alt="VietQR Code" class="w-44 h-44 object-contain">
+                    <span class="text-[9px] text-stone-500 font-bold uppercase tracking-wider mt-1">Napas247 • VietQR Chuẩn</span>
+                </div>
+
+                <div class="bg-amber-50 dark:bg-stone-800 p-3.5 rounded-xl text-xs space-y-1 text-left">
+                    <div class="flex justify-between">
+                        <span class="text-stone-500">Chủ tài khoản:</span>
+                        <span class="font-bold">LUMEN & SCENT (NHOM 9 TMA306)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-stone-500">Số tiền:</span>
+                        <span id="qrAmount" class="font-bold text-amber-700 dark:text-amber-400">289.000 VNĐ</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-stone-500">Nội dung chuyển khoản:</span>
+                        <span class="font-mono font-bold text-stone-800 dark:text-stone-200">LUMEN CANDLE 8923</span>
+                    </div>
+                </div>
+
+                <button onclick="completeOrderSuccess()" class="w-full py-3 rounded-xl font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition-all text-xs flex items-center justify-center gap-1.5 shadow-md">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    <span>Tôi Đã Chuyển Khoản Thành Công</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 10. FOOTER -->
+    <!-- ======================================================== -->
+    <footer class="bg-stone-950 text-stone-400 py-12 border-t border-stone-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-3">
+                <span class="font-heading font-bold text-lg text-white block">LUMEN & SCENT</span>
+                <p class="leading-relaxed">
+                    Dự án Thương mại điện tử B2C D2C - Học phần TMA306. Hệ sinh thái nến thơm thủ công chữa lành và quà tặng cá nhân hóa.
+                </p>
+            </div>
+            <div>
+                <h5 class="font-bold text-stone-200 mb-2">Đặc Quyền Khách Hàng</h5>
+                <ul class="space-y-1.5">
+                    <li>100% Sáp đậu nành & Bấc gỗ</li>
+                    <li>Khắc tên theo yêu cầu miễn phí</li>
+                    <li>Đổi trả hũ cũ nhận voucher 20%</li>
+                    <li>Giao quà hẹn giờ toàn quốc</li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-bold text-stone-200 mb-2">Tiêu Chuẩn Học Thuật (FTU)</h5>
+                <ul class="space-y-1.5">
+                    <li>Mô hình 8 thành tố Laudon & Traver</li>
+                    <li>Đánh giá 7C (Context, Content...)</li>
+                    <li>Đủ 5 Web Extensions chuyên sâu</li>
+                    <li>Tích hợp Live Typography & Theme</li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-bold text-stone-200 mb-2">Hotline Hỗ Trợ Đồ Án</h5>
+                <p>Nhóm sinh viên TMA306 - Đại học Ngoại Thương</p>
+                <p class="text-amber-500 mt-2 font-mono">support@lumenscent.vn</p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-6 border-t border-stone-900 text-center text-stone-600">
+            © 2026 LUMEN & SCENT. All rights reserved. Demo website phục vụ báo cáo đồ án TMA306.
+        </div>
+    </footer>
+
+    <!-- ======================================================== -->
+    <!-- JAVASCRIPT: LOGIC ĐỔI FONT, ĐỔI MÀU & 5 EXTENSIONS -->
+    <!-- ======================================================== -->
+    <script>
+        // Khởi tạo Lucide Icons
+        lucide.createIcons();
+
+        // ----------------------------------------------------
+        // A. QUẢN LÝ FONT & MÀU SẮC (CÔ YÊU CẦU: SỬA LÀ ĐỔI LUÔN)
+        // ----------------------------------------------------
+        function toggleStudio() {
+            const panel = document.getElementById('studioPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        // Bảng màu cài sẵn (Palettes)
+        const palettes = {
+            amber: {
+                primary: '#b45309',
+                primaryHover: '#92400e',
+                accent: '#d97706',
+                bg: '#faf8f5',
+                surface: '#ffffff',
+                text: '#292524',
+                subtext: '#78716c',
+                border: '#e7e5e4'
+            },
+            sage: {
+                primary: '#047857',      /* Emerald 700 */
+                primaryHover: '#065f46',
+                accent: '#059669',
+                bg: '#f2f7f4',            /* Xanh sage nhẹ */
+                surface: '#ffffff',
+                text: '#132a22',
+                subtext: '#4d695e',
+                border: '#d1e3d9'
+            },
+            rose: {
+                primary: '#be123c',      /* Rose 700 */
+                primaryHover: '#9f1239',
+                accent: '#e11d48',
+                bg: '#fdf4f5',
+                surface: '#ffffff',
+                text: '#371821',
+                subtext: '#784d58',
+                border: '#f5d3d8'
+            },
+            terracotta: {
+                primary: '#c2410c',      /* Orange 700 */
+                primaryHover: '#9a3412',
+                accent: '#ea580c',
+                bg: '#faf5f0',
+                surface: '#ffffff',
+                text: '#341d13',
+                subtext: '#795a4c',
+                border: '#eedcd3'
+            },
+            midnight: {
+                primary: '#f59e0b',      /* Amber gold */
+                primaryHover: '#d97706',
+                accent: '#fbbf24',
+                bg: '#0f172a',            /* Dark Slate */
+                surface: '#1e293b',
+                text: '#f8fafc',
+                subtext: '#94a3b8',
+                border: '#334155'
+            }
+        };
+
+        function setPalette(name) {
+            const p = palettes[name];
+            if (!p) return;
+            const root = document.documentElement;
+            root.style.setProperty('--primary-color', p.primary);
+            root.style.setProperty('--primary-hover', p.primaryHover);
+            root.style.setProperty('--accent-color', p.accent);
+            root.style.setProperty('--bg-color', p.bg);
+            root.style.setProperty('--surface-color', p.surface);
+            root.style.setProperty('--text-color', p.text);
+            root.style.setProperty('--subtext-color', p.subtext);
+            root.style.setProperty('--border-color', p.border);
+
+            document.getElementById('primaryPicker').value = p.primary;
+            document.getElementById('accentPicker').value = p.accent;
+
+            // Nếu chọn midnight thì tự bật dark mode
+            if (name === 'midnight') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        function updateCustomColor(type, colorHex) {
+            const root = document.documentElement;
+            if (type === 'primary') {
+                root.style.setProperty('--primary-color', colorHex);
+                root.style.setProperty('--primary-hover', colorHex);
+            } else if (type === 'accent') {
+                root.style.setProperty('--accent-color', colorHex);
+            }
+        }
+
+        function changeHeadingFont(fontVal) {
+            document.documentElement.style.setProperty('--font-heading', fontVal);
+        }
+
+        function changeBodyFont(fontVal) {
+            document.documentElement.style.setProperty('--font-body', fontVal);
+        }
+
+        function setRadius(radiusVal) {
+            document.documentElement.style.setProperty('--radius', radiusVal);
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // ----------------------------------------------------
+        // B. EXTENSION 1: LIVE CANDLE & LABEL CUSTOMIZER
+        // ----------------------------------------------------
+        let currentCustomCandle = {
+            jar: 'amber',
+            jarName: 'Thủy tinh hổ phách',
+            jarExtra: 0,
+            wick: 'wood',
+            wickName: 'Bấc gỗ tự nhiên (Wood Wick)',
+            scent: 'Lavender & Sandalwood',
+            recipient: 'Hoàng Lan',
+            zodiac: '♍ Xử Nữ (Virgo)',
+            message: 'Mong bạn luôn an yên và ngập tràn hạnh phúc',
+            basePrice: 289000
+        };
+
+        function setJarType(jarType) {
+            currentCustomCandle.jar = jarType;
+            document.querySelectorAll('.jar-option-btn').forEach(b => {
+                b.classList.remove('border-amber-600', 'bg-amber-50/50', 'dark:bg-amber-950/20');
+                b.classList.add('border-stone-200', 'dark:border-stone-700');
+            });
+            document.getElementById(`jarBtn-${jarType}`).classList.add('border-amber-600', 'bg-amber-50/50', 'dark:bg-amber-950/20');
+
+            const body = document.getElementById('candleBody');
+            if (jarType === 'amber') {
+                currentCustomCandle.jarName = 'Thủy tinh hổ phách';
+                currentCustomCandle.jarExtra = 0;
+                body.className = "w-64 h-72 rounded-3xl p-4 shadow-2xl border transition-all duration-500 flex flex-col justify-center items-center bg-gradient-to-br from-amber-900 via-stone-900 to-stone-950 border-amber-700/50";
+            } else if (jarType === 'ceramic') {
+                currentCustomCandle.jarName = 'Gốm mộc Bát Tràng (Upcycled)';
+                currentCustomCandle.jarExtra = 25000;
+                body.className = "w-64 h-72 rounded-3xl p-4 shadow-2xl border transition-all duration-500 flex flex-col justify-center items-center bg-gradient-to-br from-stone-200 via-stone-300 to-stone-400 border-stone-400 text-stone-800";
+            } else if (jarType === 'cement') {
+                currentCustomCandle.jarName = 'Xi măng Terrazzo';
+                currentCustomCandle.jarExtra = 30000;
+                body.className = "w-64 h-72 rounded-3xl p-4 shadow-2xl border transition-all duration-500 flex flex-col justify-center items-center bg-gradient-to-br from-stone-600 via-stone-700 to-stone-800 border-stone-500";
+            }
+            updateCustomizerPrice();
+        }
+
+        function setWick(wickType) {
+            currentCustomCandle.wick = wickType;
+            document.querySelectorAll('.wick-option-btn').forEach(b => {
+                b.classList.remove('border-amber-600', 'bg-amber-50/50', 'dark:bg-amber-950/20');
+                b.classList.add('border-stone-200', 'dark:border-stone-700');
+            });
+            document.getElementById(`wickBtn-${wickType}`).classList.add('border-amber-600', 'bg-amber-50/50', 'dark:bg-amber-950/20');
+
+            const wickView = document.getElementById('customWickView');
+            if (wickType === 'wood') {
+                currentCustomCandle.wickName = 'Bấc gỗ tự nhiên';
+                wickView.className = "w-2.5 h-3.5 bg-amber-950 rounded-sm";
+            } else {
+                currentCustomCandle.wickName = 'Bấc sợi Cotton Organic';
+                wickView.className = "w-1 h-3.5 bg-stone-300 rounded-full";
+            }
+        }
+
+        function updateCustomizerScent(val) {
+            currentCustomCandle.scent = val;
+            document.getElementById('previewScent').innerText = val;
+        }
+
+        function updateLiveLabel() {
+            const recipient = document.getElementById('inputRecipient').value || 'Tên người nhận';
+            const zodiac = document.getElementById('inputZodiac').value;
+            const message = document.getElementById('inputMessage').value || '';
+
+            currentCustomCandle.recipient = recipient;
+            currentCustomCandle.zodiac = zodiac;
+            currentCustomCandle.message = message;
+
+            document.getElementById('previewRecipient').innerText = recipient;
+            document.getElementById('previewZodiac').innerText = zodiac;
+            document.getElementById('previewMessage').innerText = `"${message}"`;
+        }
+
+        function updateCustomizerPrice() {
+            const total = currentCustomCandle.basePrice + currentCustomCandle.jarExtra;
+            document.getElementById('customizerPrice').innerText = `${total.toLocaleString('vi-VN')} VNĐ`;
+        }
+
+        function toggleCandleFlame() {
+            const flame = document.getElementById('customFlame');
+            flame.classList.toggle('hidden');
+        }
+
+        // ----------------------------------------------------
+        // C. EXTENSION 2: SCENT FINDER QUIZ LOGIC
+        // ----------------------------------------------------
+        let quizAnswers = {};
+
+        function answerQuiz(step, answer) {
+            quizAnswers[`step${step}`] = answer;
+            if (step === 1) {
+                document.getElementById('quizStep1').classList.add('hidden');
+                document.getElementById('quizStep2').classList.remove('hidden');
+            } else if (step === 2) {
+                document.getElementById('quizStep2').classList.add('hidden');
+                document.getElementById('quizStep3').classList.remove('hidden');
+            } else if (step === 3) {
+                document.getElementById('quizStep3').classList.add('hidden');
+                calculateQuizResult();
+                document.getElementById('quizResult').classList.remove('hidden');
+            }
+        }
+
+        function calculateQuizResult() {
+            const t1 = quizAnswers.step1;
+            const t3 = quizAnswers.step3;
+
+            if (t1 === 'stress' || t1 === 'sleep') {
+                document.getElementById('resultTitle').innerText = '"Deep Slumber No.04" (Giấc Ngủ Sâu & Bình Yên)';
+                document.getElementById('resultTop').innerText = 'Cam Bergamot & Cúc La Mã';
+                document.getElementById('resultHeart').innerText = 'Oải hương Pháp & Xô thơm';
+                document.getElementById('resultBase').innerText = 'Gỗ tuyết tùng & Hổ phách';
+                currentCustomCandle.scent = 'Lavender & Sandalwood';
+            } else if (t1 === 'focus') {
+                document.getElementById('resultTitle').innerText = '"Focus Flow No.08" (Tỉnh Táo & Làm Việc Sâu)';
+                document.getElementById('resultTop').innerText = 'Vỏ bưởi hồng & Lá bạc hà';
+                document.getElementById('resultHeart').innerText = 'Trà trắng Nhật Bản & Hoa nhài';
+                document.getElementById('resultBase').innerText = 'Gỗ đàn hương & Xạ hương trắng';
+                currentCustomCandle.scent = 'White Tea & Cedarwood';
+            } else {
+                document.getElementById('resultTitle').innerText = '"Cozy Hug No.02" (Ngọt Ngào & Ôm Ấp)';
+                document.getElementById('resultTop').innerText = 'Quả mơ chín & Hạnh nhân';
+                document.getElementById('resultHeart').innerText = 'Vani Madagascar & Hoa phong lữ';
+                document.getElementById('resultBase').innerText = 'Vỏ quế cay & Đậu Tonka';
+                currentCustomCandle.scent = 'Vanilla & Cinnamon';
+            }
+        }
+
+        function applyQuizToCustomizer() {
+            document.getElementById('scentSelect').value = currentCustomCandle.scent;
+            updateCustomizerScent(currentCustomCandle.scent);
+            window.location.hash = '#customizer';
+            alert(`Đã áp dụng công thức mùi hương [${currentCustomCandle.scent}] vào studio tự phối nến thành công!`);
+        }
+
+        function resetQuiz() {
+            quizAnswers = {};
+            document.getElementById('quizResult').classList.add('hidden');
+            document.getElementById('quizStep1').classList.remove('hidden');
+        }
+
+        // ----------------------------------------------------
+        // D. EXTENSION 3: GIFT BUNDLE BUILDER
+        // ----------------------------------------------------
+        let bundleItems = {};
+
+        function toggleBundleItem(id, price, name) {
+            if (bundleItems[id]) {
+                delete bundleItems[id];
+            } else {
+                bundleItems[id] = { price, name };
+            }
+            updateBundleDisplay();
+        }
+
+        function updateBundleDisplay() {
+            const keys = Object.keys(bundleItems);
+            let total = 0;
+            keys.forEach(k => total += bundleItems[k].price);
+
+            document.getElementById('bundleTotalPrice').innerText = `${total.toLocaleString('vi-VN')} VNĐ`;
+
+            if (keys.length === 0) {
+                document.getElementById('selectedBundleList').innerText = 'Chưa chọn phụ kiện nào';
+            } else {
+                document.getElementById('selectedBundleList').innerText = keys.map(k => bundleItems[k].name).join(' + ');
+            }
+        }
+
+        // ----------------------------------------------------
+        // E. EXTENSION 4: WEB AUDIO PROCEDURAL FIRE SOUND
+        // ----------------------------------------------------
+        let audioCtx = null;
+        let isPlayingSound = false;
+        let noiseNode = null;
+
+        function toggleFireSound() {
+            if (!isPlayingSound) {
+                startFireSound();
+                document.getElementById('soundIcon').setAttribute('data-lucide', 'volume-2');
+                document.getElementById('soundText').innerText = 'Âm thanh bấc gỗ: Bật (Tí tách)';
+                document.getElementById('soundBtn').classList.add('border-amber-500', 'bg-amber-50', 'text-amber-800');
+            } else {
+                stopFireSound();
+                document.getElementById('soundIcon').setAttribute('data-lucide', 'volume-x');
+                document.getElementById('soundText').innerText = 'Âm thanh bấc gỗ: Tắt';
+                document.getElementById('soundBtn').classList.remove('border-amber-500', 'bg-amber-50', 'text-amber-800');
+            }
+            lucide.createIcons();
+            isPlayingSound = !isPlayingSound;
+        }
+
+        function startFireSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+                
+                // Thuật toán giả lập âm thanh lửa nổ tí tách (Crackling Noise)
+                const bufferSize = audioCtx.sampleRate * 2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    // Tạo các đốm nổ ngẫu nhiên (popping crackle)
+                    data[i] = Math.random() > 0.994 ? white * 0.8 : white * 0.03;
+                }
+
+                noiseNode = audioCtx.createBufferSource();
+                noiseNode.buffer = buffer;
+                noiseNode.loop = true;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 1200;
+
+                const gainNode = audioCtx.createGain();
+                gainNode.gain.value = 0.25;
+
+                noiseNode.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                noiseNode.start();
+            } catch (e) {
+                console.log("Audio not allowed before user interaction:", e);
+            }
+        }
+
+        function stopFireSound() {
+            if (noiseNode) {
+                noiseNode.stop();
+                noiseNode.disconnect();
+            }
+            if (audioCtx) {
+                audioCtx.close();
+            }
+        }
+
+        // ----------------------------------------------------
+        // F. GIỎ HÀNG & MÔ PHỎNG CHECKOUT VIETQR
+        // ----------------------------------------------------
+        let cart = [];
+        let discountRate = 0;
+
+        function addCustomCandleToCart() {
+            const item = {
+                id: 'candle-' + Date.now(),
+                type: 'candle',
+                title: `Hũ Nến Custom: ${currentCustomCandle.recipient}`,
+                desc: `${currentCustomCandle.jarName} • ${currentCustomCandle.wickName} • Mùi: ${currentCustomCandle.scent} • Cung: ${currentCustomCandle.zodiac}`,
+                price: currentCustomCandle.basePrice + currentCustomCandle.jarExtra,
+                qty: 1
+            };
+            cart.push(item);
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+        function addBundleToCart() {
+            const keys = Object.keys(bundleItems);
+            if (keys.length === 0) {
+                alert('Vui lòng tích chọn ít nhất 1 phụ kiện quà tặng trước!');
+                return;
+            }
+            keys.forEach(k => {
+                cart.push({
+                    id: 'bundle-' + k + '-' + Date.now(),
+                    type: 'bundle',
+                    title: bundleItems[k].name,
+                    desc: 'Phụ kiện chăm sóc nến chuyên dụng',
+                    price: bundleItems[k].price,
+                    qty: 1
+                });
+            });
+            // Reset bundle checkbox
+            bundleItems = {};
+            document.querySelectorAll('.addon-card input[type="checkbox"]').forEach(cb => cb.checked = false);
+            updateBundleDisplay();
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+        function removeCartItem(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartCount').innerText = cart.length;
+
+            const container = document.getElementById('cartItemsContainer');
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-stone-400 text-xs">
+                        <i data-lucide="shopping-basket" class="w-12 h-12 mx-auto mb-2 opacity-50"></i>
+                        Giỏ hàng đang trống. Hãy tạo một hũ nến độc bản ngay nhé!
+                    </div>
+                `;
+                document.getElementById('cartSubtotal').innerText = '0 VNĐ';
+                document.getElementById('cartDiscount').innerText = '-0 VNĐ';
+                document.getElementById('cartFinalTotal').innerText = '0 VNĐ';
+                lucide.createIcons();
+                return;
+            }
+
+            let subtotal = 0;
+            let html = '';
+
+            cart.forEach((item, idx) => {
+                subtotal += item.price;
+                html += `
+                    <div class="p-3.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-800/40 flex items-start justify-between gap-3 text-xs">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-stone-800 dark:text-stone-100">${item.title}</h4>
+                            <p class="text-[11px] text-stone-500 mt-0.5 leading-relaxed">${item.desc}</p>
+                            <span class="inline-block mt-1.5 font-bold text-amber-700 dark:text-amber-400">${item.price.toLocaleString('vi-VN')} VNĐ</span>
+                        </div>
+                        <button onclick="removeCartItem(${idx})" class="text-stone-400 hover:text-red-500 p-1">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            const discount = Math.round(subtotal * discountRate);
+            const finalTotal = subtotal - discount;
+
+            document.getElementById('cartSubtotal').innerText = `${subtotal.toLocaleString('vi-VN')} VNĐ`;
+            document.getElementById('cartDiscount').innerText = `-${discount.toLocaleString('vi-VN')} VNĐ`;
+            document.getElementById('cartFinalTotal').innerText = `${finalTotal.toLocaleString('vi-VN')} VNĐ`;
+            document.getElementById('qrAmount').innerText = `${finalTotal.toLocaleString('vi-VN')} VNĐ`;
+
+            lucide.createIcons();
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('couponCode').value.trim().toUpperCase();
+            if (code === 'REFILL20') {
+                discountRate = 0.20;
+                alert('Áp dụng thành công mã REFILL20! Bạn được giảm ngay 20% tổng đơn hàng vì tinh thần tiêu dùng bền vững.');
+                updateCartUI();
+            } else if (code === '') {
+                alert('Vui lòng nhập mã giảm giá!');
+            } else {
+                alert('Mã giảm giá không hợp lệ. Bạn hãy thử mã [REFILL20] nhé!');
+            }
+        }
+
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                alert('Giỏ hàng trống! Hãy chọn ít nhất 1 sản phẩm trước khi thanh toán.');
+                return;
+            }
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        function completeOrderSuccess() {
+            alert('🎉 Xác nhận đơn hàng thành công! Đội ngũ nghệ nhân LUMEN & SCENT sẽ bắt đầu chế tác hũ nến thủ công và gửi mã vận đơn qua email của bạn.');
+            cart = [];
+            discountRate = 0;
+            updateCartUI();
+            closeCheckoutModal();
+            toggleCartDrawer();
+        }
+    </script>
+</body>
+</html>

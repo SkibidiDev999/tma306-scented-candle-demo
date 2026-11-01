@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="vi" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATELIER LUMEN | Nến Thơm Thủ Công & Cá Nhân Hóa (Production 3D Engine)</title>
+    <!-- Google Fonts: Hệ thống Typography Editorial & Technical Monospace -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        atelier: {
+                            bg: 'var(--color-bg)',
+                            paper: 'var(--color-paper)',
+                            surface: 'var(--color-surface)',
+                            border: 'var(--color-border)',
+                            ink: 'var(--color-ink)',
+                            muted: 'var(--color-muted)',
+                            accent: 'var(--color-accent)',
+                            accentHover: 'var(--color-accent-hover)',
+                        }
+                    },
+                    fontFamily: {
+                        serif: 'var(--font-serif)',
+                        sans: 'var(--font-sans)',
+                        mono: 'var(--font-mono)',
+                    },
+                    borderRadius: {
+                        'atelier': 'var(--radius-atelier)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Three.js Core & OrbitControls (Full 3D WebGL Engine) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        :root {
+            --color-bg: #f9f8f6;
+            --color-paper: #f2eee9;
+            --color-surface: #ffffff;
+            --color-border: #e2ddd5;
+            --color-ink: #1c1917;
+            --color-muted: #78716c;
+            --color-accent: #966a38;
+            --color-accent-hover: #785226;
+            --font-serif: 'Newsreader', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --radius-atelier: 4px;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-ink);
+            font-family: var(--font-sans);
+            letter-spacing: -0.01em;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .font-editorial { font-family: var(--font-serif); }
+        .font-specs { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+        .hairline-border { border: 1px solid var(--color-border); }
+        .hairline-b { border-bottom: 1px solid var(--color-border); }
+        .hairline-t { border-top: 1px solid var(--color-border); }
+
+        /* 3D Canvas Styling */
+        #webglCanvasContainer {
+            width: 100%;
+            height: 480px;
+            position: relative;
+            cursor: grab;
+            touch-action: none;
+        }
+        #webglCanvasContainer:active {
+            cursor: grabbing;
+        }
+
+        /* 3D Viewport Controls Overlay */
+        .viewport-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            pointer-events: none;
+            background: rgba(28, 25, 23, 0.75);
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #d6d0c7;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .viewport-actions {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .builder-drag-item {
+            cursor: grab;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+        .builder-drag-item:active { cursor: grabbing; }
+        .builder-drag-item.is-dragging { opacity: 0.35; }
+        .drag-target-hover {
+            border-color: var(--color-accent) !important;
+            background-color: rgba(150, 106, 56, 0.08) !important;
+        }
+
+        button, a, input, select {
+            transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+        }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d6d0c7; border-radius: 2px; }
+    </style>
+</head>
+<body class="selection:bg-stone-200 selection:text-stone-900">
+
+    <!-- Canvas ẩn vẽ nhãn Texture 2D độ phân giải 2K để map trực tiếp lên hình trụ 3D -->
+    <canvas id="hiddenLabelCanvas" width="1024" height="640" style="display: none;"></canvas>
+
+    <!-- ======================================================== -->
+    <!-- 0. STUDIO ĐIỀU KHIỂN HỆ THỐNG (THEME & PAGE BUILDER CỦA GIẢNG VIÊN) -->
+    <!-- ======================================================== -->
+    <div id="inspectorWidget" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <button onclick="toggleInspector()" class="flex items-center gap-2.5 bg-stone-900 text-stone-100 px-4 py-2.5 rounded-atelier shadow-lg hover:bg-stone-800 border border-stone-700 text-xs font-mono uppercase tracking-wider">
+            <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>Design System & Layout Inspector</span>
+        </button>
+
+        <div id="inspectorPanel" class="hidden mt-3 w-[440px] bg-stone-900 text-stone-100 rounded-atelier shadow-2xl border border-stone-700 p-5 text-xs transition-all max-h-[85vh] overflow-y-auto font-sans">
+            <div class="flex items-center justify-between pb-3 hairline-b border-stone-700">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                    <span class="font-mono font-semibold tracking-wider uppercase text-[11px] text-stone-300">Live Customizer Inspector</span>
+                </div>
+                <button onclick="toggleInspector()" class="text-stone-400 hover:text-white p-1">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="flex mt-3 p-1 bg-stone-800 rounded-atelier font-mono text-[11px]">
+                <button id="tabBtnTheme" onclick="switchInspectorTab('theme')" class="flex-1 py-1.5 rounded-atelier bg-stone-700 text-stone-100 font-medium">
+                    Typography & Palette
+                </button>
+                <button id="tabBtnLayout" onclick="switchInspectorTab('layout')" class="flex-1 py-1.5 rounded-atelier text-stone-400 hover:text-stone-200">
+                    Bố Cục (Drag & Drop)
+                </button>
+            </div>
+
+            <!-- TAB 1: TYPOGRAPHY & PALETTE -->
+            <div id="tabContentTheme" class="mt-4 space-y-4">
+                <div>
+                    <label class="block font-mono text-[10px] uppercase tracking-widest text-stone-400 mb-2">1. Bảng Màu Thương Hiệu (Curated Palettes)</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="applyPalette('atelier')" class="p-2 border border-stone-700 hover:border-stone-500 rounded-atelier bg-stone-800/80 text-left flex items-center gap-2">
+                            <span class="w-3.5 h-3.5 rounded-sm bg-[#966a38] inline-block"></span>
+                            <span class="font-medium text-[11px]">Atelier Brass (Mặc định)</span>
+                        </button>
+                        <button onclick="applyPalette('monochrome')" class="p-2 border border-stone-700 hover:border-stone-500 rounded-atelier bg-stone-800/80 text-left flex items-center gap-2">
+                            <span class="w-3.5 h-3.5 rounded-sm bg-stone-400 inline-block"></span>
+                            <span class="font-medium text-[11px]">Monochrome Charcoal</span>
+                        </button>
+                        <button onclick="applyPalette('sage')" class="p-2 border border-stone-700 hover:border-stone-500 rounded-atelier bg-stone-800/80 text-left flex items-center gap-2">
+                            <span class="w-3.5 h-3.5 rounded-sm bg-[#4a5849] inline-block"></span>
+                            <span class="font-medium text-[11px]">Botanical Sage</span>
+                        </button>
+                        <button onclick="applyPalette('terracotta')" class="p-2 border border-stone-700 hover:border-stone-500 rounded-atelier bg-stone-800/80 text-left flex items-center gap-2">
+                            <span class="w-3.5 h-3.5 rounded-sm bg-[#b4533c] inline-block"></span>
+                            <span class="font-medium text-[11px]">Raw Terracotta</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pt-3 hairline-t border-stone-700 flex items-center justify-between">
+                    <div>
+                        <span class="font-mono text-[10px] uppercase tracking-widest text-stone-400 block mb-1">Màu Chủ Đạo (Accent)</span>
+                        <div class="flex items-center gap-2">
+                            <input type="color" id="primaryPicker" value="#966a38" onchange="setCustomAccent(this.value)" class="w-7 h-7 rounded border border-stone-700 bg-transparent cursor-pointer">
+                            <span id="accentHex" class="font-mono text-[11px] text-stone-300">#966A38</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="font-mono text-[10px] uppercase tracking-widest text-stone-400 block mb-1">Tông Giấy Nền (Canvas)</span>
+                        <div class="flex items-center gap-2">
+                            <input type="color" id="bgPicker" value="#f9f8f6" onchange="setCustomBg(this.value)" class="w-7 h-7 rounded border border-stone-700 bg-transparent cursor-pointer">
+                            <span id="bgHex" class="font-mono text-[11px] text-stone-300">#F9F8F6</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-3 hairline-t border-stone-700 space-y-3">
+                    <div>
+                        <label class="block font-mono text-[10px] uppercase tracking-widest text-stone-400 mb-1.5">2. Font Tiêu Đề (Editorial Serif)</label>
+                        <select onchange="setHeadingFont(this.value)" class="w-full p-2 rounded-atelier bg-stone-800 border border-stone-700 text-stone-200 text-xs font-mono">
+                            <option value="'Newsreader', serif" selected>Newsreader (Báo chí cổ điển, Tinh tế)</option>
+                            <option value="'Cormorant Garamond', serif">Cormorant Garamond (Nghệ thuật, Sang trọng)</option>
+                            <option value="'Playfair Display', serif">Playfair Display (Cổ điển cao độ)</option>
+                            <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans (Hiện đại tối giản)</option>
+                            <option value="'IBM Plex Mono', monospace">IBM Plex Mono (Brutalist Technical)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block font-mono text-[10px] uppercase tracking-widest text-stone-400 mb-1.5">3. Font Văn Bản (Body Text)</label>
+                        <select onchange="setBodyFont(this.value)" class="w-full p-2 rounded-atelier bg-stone-800 border border-stone-700 text-stone-200 text-xs font-mono">
+                            <option value="'Plus Jakarta Sans', sans-serif" selected>Plus Jakarta Sans (Rõ nét, Dễ đọc tiếng Việt)</option>
+                            <option value="'Inter', sans-serif">Inter (Chuẩn giao diện quốc tế)</option>
+                            <option value="'IBM Plex Mono', monospace">IBM Plex Mono (Monospace phân giải cao)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="pt-3 hairline-t border-stone-700">
+                    <label class="block font-mono text-[10px] uppercase tracking-widest text-stone-400 mb-1.5">4. Kỷ Luật Bo Góc (Geometric Radius)</label>
+                    <div class="grid grid-cols-4 gap-1.5 text-center font-mono text-[11px]">
+                        <button onclick="setRadius('0px')" class="p-1.5 border border-stone-700 hover:border-stone-500 rounded-none bg-stone-800">0px</button>
+                        <button onclick="setRadius('4px')" class="p-1.5 border border-amber-500/80 rounded-[4px] bg-stone-700 font-bold">4px (Mặc định)</button>
+                        <button onclick="setRadius('8px')" class="p-1.5 border border-stone-700 hover:border-stone-500 rounded-[8px] bg-stone-800">8px</button>
+                        <button onclick="setRadius('16px')" class="p-1.5 border border-stone-700 hover:border-stone-500 rounded-[16px] bg-stone-800">16px</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: PAGE BUILDER / REORDER SECTIONS -->
+            <div id="tabContentLayout" class="hidden mt-4 space-y-4">
+                <p class="font-mono text-[10px] text-stone-400 leading-relaxed uppercase">
+                    Kéo thả chuột hoặc sử dụng phím mũi tên để thay đổi thứ tự các khối section trên trang theo yêu cầu của giảng viên.
+                </p>
+
+                <div id="builderSectionList" class="space-y-1.5"></div>
+
+                <div class="pt-3 hairline-t border-stone-700 space-y-2">
+                    <div class="flex items-center justify-between p-2 rounded-atelier bg-stone-800 border border-stone-700">
+                        <span class="font-mono text-[11px]">Đảo cột 3D Customizer (Form ⇋ 3D Viewer):</span>
+                        <button onclick="toggleCustomizerColumns()" class="px-2 py-1 bg-stone-700 hover:bg-stone-600 rounded-atelier font-mono text-[10px] uppercase">Đảo Cột</button>
+                    </div>
+                    <div class="flex items-center justify-between p-2 rounded-atelier bg-stone-800 border border-stone-700">
+                        <span class="font-mono text-[11px]">Căn lề hiển thị:</span>
+                        <button onclick="toggleLayoutWidth()" id="btnLayoutWidth" class="px-2 py-1 bg-stone-700 hover:bg-stone-600 rounded-atelier font-mono text-[10px] uppercase">Boxed (1280px)</button>
+                    </div>
+                    <button onclick="resetSectionOrder()" class="w-full py-2 bg-stone-800 hover:bg-stone-700 border border-stone-700 rounded-atelier font-mono text-[10px] uppercase text-stone-400 hover:text-stone-200">
+                        Khôi Phục Cấu Trúc Mặc Định
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 1. HEADER (EDITORIAL MINIMALISM) -->
+    <!-- ======================================================== -->
+    <header class="bg-atelier-bg hairline-b sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between text-[11px] font-mono text-atelier-muted hairline-b border-stone-200/60">
+            <div class="flex items-center gap-4">
+                <span>SPEC: 100% HYDROGENATED SOY WAX</span>
+                <span class="hidden sm:inline">ORIGIN: BEN TRE / VIETNAM</span>
+                <span class="hidden md:inline">CIRCULAR REFILL: -20% VOUCHER [REFILL20]</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-stone-900 font-medium">BATCH: #2026-AUTUMN</span>
+            </div>
+        </div>
+
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex flex-col">
+                <span class="font-editorial text-2xl sm:text-3xl font-medium tracking-tight uppercase leading-none">LUMEN ATELIER</span>
+                <span class="font-mono text-[10px] tracking-[0.2em] uppercase text-atelier-muted mt-1">Bespoke Olfactory Studio & 3D Lab</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-wider text-stone-700">
+                <a href="#section-customizer" class="hover:text-atelier-accent transition-colors">01. Bespoke 3D Studio</a>
+                <a href="#section-quiz" class="hover:text-atelier-accent transition-colors">02. Scent Consultation</a>
+                <a href="#section-bundle" class="hover:text-atelier-accent transition-colors">03. Tooling & Kits</a>
+                <a href="#section-delivery" class="hover:text-atelier-accent transition-colors">04. Dispatch Protocol</a>
+                <a href="#section-reviews" class="hover:text-atelier-accent transition-colors">05. Production Archive</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button id="soundToggleBtn" onclick="toggleProceduralSound()" class="px-3 py-1.5 rounded-atelier border border-stone-300 bg-white hover:border-stone-500 text-[11px] font-mono flex items-center gap-2">
+                    <span id="soundStatusIndicator" class="w-1.5 h-1.5 rounded-full bg-stone-400 inline-block"></span>
+                    <span id="soundLabel">Acoustic Wick: Off</span>
+                </button>
+
+                <button onclick="toggleCartDrawer()" class="px-3.5 py-1.5 rounded-atelier bg-stone-900 text-white text-[11px] font-mono uppercase tracking-wider flex items-center gap-2 hover:bg-stone-800">
+                    <span>Cart</span>
+                    <span id="cartCountBadge" class="font-specs font-semibold text-amber-300">[0]</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ======================================================== -->
+    <!-- MAIN SECTIONS CONTAINER (HỖ TRỢ DRAG & DROP BỐ CỤC) -->
+    <!-- ======================================================== -->
+    <main id="mainSectionsContainer" class="max-w-7xl mx-auto transition-all">
+
+        <!-- SECTION 1: HERO -->
+        <section id="sec-hero" data-name="01. Hero & Brand Manifesto" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+                <div class="lg:col-span-8 space-y-6">
+                    <div class="font-mono text-xs uppercase tracking-[0.25em] text-atelier-muted">
+                        TMA306 E-Commerce Model / Direct-to-Consumer / Interactive 3D Lab
+                    </div>
+                    <h1 class="font-editorial text-4xl sm:text-6xl lg:text-7xl font-normal leading-[1.05] tracking-tight">
+                        Hương thơm bản thể, <br>
+                        <span class="italic font-normal">định danh qua mô hình 3D đa chiều.</span>
+                    </h1>
+                    <p class="text-base sm:text-lg text-atelier-muted max-w-2xl font-normal leading-relaxed">
+                        Mỗi hũ nến tại xưởng được đổ tay từ 100% sáp đậu nành thực vật nguyên chất, bấc gỗ không xử lý hóa chất và tinh dầu tự nhiên. Trải nghiệm trực quan hóa 3D 360 độ cho phép bạn tùy chỉnh vật liệu, khắc tên riêng và kiểm tra bản in trước khi xuất xưởng.
+                    </p>
+                    <div class="flex flex-wrap items-center gap-4 pt-4">
+                        <a href="#section-customizer" class="px-6 py-3 rounded-atelier bg-stone-900 text-stone-100 hover:bg-stone-800 text-xs font-mono uppercase tracking-wider">
+                            Khởi Chạy 3D Studio
+                        </a>
+                        <a href="#section-quiz" class="px-6 py-3 rounded-atelier border border-stone-300 hover:border-stone-800 text-stone-900 text-xs font-mono uppercase tracking-wider">
+                            Trắc Nghiệm Khứu Giác
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4 bg-atelier-paper p-6 rounded-atelier hairline-border space-y-4">
+                    <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted uppercase pb-3 hairline-b">
+                        <span>3D Interactive Specifications</span>
+                        <span>v2.4 Production</span>
+                    </div>
+                    <div class="font-specs text-xs space-y-2 text-stone-700 leading-relaxed">
+                        <div class="flex justify-between">
+                            <span class="text-atelier-muted">Khung dựng 3D:</span>
+                            <span class="font-medium text-stone-900">WebGL / Three.js PBR Engine</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-atelier-muted">Vật liệu mô phỏng:</span>
+                            <span class="font-medium text-stone-900">Physical Amber / Ceramic / Terrazzo</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-atelier-muted">Nhãn in động:</span>
+                            <span class="font-medium text-stone-900">2K Dynamic Canvas Texture Map</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-atelier-muted">Mô phỏng ngọn lửa:</span>
+                            <span class="font-medium text-stone-900">Raycast Flicker Lighting</span>
+                        </div>
+                    </div>
+                    <div class="pt-3 hairline-t text-[11px] text-atelier-muted italic">
+                        "Giữ chuột trái để xoay 360 độ, cuộn chuột để phóng to/thu nhỏ hũ nến."
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: EXTENSION 1 - FULL 3D INTERACTIVE CANDLE STUDIO -->
+        <section id="section-customizer" data-name="02. Extension 1: Bespoke 3D Studio" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
+            <div class="max-w-3xl mb-12">
+                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-2">Extension 01 / Three.js 3D Production Studio</span>
+                <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Bespoke 3D Studio: Trực Quan Hóa Hũ Nến Đơn Bản</h2>
+                <p class="text-sm text-atelier-muted mt-2 leading-relaxed">
+                    Xoay đa góc nhìn 360 độ, chọn chất liệu phôi hũ thực tế và quan sát nhãn in cá nhân hóa được ánh xạ trực tiếp lên bề mặt hình trụ theo thời gian thực.
+                </p>
+            </div>
+
+            <div id="customizerGrid" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Cột Form cấu hình thông số -->
+                <div id="customizerFormCol" class="lg:col-span-6 bg-white p-6 sm:p-8 rounded-atelier hairline-border space-y-6">
+                    <!-- Bước 1: Chất liệu hũ 3D -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2.5">
+                            <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 font-semibold">1. Lựa chọn chất liệu phôi hũ 3D</label>
+                            <span class="font-mono text-[10px] text-atelier-muted">PBR Physical Shaders</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="set3DVessel('amber')" id="vesselBtn-amber" class="vessel-btn p-3 rounded-atelier border-2 border-stone-900 bg-stone-50 text-left">
+                                <span class="font-mono text-[10px] text-atelier-muted block">01 / Glass</span>
+                                <span class="font-medium text-xs text-stone-900 block mt-1">Thủy tinh hổ phách</span>
+                                <span class="font-specs text-[11px] text-stone-600 block mt-1">289.000 đ</span>
+                            </button>
+                            <button onclick="set3DVessel('ceramic')" id="vesselBtn-ceramic" class="vessel-btn p-3 rounded-atelier border border-stone-300 hover:border-stone-500 text-left">
+                                <span class="font-mono text-[10px] text-atelier-muted block">02 / Ceramic</span>
+                                <span class="font-medium text-xs text-stone-900 block mt-1">Gốm Bát Tràng</span>
+                                <span class="font-specs text-[11px] text-stone-600 block mt-1">+25.000 đ</span>
+                            </button>
+                            <button onclick="set3DVessel('terrazzo')" id="vesselBtn-terrazzo" class="vessel-btn p-3 rounded-atelier border border-stone-300 hover:border-stone-500 text-left">
+                                <span class="font-mono text-[10px] text-atelier-muted block">03 / Terrazzo</span>
+                                <span class="font-medium text-xs text-stone-900 block mt-1">Khoáng xi măng</span>
+                                <span class="font-specs text-[11px] text-stone-600 block mt-1">+35.000 đ</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bước 2: Loại bấc nến 3D -->
+                    <div>
+                        <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 font-semibold block mb-2.5">2. Cấu trúc bấc nến 3D</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="set3DWick('wood')" id="wickBtn-wood" class="wick-btn p-3 rounded-atelier border-2 border-stone-900 bg-stone-50 text-left">
+                                <span class="font-medium text-xs text-stone-900 block">Bấc gỗ tự nhiên (Wood Wick)</span>
+                                <span class="text-[11px] text-atelier-muted block mt-0.5">Tiếng nổ tí tách, bản dẹt gỗ phong</span>
+                            </button>
+                            <button onclick="set3DWick('cotton')" id="wickBtn-cotton" class="wick-btn p-3 rounded-atelier border border-stone-300 hover:border-stone-500 text-left">
+                                <span class="font-medium text-xs text-stone-900 block">Bấc bông hữu cơ (Cotton)</span>
+                                <span class="text-[11px] text-atelier-muted block mt-0.5">Sợi tròn đan chéo, ngọn lửa đều</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bước 3: Công thức mùi hương -->
+                    <div>
+                        <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 font-semibold block mb-2.5">3. Công thức mùi hương chưng cất</label>
+                        <select id="scentFormulaSelect" onchange="changeScentFormula(this.value)" class="w-full p-2.5 rounded-atelier border border-stone-300 text-xs font-mono bg-white">
+                            <option value="Formula 01: Oải Hương & Đàn Hương">Formula 01: Oải Hương Provence & Gỗ Đàn Hương (Thư giãn, ngủ sâu)</option>
+                            <option value="Formula 02: Vani Madagascar & Quế Cay">Formula 02: Vani Madagascar & Quế Cay (Ấm áp, hoài niệm)</option>
+                            <option value="Formula 03: Trà Trắng & Tuyết Tùng">Formula 03: Trà Trắng Núi Cao & Gỗ Tuyết Tùng (Tập trung, làm việc sâu)</option>
+                            <option value="Formula 04: Cam Bergamot & Hoa Nhài">Formula 04: Cam Bergamot & Hoa Nhài Mộc (Thanh khiết, phục hồi)</option>
+                        </select>
+                    </div>
+
+                    <!-- Bước 4: Nhãn in cá nhân hóa (Ánh xạ trực tiếp lên mô hình 3D) -->
+                    <div class="p-4 rounded-atelier bg-atelier-paper hairline-border space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="font-mono text-[11px] uppercase tracking-wider text-stone-800 font-semibold">4. Định danh nhãn in (Live Dynamic Texture 3D)</span>
+                            <span class="font-mono text-[10px] text-emerald-700 font-semibold">● Realtime Sync</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="font-mono text-[10px] uppercase text-atelier-muted block mb-1">Tên người nhận (Recipient):</label>
+                                <input type="text" id="inputRecipient" value="HOÀNG LAN" oninput="update3DLabelTexture()" class="w-full p-2 rounded-atelier border border-stone-300 text-xs font-mono uppercase bg-white">
+                            </div>
+                            <div>
+                                <label class="font-mono text-[10px] uppercase text-atelier-muted block mb-1">Cung hoàng đạo (Zodiac):</label>
+                                <select id="inputZodiac" onchange="update3DLabelTexture()" class="w-full p-2 rounded-atelier border border-stone-300 text-xs font-mono bg-white">
+                                    <option value="ARIES / BẠCH DƯƠNG">Aries / Bạch Dương</option>
+                                    <option value="TAURUS / KIM NGƯU">Taurus / Kim Ngưu</option>
+                                    <option value="GEMINI / SONG TỬ">Gemini / Song Tử</option>
+                                    <option value="CANCER / CỰ GIẢI">Cancer / Cự Giải</option>
+                                    <option value="LEO / SƯ TỬ">Leo / Sư Tử</option>
+                                    <option value="VIRGO / XỬ NỮ" selected>Virgo / Xử Nữ</option>
+                                    <option value="LIBRA / THIÊN BÌNH">Libra / Thiên Bình</option>
+                                    <option value="SCORPIO / BỌ CẠP">Scorpio / Bọ Cạp</option>
+                                    <option value="SAGITTARIUS / NHÂN MÃ">Sagittarius / Nhân Mã</option>
+                                    <option value="CAPRICORN / MA KẾT">Capricorn / Ma Kết</option>
+                                    <option value="AQUARIUS / BẢO BÌNH">Aquarius / Bảo Bình</option>
+                                    <option value="PISCES / SONG NGƯ">Pisces / Song Ngư</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="font-mono text-[10px] uppercase text-atelier-muted block mb-1">Thông điệp in dập (Custom Inscription):</label>
+                            <input type="text" id="inputMessage" value="Mong mọi áp lực đều tan biến theo làn hương an yên." oninput="update3DLabelTexture()" class="w-full p-2 rounded-atelier border border-stone-300 text-xs font-sans bg-white">
+                        </div>
+                    </div>
+
+                    <!-- Nút chốt đơn -->
+                    <div class="pt-2 flex items-center justify-between font-mono">
+                        <div>
+                            <span class="text-[10px] text-atelier-muted uppercase block">Tổng giá trị định hình:</span>
+                            <span id="customizerTotalPrice" class="font-specs text-xl text-stone-900 font-bold">289.000 đ</span>
+                        </div>
+                        <button onclick="addCustomCandleToCart()" class="px-6 py-3 rounded-atelier bg-stone-900 hover:bg-stone-800 text-white font-mono text-xs uppercase tracking-wider font-semibold">
+                            Lưu Cấu Hình & Thêm Vào Giỏ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cột Khung Render WebGL 3D Tương Tác 360 độ -->
+                <div id="customizerPreviewCol" class="lg:col-span-6 bg-stone-950 text-stone-100 rounded-atelier hairline-border border-stone-800 relative overflow-hidden flex flex-col justify-between">
+                    
+                    <!-- Viewport Header Badge -->
+                    <div class="viewport-badge">
+                        <span>Interactive 3D Engine • 360° Drag & Zoom</span>
+                    </div>
+
+                    <!-- Canvas 3D Viewport -->
+                    <div id="webglCanvasContainer">
+                        <!-- Canvas Three.js sẽ được inject tự động vào đây -->
+                    </div>
+
+                    <!-- Viewport Footer Actions -->
+                    <div class="p-4 bg-stone-900/90 hairline-t border-stone-800 flex items-center justify-between text-[11px] font-mono text-stone-400">
+                        <div class="flex items-center gap-3">
+                            <button onclick="toggle3DFlame()" id="flameToggleBtn" class="px-3 py-1.5 rounded-atelier bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 flex items-center gap-1.5">
+                                <span id="flameIndicator" class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                                <span id="flameStatusText">Ngọn Lửa: Bật</span>
+                            </button>
+                            <button onclick="reset3DCamera()" class="px-3 py-1.5 rounded-atelier bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700">
+                                Đặt Lại Góc Nhìn
+                            </button>
+                        </div>
+                        <div class="hidden sm:flex items-center gap-2 text-[10px] text-stone-500">
+                            <span>Kéo chuột để xoay</span>
+                            <span>•</span>
+                            <span>Lăn chuột để zoom</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: EXTENSION 2 - SCENT CONSULTATION QUIZ -->
+        <section id="section-quiz" data-name="03. Extension 2: Scent Consultation" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b bg-atelier-paper">
+            <div class="max-w-3xl mx-auto text-center space-y-3 mb-10">
+                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted">Extension 02 / Olfactory Consultation</span>
+                <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Chẩn Đoán Khứu Giác Theo Trạng Thái Thần Kinh</h2>
+                <p class="text-sm text-atelier-muted leading-relaxed">
+                    Hệ thống phân tích 3 bước dựa trên bảng phân loại trị liệu tinh dầu tự nhiên để đưa ra công thức tương thích với nhu cầu phục hồi năng lượng của bạn.
+                </p>
+            </div>
+
+            <div class="max-w-2xl mx-auto bg-white p-6 sm:p-10 rounded-atelier hairline-border shadow-sm">
+                <!-- Step 1 -->
+                <div id="quizStep1" class="space-y-4">
+                    <div class="flex justify-between items-center font-mono text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                        <span>Câu hỏi 01 / 03: Trạng thái tinh thần hiện tại</span>
+                        <span>[Phase 1]</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <button onclick="selectQuizAnswer(1, 'stress')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[10px] text-atelier-muted block">Profile A</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-1">Căng thẳng trí não, quá tải thông tin</span>
+                            <span class="text-[11px] text-atelier-muted block mt-1">Cần hạ dịu xung thần kinh</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(1, 'insomnia')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[10px] text-atelier-muted block">Profile B</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-1">Trằn trọc, giấc ngủ không sâu</span>
+                            <span class="text-[11px] text-atelier-muted block mt-1">Cần tầng hương trầm ấm vỗ về</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(1, 'focus')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[10px] text-atelier-muted block">Profile C</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-1">Mất tập trung, uể oải giữa giờ</span>
+                            <span class="text-[11px] text-atelier-muted block mt-1">Cần thanh lọc, kích thích sáng tạo</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(1, 'warmth')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-mono text-[10px] text-atelier-muted block">Profile D</span>
+                            <span class="font-medium text-xs text-stone-900 block mt-1">Cần cảm giác thân thuộc, ấm cúng</span>
+                            <span class="text-[11px] text-atelier-muted block mt-1">Không gian riêng tư hoặc đọc sách</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div id="quizStep2" class="hidden space-y-4">
+                    <div class="flex justify-between items-center font-mono text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                        <span>Câu hỏi 02 / 03: Diện tích không gian thắp</span>
+                        <span>[Phase 2]</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <button onclick="selectQuizAnswer(2, 'desk')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-medium text-xs text-stone-900 block">Bàn làm việc cá nhân (&lt; 15m²)</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(2, 'bedroom')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-medium text-xs text-stone-900 block">Phòng ngủ khép kín (15 - 25m²)</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(2, 'living')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-medium text-xs text-stone-900 block">Phòng khách / không gian mở (&gt; 30m²)</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(2, 'studio')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-medium text-xs text-stone-900 block">Xưởng thủ công / Yoga studio</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div id="quizStep3" class="hidden space-y-4">
+                    <div class="flex justify-between items-center font-mono text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                        <span>Câu hỏi 03 / 03: Tông mùi thiên hướng</span>
+                        <span>[Phase 3]</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <button onclick="selectQuizAnswer(3, 'woody')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-medium text-xs text-stone-900 block">Woody / Gỗ trầm, rêu sồi, khói mộc</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(3, 'floral')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-medium text-xs text-stone-900 block">Herbal Floral / Oải hương, xô thơm, cúc</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(3, 'fresh')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-medium text-xs text-stone-900 block">Citrus Fresh / Trà núi, bưởi hồng, sương</span>
+                        </button>
+                        <button onclick="selectQuizAnswer(3, 'gourmand')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
+                            <span class="font-medium text-xs text-stone-900 block">Warm Gourmand / Vani, đậu tonka, quế</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kết quả chẩn đoán -->
+                <div id="quizResult" class="hidden space-y-5 text-left">
+                    <div class="flex justify-between items-center font-mono text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
+                        <span>Diagnosis Complete</span>
+                        <span class="text-emerald-700 font-semibold">[Matched 98%]</span>
+                    </div>
+
+                    <div>
+                        <span class="font-mono text-[10px] uppercase text-atelier-muted tracking-wider block">Recommended Compound</span>
+                        <h3 id="quizCompoundName" class="font-editorial text-2xl sm:text-3xl font-medium text-stone-900 mt-0.5">
+                            Formula 01: Oải Hương Provence & Gỗ Đàn Hương
+                        </h3>
+                    </div>
+
+                    <div class="bg-atelier-bg p-4 rounded-atelier hairline-border font-specs text-xs space-y-2">
+                        <div class="flex justify-between pb-1.5 hairline-b border-stone-200">
+                            <span class="text-atelier-muted">Top Notes (0 - 15 phút):</span>
+                            <span id="quizTopNotes" class="font-medium text-stone-900">Cam Bergamot & Cúc La Mã</span>
+                        </div>
+                        <div class="flex justify-between pb-1.5 hairline-b border-stone-200">
+                            <span class="text-atelier-muted">Heart Notes (15 - 60 phút):</span>
+                            <span id="quizHeartNotes" class="font-medium text-stone-900">Oải hương Pháp & Xô thơm mộc</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-atelier-muted">Base Notes (&gt; 60 phút):</span>
+                            <span id="quizBaseNotes" class="font-medium text-stone-900">Gỗ tuyết tùng & Hổ phách nhựa cây</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-2">
+                        <button onclick="applyQuizToStudio()" class="px-5 py-2.5 rounded-atelier bg-stone-900 hover:bg-stone-800 text-white font-mono text-xs uppercase tracking-wider">
+                            Áp Dụng Công Thức Vào Hũ Nến 3D
+                        </button>
+                        <button onclick="resetQuiz()" class="px-4 py-2.5 rounded-atelier border border-stone-300 text-stone-600 font-mono text-xs uppercase">
+                            Chẩn Đoán Lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: EXTENSION 3 - ACCESSORY TOOLING (BUNDLE) -->
+        <section id="section-bundle" data-name="03. Extension 3: Tooling & Bundle" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
+            <div class="max-w-3xl mb-12">
+                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-2">Extension 03 / Tooling & Preservation</span>
+                <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Dụng Cụ Chăm Sóc Nến & Hộp Quà Giấy Dệt</h2>
+                <p class="text-sm text-atelier-muted mt-2 leading-relaxed">
+                    Công cụ chuẩn mực để duy trì tuổi thọ bấc nến và triệt tiêu muội than. Chọn thêm dụng cụ để hưởng chính sách chiết khấu 15% gói Bundle.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Tool 1 -->
+                <div class="p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
+                    <div>
+                        <div class="font-mono text-[10px] text-atelier-muted uppercase pb-2 hairline-b mb-3">REF. 01 / BRASS</div>
+                        <h4 class="font-medium text-sm text-stone-900">Kéo Cắt Bấc Mạ Đồng Thau</h4>
+                        <p class="text-xs text-atelier-muted mt-1 leading-relaxed">Cắt bấc chuẩn 5mm trước mỗi lần thắp, hạn chế tối đa ngọn lửa bùng và khói đen.</p>
+                    </div>
+                    <div class="pt-4 hairline-t flex items-center justify-between mt-4">
+                        <span class="font-specs text-xs font-semibold text-stone-900">65.000 đ</span>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-xs font-mono">
+                            <input type="checkbox" onchange="toggleBundle('trimmer', 65000, 'Kéo Cắt Bấc Đồng Thau')" class="rounded-none text-stone-900">
+                            <span>Chọn</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Tool 2 -->
+                <div class="p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
+                    <div>
+                        <div class="font-mono text-[10px] text-atelier-muted uppercase pb-2 hairline-b mb-3">REF. 02 / STEEL</div>
+                        <h4 class="font-medium text-sm text-stone-900">Chuông Dập Lửa Khử Khói</h4>
+                        <p class="text-xs text-atelier-muted mt-1 leading-relaxed">Dập tắt bằng cơ chế cô lập oxy, triệt tiêu hoàn toàn mùi khét của bấc tàn.</p>
+                    </div>
+                    <div class="pt-4 hairline-t flex items-center justify-between mt-4">
+                        <span class="font-specs text-xs font-semibold text-stone-900">55.000 đ</span>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-xs font-mono">
+                            <input type="checkbox" onchange="toggleBundle('snuffer', 55000, 'Chuông Dập Lửa Khử Khói')" class="rounded-none text-stone-900">
+                            <span>Chọn</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Tool 3 -->
+                <div class="p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
+                    <div>
+                        <div class="font-mono text-[10px] text-atelier-muted uppercase pb-2 hairline-b mb-3">REF. 03 / WOOD</div>
+                        <h4 class="font-medium text-sm text-stone-900">Diêm Dài Thảo Mộc 10cm</h4>
+                        <p class="text-xs text-atelier-muted mt-1 leading-relaxed">Que gỗ thông tự nhiên dài 10cm, an toàn tuyệt đối khi thắp nến ở đáy sâu.</p>
+                    </div>
+                    <div class="pt-4 hairline-t flex items-center justify-between mt-4">
+                        <span class="font-specs text-xs font-semibold text-stone-900">25.000 đ</span>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-xs font-mono">
+                            <input type="checkbox" onchange="toggleBundle('matches', 25000, 'Diêm Dài Thảo Mộc 10cm')" class="rounded-none text-stone-900">
+                            <span>Chọn</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Tool 4 -->
+                <div class="p-5 rounded-atelier hairline-border bg-white flex flex-col justify-between">
+                    <div>
+                        <div class="font-mono text-[10px] text-atelier-muted uppercase pb-2 hairline-b mb-3">REF. 04 / KRAFT</div>
+                        <h4 class="font-medium text-sm text-stone-900">Hộp Carton Dệt & Thiệp Sáp</h4>
+                        <p class="text-xs text-atelier-muted mt-1 leading-relaxed">Đóng gói thủ công với rơm giấy gỗ mộc và thiệp niêm phong sáp hữu cơ.</p>
+                    </div>
+                    <div class="pt-4 hairline-t flex items-center justify-between mt-4">
+                        <span class="font-specs text-xs font-semibold text-stone-900">39.000 đ</span>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-xs font-mono">
+                            <input type="checkbox" onchange="toggleBundle('box', 39000, 'Hộp Quà Carton & Thiệp Sáp')" class="rounded-none text-stone-900">
+                            <span>Chọn</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 p-5 rounded-atelier bg-atelier-paper hairline-border flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="font-mono text-xs text-stone-700">
+                    <span class="text-atelier-muted uppercase">Dụng cụ đã cấu hình: </span>
+                    <span id="bundleSummaryText" class="font-medium">Chưa có phụ kiện nào</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right font-mono">
+                        <span class="text-[10px] text-atelier-muted uppercase block">Tổng phụ kiện:</span>
+                        <span id="bundleTotalVal" class="font-specs text-base font-semibold text-stone-900">0 đ</span>
+                    </div>
+                    <button onclick="addBundleToCart()" class="px-5 py-2.5 rounded-atelier bg-stone-900 hover:bg-stone-800 text-white font-mono text-xs uppercase tracking-wider">
+                        Thêm Dụng Cụ Vào Giỏ
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: EXTENSION 5 - DISPATCH SCHEDULE -->
+        <section id="section-delivery" data-name="04. Extension 5: Dispatch Schedule" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
+            <div class="max-w-3xl mb-10">
+                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-2">Extension 05 / Dispatch Protocol</span>
+                <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Đặt Lịch Điều Phối Quà Tặng Theo Thời Điểm</h2>
+                <p class="text-sm text-atelier-muted mt-2 leading-relaxed">
+                    Xác lập thời điểm bàn giao bưu phẩm chính xác nhằm đảm bảo trải nghiệm quà tặng vào các dịp kỷ niệm hoặc sinh nhật.
+                </p>
+            </div>
+
+            <div class="max-w-2xl bg-white p-6 sm:p-8 rounded-atelier hairline-border space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 block mb-1.5 font-semibold">Ngày nhận quà ấn định:</label>
+                        <input type="date" id="deliveryDateInput" class="w-full p-2.5 rounded-atelier border border-stone-300 font-mono text-xs bg-white">
+                    </div>
+                    <div>
+                        <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 block mb-1.5 font-semibold">Khung giờ điều phối:</label>
+                        <select class="w-full p-2.5 rounded-atelier border border-stone-300 font-mono text-xs bg-white">
+                            <option>Ca 1: 09:00 - 12:00 (Buổi sáng)</option>
+                            <option selected>Ca 2: 14:00 - 17:00 (Giờ hành chính)</option>
+                            <option>Ca 3: 18:30 - 21:00 (Buổi tối)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="pt-2 flex items-center gap-2">
+                    <input type="checkbox" id="anonymousDispatch" class="rounded-none text-stone-900 w-4 h-4">
+                    <label for="anonymousDispatch" class="text-xs text-stone-700 font-sans cursor-pointer">
+                        Giao hàng ẩn danh (Không in thông tin người gửi trên vận đơn bưu cục để tạo bất ngờ).
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: 7C ARCHIVE & EVIDENCE (COMMUNITY) -->
+        <section id="section-reviews" data-name="05. 7C Community: Archive" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b bg-atelier-paper">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-2">7C Framework / Community & Verification</span>
+                    <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Lưu Trữ Đánh Giá Từ Đơn Hàng Thực Nghiệm</h2>
+                </div>
+                <div class="mt-4 md:mt-0 font-mono text-xs text-atelier-muted">
+                    <span class="font-specs font-bold text-stone-900 text-xl">4.92 / 5.0</span>
+                    <span class="block">Tổng số 842 biên bản nghiệm thu sản phẩm</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Review 1 -->
+                <div class="p-6 bg-white rounded-atelier hairline-border space-y-3 font-sans">
+                    <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted pb-2 hairline-b">
+                        <span>VERIFIED ORDER #VN-8921</span>
+                        <span class="font-specs">10/2026</span>
+                    </div>
+                    <div class="text-xs font-semibold text-stone-900">Phạm Minh Thư (Nhân viên tài chính)</div>
+                    <p class="text-xs text-stone-600 leading-relaxed">
+                        "Mô hình 3D trên web tái hiện chất liệu gốm Bát Tràng rất chân thực. Khi nhận hàng thực tế, nhãn in dập đúng từng dấu phẩy của lời chúc. Mùi đàn hương đằm sâu, không bị gắt mùi hương liệu tổng hợp."
+                    </p>
+                    <div class="font-mono text-[10px] text-stone-500 pt-2">
+                        Spec: 3D Ceramic Vessel • Wood Wick • Formula 01
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="p-6 bg-white rounded-atelier hairline-border space-y-3 font-sans">
+                    <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted pb-2 hairline-b">
+                        <span>VERIFIED ORDER #VN-8874</span>
+                        <span class="font-specs">10/2026</span>
+                    </div>
+                    <div class="text-xs font-semibold text-stone-900">Lê Quốc Anh (Kiến trúc sư)</div>
+                    <p class="text-xs text-stone-600 leading-relaxed">
+                        "Bấc gỗ cháy tiếng tanh tách êm tai, ngọn lửa tròn đều. Thao tác xoay 360 độ trên web giúp mình kiểm tra kỹ nhãn trước khi đặt tặng đối tác."
+                    </p>
+                    <div class="font-mono text-[10px] text-stone-500 pt-2">
+                        Spec: 3D Amber Glass • Wood Wick • Formula 03
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="p-6 bg-white rounded-atelier hairline-border space-y-3 font-sans">
+                    <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted pb-2 hairline-b">
+                        <span>VERIFIED ORDER #VN-8799</span>
+                        <span class="font-specs">09/2026</span>
+                    </div>
+                    <div class="text-xs font-semibold text-stone-900">Nguyễn Hải Như (Biên tập viên)</div>
+                    <p class="text-xs text-stone-600 leading-relaxed">
+                        "Dịch vụ hẹn giờ chuẩn xác. Hộp quà giấy dệt rất trang trọng, có thiệp niêm phong sáp thủ công đúng chất atelier truyền thống."
+                    </p>
+                    <div class="font-mono text-[10px] text-stone-500 pt-2">
+                        Spec: Complete Gift Bundle • Formula 02
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: SUSTAINABILITY & CIRCULAR ECONOMY -->
+        <section id="section-story" data-name="06. Sustainability Manifesto" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-4">
+                    <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block">Circular Economy / Refill Mandate</span>
+                    <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Kinh Tế Tuần Hoàn & Vòng Đời Vỏ Nến</h2>
+                    <p class="text-sm text-atelier-muted leading-relaxed">
+                        Mỗi vỏ hũ sản xuất ra đều được cam kết thu hồi và nạp lại vĩnh viễn. Khi đốt hết sáp, khách hàng gửi vỏ hũ về atelier để được xử lý vô trùng và rót mẻ sáp mới với mức giá giảm 20% qua mã ưu đãi REFILL20.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 pt-4 font-mono">
+                        <div class="p-4 rounded-atelier border border-stone-300 bg-white">
+                            <span class="font-specs text-2xl font-bold text-stone-900 block">-65%</span>
+                            <span class="text-[11px] text-atelier-muted uppercase block mt-1">Giảm thiểu phát thải rác bao bì</span>
+                        </div>
+                        <div class="p-4 rounded-atelier border border-stone-300 bg-white">
+                            <span class="font-specs text-2xl font-bold text-stone-900 block">-20%</span>
+                            <span class="text-[11px] text-atelier-muted uppercase block mt-1">Chiết khấu trực tiếp cho lần refill</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 bg-stone-900 text-stone-100 p-6 sm:p-8 rounded-atelier space-y-4 font-mono text-xs">
+                    <div class="text-[10px] text-stone-400 uppercase tracking-widest pb-2 hairline-b border-stone-800">
+                        Protocol Code: REFILL20
+                    </div>
+                    <div class="space-y-2 text-stone-300">
+                        <div>01. Gửi lại vỏ hũ rỗng về xưởng.</div>
+                        <div>02. Khử khuẩn nhiệt phân ở 100°C.</div>
+                        <div>03. Rót sáp đậu nành mới và bàn giao trong 48h.</div>
+                    </div>
+                    <button onclick="applyRefillVoucher('REFILL20')" class="w-full py-2.5 mt-2 bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 rounded-atelier uppercase tracking-wider text-[11px]">
+                        Áp Dụng Mã Ưu Đãi REFILL20
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ======================================================== -->
+    <!-- 8. CART DRAWER (7C: COMMERCE) -->
+    <!-- ======================================================== -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden font-sans">
+        <div onclick="toggleCartDrawer()" class="absolute inset-0 bg-stone-900/50 backdrop-blur-xs transition-opacity"></div>
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between border-l border-stone-300">
+                <div class="p-6 hairline-b flex items-center justify-between">
+                    <div>
+                        <h3 class="font-mono text-xs uppercase tracking-wider font-bold">Giỏ Hàng Đơn Hàng (Manifest)</h3>
+                        <span class="text-[10px] text-atelier-muted font-mono">Bespoke 3D Production Queue</span>
+                    </div>
+                    <button onclick="toggleCartDrawer()" class="p-1 hover:bg-stone-100 rounded-atelier">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div id="cartItemsList" class="p-6 overflow-y-auto flex-1 space-y-4 font-mono text-xs">
+                    <div class="text-center py-12 text-atelier-muted">Giỏ hàng chưa ghi nhận sản phẩm nào.</div>
+                </div>
+
+                <div class="p-6 hairline-t bg-stone-50 space-y-4 font-mono text-xs">
+                    <div class="flex gap-2">
+                        <input type="text" id="voucherCodeInput" placeholder="MÃ ƯU ĐÃI (REFILL20)" class="w-full p-2 border border-stone-300 uppercase text-xs bg-white rounded-atelier">
+                        <button onclick="applyVoucher()" class="px-4 py-2 bg-stone-900 text-white rounded-atelier uppercase">Áp dụng</button>
+                    </div>
+
+                    <div class="space-y-1.5 font-specs">
+                        <div class="flex justify-between text-stone-600">
+                            <span>Tạm tính:</span>
+                            <span id="cartSubtotalText">0 đ</span>
+                        </div>
+                        <div class="flex justify-between text-emerald-700">
+                            <span>Chiết khấu (Refill):</span>
+                            <span id="cartDiscountText">-0 đ</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold text-stone-900 pt-2 hairline-t">
+                            <span>Tổng quyết toán:</span>
+                            <span id="cartFinalTotalText">0 đ</span>
+                        </div>
+                    </div>
+
+                    <button onclick="openVietQRModal()" class="w-full py-3 bg-stone-900 hover:bg-stone-800 text-white rounded-atelier uppercase tracking-wider font-semibold text-xs">
+                        Xác Nhận & Tạo Mã Quyết Toán VietQR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 9. MODAL VIETQR (COMMERCE CHECKOUT) -->
+    <!-- ======================================================== -->
+    <div id="vietqrModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 font-mono">
+        <div onclick="closeVietQRModal()" class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs"></div>
+        <div class="relative bg-white max-w-md w-full rounded-atelier p-6 shadow-2xl border border-stone-300 z-10 space-y-4 text-xs">
+            <div class="flex justify-between items-center pb-3 hairline-b">
+                <span class="font-bold uppercase tracking-wider">VietQR Settlement Portal</span>
+                <button onclick="closeVietQRModal()" class="text-stone-400 hover:text-stone-800">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div class="text-center space-y-3">
+                <p class="text-stone-600 font-sans text-xs">
+                    Quét mã thanh toán chuẩn Napas247 để chuyển tiền trực tiếp vào tài khoản xưởng:
+                </p>
+                <div class="w-48 h-48 mx-auto bg-white p-2 border border-stone-300 rounded-[2px] flex flex-col items-center justify-center">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=LUMEN-ATELIER-3D-VERIFIED" alt="VietQR" class="w-40 h-40 object-contain">
+                </div>
+                <div class="bg-stone-50 p-3 rounded-atelier space-y-1 text-left font-specs">
+                    <div class="flex justify-between">
+                        <span class="text-atelier-muted">Đơn vị thụ hưởng:</span>
+                        <span class="font-bold text-stone-900">LUMEN ATELIER FTU</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-atelier-muted">Số tiền quyết toán:</span>
+                        <span id="qrFinalAmount" class="font-bold text-stone-900">289.000 đ</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-atelier-muted">Nội dung chuyển khoản:</span>
+                        <span class="font-bold text-stone-900">ORDER 8923</span>
+                    </div>
+                </div>
+                <button onclick="completePaymentSimulation()" class="w-full py-2.5 bg-stone-900 hover:bg-stone-800 text-white rounded-atelier uppercase font-semibold">
+                    Xác Nhận Đã Chuyển Khoản Thành Công
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- 10. FOOTER -->
+    <!-- ======================================================== -->
+    <footer class="bg-stone-950 text-stone-400 py-16 hairline-t border-stone-800 text-xs font-mono">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-3">
+                <span class="font-editorial text-xl font-medium text-stone-100 block">LUMEN ATELIER</span>
+                <p class="text-stone-400 leading-relaxed font-sans">
+                    Nghiên cứu ứng dụng thương mại điện tử D2C học phần TMA306. Phân khúc nến thơm thủ công định danh, tích hợp 3D WebGL và kinh tế tuần hoàn.
+                </p>
+            </div>
+            <div>
+                <span class="text-stone-200 uppercase tracking-widest block mb-2 font-semibold">Quy chuẩn sản xuất</span>
+                <ul class="space-y-1.5 text-stone-400">
+                    <li>100% Sáp đậu nành Bến Tre</li>
+                    <li>Bấc gỗ không ngâm tẩm hóa chất</li>
+                    <li>Tinh dầu chưng cất hơi nước</li>
+                    <li>Bao bì carton dệt sợi tái sinh</li>
+                </ul>
+            </div>
+            <div>
+                <span class="text-stone-200 uppercase tracking-widest block mb-2 font-semibold">Học thuật TMA306</span>
+                <ul class="space-y-1.5 text-stone-400">
+                    <li>Mô hình 8 thành tố Laudon & Traver</li>
+                    <li>Tiêu chuẩn 7C Rayport & Jaworski</li>
+                    <li>WebGL Three.js 3D Configurator</li>
+                    <li>Tuân thủ chuẩn thiết kế chống AI Slop</li>
+                </ul>
+            </div>
+            <div>
+                <span class="text-stone-200 uppercase tracking-widest block mb-2 font-semibold">Atelier Verification</span>
+                <p class="text-stone-400">Đại học Ngoại Thương - Khóa 61/62</p>
+                <p class="text-stone-500 mt-2 font-mono">atelier@lumenscent.edu.vn</p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 hairline-t border-stone-900 text-stone-600 flex justify-between">
+            <span>© 2026 LUMEN ATELIER. All 3D models recorded.</span>
+            <span>WCAG 2.1 AA Compliant</span>
+        </div>
+    </footer>
+
+    <!-- ======================================================== -->
+    <!-- LOGIC SCRIPTS: THREE.JS 3D ENGINE & ATELIER SYSTEMS -->
+    <!-- ======================================================== -->
+    <script>
+        lucide.createIcons();
+
+        // ----------------------------------------------------
+        // A. THREE.JS 3D CANDLE ENGINE (PRODUCTION GRADE)
+        // ----------------------------------------------------
+        let scene, camera, renderer, controls;
+        let candleGroup, vesselMesh, waxMesh, wickMesh, flameMesh, labelMesh;
+        let candleLight, ambientLight, keyLight, fillLight;
+        let labelTexture;
+        let isFlameActive = true;
+
+        const candle3DConfig = {
+            vesselType: 'amber',
+            vesselExtra: 0,
+            vesselName: 'Thủy tinh hổ phách',
+            wickType: 'wood',
+            scentFormula: 'Formula 01: Oải Hương & Đàn Hương',
+            recipient: 'HOÀNG LAN',
+            zodiac: 'VIRGO / XỬ NỮ',
+            message: 'Mong mọi áp lực đều tan biến theo làn hương an yên.',
+            basePrice: 289000
+        };
+
+        function init3DScene() {
+            const container = document.getElementById('webglCanvasContainer');
+            const width = container.clientWidth;
+            const height = container.clientHeight || 480;
+
+            // 1. Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x121110); // Warm studio dark tone
+
+            // 2. Camera
+            camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
+            camera.position.set(0, 1.3, 3.2);
+
+            // 3. Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // 4. OrbitControls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2 + 0.1; // Khống chế góc nhìn không xuyên sàn
+            controls.minDistance = 1.8;
+            controls.maxDistance = 5.0;
+            controls.target.set(0, 0.45, 0);
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 1.2;
+
+            // Dừng tự xoay khi người dùng thao tác
+            container.addEventListener('pointerdown', () => { controls.autoRotate = false; });
+
+            // 5. Lighting Setup (Studio Lighting Rig)
+            ambientLight = new THREE.AmbientLight(0xfff8f0, 0.7);
+            scene.add(ambientLight);
+
+            keyLight = new THREE.DirectionalLight(0xffeedd, 1.4);
+            keyLight.position.set(3, 5, 4);
+            keyLight.castShadow = true;
+            keyLight.shadow.mapSize.width = 1024;
+            keyLight.shadow.mapSize.height = 1024;
+            keyLight.shadow.bias = -0.001;
+            scene.add(keyLight);
+
+            fillLight = new THREE.DirectionalLight(0xb0c4de, 0.4);
+            fillLight.position.set(-4, 2, -3);
+            scene.add(fillLight);
+
+            // PointLight ánh nến nhấp nháy phát quang
+            candleLight = new THREE.PointLight(0xffaa33, 1.8, 3.5);
+            candleLight.position.set(0, 1.05, 0);
+            candleLight.castShadow = true;
+            scene.add(candleLight);
+
+            // 6. Ground Shadow Plane
+            const groundGeo = new THREE.PlaneGeometry(10, 10);
+            const groundMat = new THREE.ShadowMaterial({ opacity: 0.4 });
+            const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+            groundMesh.rotation.x = -Math.PI / 2;
+            groundMesh.position.y = 0;
+            groundMesh.receiveShadow = true;
+            scene.add(groundMesh);
+
+            // 7. Group Hũ Nến
+            candleGroup = new THREE.Group();
+            scene.add(candleGroup);
+
+            buildCandleModel();
+
+            // 8. Resize Listener
+            window.addEventListener('resize', onWindowResize);
+
+            // 9. Animation Loop
+            animate3D();
+        }
+
+        // Tạo vật liệu hũ PBR tương ứng
+        function getVesselMaterial(type) {
+            if (type === 'amber') {
+                return new THREE.MeshPhysicalMaterial({
+                    color: new THREE.Color(0x6e350f),
+                    emissive: new THREE.Color(0x1a0a02),
+                    roughness: 0.15,
+                    metalness: 0.05,
+                    transmission: 0.65,
+                    opacity: 0.95,
+                    transparent: true,
+                    ior: 1.54,
+                    reflectivity: 0.7,
+                    clearcoat: 0.5,
+                    clearcoatRoughness: 0.1
+                });
+            } else if (type === 'ceramic') {
+                return new THREE.MeshStandardMaterial({
+                    color: new THREE.Color(0xebe5dc),
+                    roughness: 0.88,
+                    metalness: 0.02
+                });
+            } else if (type === 'terrazzo') {
+                return new THREE.MeshStandardMaterial({
+                    color: new THREE.Color(0x615c56),
+                    roughness: 0.92,
+                    metalness: 0.05
+                });
+            }
+        }
+
+        function buildCandleModel() {
+            // Xóa cũ nếu có
+            while (candleGroup.children.length > 0) {
+                const obj = candleGroup.children[0];
+                candleGroup.remove(obj);
+            }
+
+            const vesselRadius = 0.55;
+            const vesselHeight = 0.85;
+
+            // 1. Thân hũ nến (Vessel Outer Cylinder)
+            const vesselGeo = new THREE.CylinderGeometry(vesselRadius, vesselRadius, vesselHeight, 48, 1, false);
+            const vesselMat = getVesselMaterial(candle3DConfig.vesselType);
+            vesselMesh = new THREE.Mesh(vesselGeo, vesselMat);
+            vesselMesh.position.y = vesselHeight / 2;
+            vesselMesh.castShadow = true;
+            vesselMesh.receiveShadow = true;
+            candleGroup.add(vesselMesh);
+
+            // Đáy hũ dày dặn
+            const baseGeo = new THREE.CylinderGeometry(vesselRadius * 0.98, vesselRadius * 0.98, 0.04, 32);
+            const baseMesh = new THREE.Mesh(baseGeo, vesselMat);
+            baseMesh.position.y = 0.02;
+            candleGroup.add(baseMesh);
+
+            // 2. Khối sáp đậu nành (Soy Wax Pool)
+            const waxRadius = vesselRadius * 0.94;
+            const waxHeight = vesselHeight * 0.82;
+            const waxGeo = new THREE.CylinderGeometry(waxRadius, waxRadius * 0.96, waxHeight, 36);
+            const waxMat = new THREE.MeshStandardMaterial({
+                color: new THREE.Color(0xf6f1e8),
+                roughness: 0.45,
+                metalness: 0.0
+            });
+            waxMesh = new THREE.Mesh(waxGeo, waxMat);
+            waxMesh.position.y = (waxHeight / 2) + 0.04;
+            waxMesh.receiveShadow = true;
+            candleGroup.add(waxMesh);
+
+            // 3. Bấc nến (Wick)
+            buildWickMesh();
+
+            // 4. Ngọn lửa 3D phát quang (Flame Mesh)
+            buildFlameMesh();
+
+            // 5. Nhãn dán Dynamic Canvas Texture bao quanh mặt trước hũ
+            buildDynamicLabelMesh();
+        }
+
+        function buildWickMesh() {
+            if (wickMesh) candleGroup.remove(wickMesh);
+
+            const waxSurfaceY = (0.85 * 0.82) + 0.04; // Chiều cao mặt sáp
+
+            if (candle3DConfig.wickType === 'wood') {
+                // Bấc gỗ phẳng tự nhiên
+                const wickGeo = new THREE.BoxGeometry(0.12, 0.16, 0.015);
+                const wickMat = new THREE.MeshStandardMaterial({
+                    color: new THREE.Color(0x2a1b12),
+                    roughness: 0.95
+                });
+                wickMesh = new THREE.Mesh(wickGeo, wickMat);
+                wickMesh.position.set(0, waxSurfaceY + 0.07, 0);
+            } else {
+                // Bấc bông tròn
+                const wickGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.14, 16);
+                const wickMat = new THREE.MeshStandardMaterial({
+                    color: new THREE.Color(0x222222),
+                    roughness: 0.8
+                });
+                wickMesh = new THREE.Mesh(wickGeo, wickMat);
+                wickMesh.position.set(0, waxSurfaceY + 0.06, 0);
+            }
+            wickMesh.castShadow = true;
+            candleGroup.add(wickMesh);
+        }
+
+        function buildFlameMesh() {
+            if (flameMesh) candleGroup.remove(flameMesh);
+
+            const flameGeo = new THREE.ConeGeometry(0.06, 0.22, 16);
+            const flameMat = new THREE.MeshBasicMaterial({
+                color: 0xffdd66,
+                transparent: true,
+                opacity: 0.92
+            });
+            flameMesh = new THREE.Mesh(flameGeo, flameMat);
+            flameMesh.position.set(0, wickMesh.position.y + 0.12, 0);
+            flameMesh.visible = isFlameActive;
+            candleGroup.add(flameMesh);
+        }
+
+        // Vẽ 2D Canvas rồi map thành Dynamic Texture dán lên hũ 3D
+        function buildDynamicLabelMesh() {
+            if (labelMesh) candleGroup.remove(labelMesh);
+
+            updateCanvasTextureContent();
+
+            labelTexture = new THREE.CanvasTexture(document.getElementById('hiddenLabelCanvas'));
+            labelTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+            // Dựng một mảng cong cung tròn ôm sát bề mặt hũ nến
+            const labelRadius = 0.552; // Lớn hơn bán kính hũ 0.002 để không bị z-fighting
+            const labelHeight = 0.52;
+            const thetaLength = Math.PI * 0.72; // Góc bao phủ 130 độ mặt trước
+            const thetaStart = -thetaLength / 2;
+
+            const labelGeo = new THREE.CylinderGeometry(
+                labelRadius, labelRadius, labelHeight, 32, 1, true, thetaStart, thetaLength
+            );
+
+            const labelMat = new THREE.MeshStandardMaterial({
+                map: labelTexture,
+                roughness: 0.85,
+                metalness: 0.02,
+                transparent: true,
+                side: THREE.DoubleSide
+            });
+
+            labelMesh = new THREE.Mesh(labelGeo, labelMat);
+            labelMesh.position.y = 0.42; // Căn giữa thân hũ
+            candleGroup.add(labelMesh);
+        }
+
+        function updateCanvasTextureContent() {
+            const canvas = document.getElementById('hiddenLabelCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // 1. Nền giấy mộc dệt sợi (Typewriter Paper)
+            ctx.fillStyle = '#f3ede3';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Viền hairline 2 lớp chuẩn in ấn thủ công
+            ctx.strokeStyle = '#3a3530';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(28, 28, canvas.width - 56, canvas.height - 56);
+
+            // 3. Header thông số
+            ctx.fillStyle = '#2b2622';
+            ctx.font = 'bold 22px "IBM Plex Mono", monospace';
+            ctx.fillText('LUMEN ATELIER', 50, 75);
+
+            ctx.font = '18px "IBM Plex Mono", monospace';
+            ctx.fillText('NET WT. 240G / 8.5 OZ', canvas.width - 320, 75);
+
+            ctx.strokeStyle = '#b0a89d';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, 95);
+            ctx.lineTo(canvas.width - 50, 95);
+            ctx.stroke();
+
+            // 4. Recipient Name
+            ctx.fillStyle = '#6b635b';
+            ctx.font = '20px "IBM Plex Mono", monospace';
+            ctx.fillText('COMPOUNDED & LABELED FOR:', 50, 145);
+
+            ctx.fillStyle = '#11100e';
+            ctx.font = 'bold 46px "IBM Plex Mono", monospace';
+            ctx.fillText((candle3DConfig.recipient || 'HOÀNG LAN').toUpperCase(), 50, 205);
+
+            // 5. Inscription Message
+            ctx.fillStyle = '#2d2824';
+            ctx.font = 'italic 26px "Newsreader", serif';
+            const msg = `"${candle3DConfig.message || 'Mong mọi áp lực đều tan biến theo làn hương an yên.'}"`;
+            wrapText(ctx, msg, 50, 265, canvas.width - 100, 36);
+
+            // 6. Footer Metadata
+            ctx.strokeStyle = '#b0a89d';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(50, 480);
+            ctx.lineTo(canvas.width - 50, 480);
+            ctx.stroke();
+
+            ctx.fillStyle = '#4a443e';
+            ctx.font = 'bold 20px "IBM Plex Mono", monospace';
+            ctx.fillText(`ZODIAC MARK: ${candle3DConfig.zodiac}`, 50, 525);
+            ctx.fillText(`SCENT: ${candle3DConfig.scentFormula.split(':')[0]}`, 50, 565);
+
+            ctx.font = '16px "IBM Plex Mono", monospace';
+            ctx.fillText('BATCH: #VN-2026', canvas.width - 240, 525);
+            ctx.fillText('HAND-POURED ATELIER', canvas.width - 280, 565);
+
+            if (labelTexture) {
+                labelTexture.needsUpdate = true;
+            }
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = ctx.measureText(testLine);
+                const testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
+        function update3DLabelTexture() {
+            candle3DConfig.recipient = document.getElementById('inputRecipient').value || 'RECIPIENT';
+            candle3DConfig.zodiac = document.getElementById('inputZodiac').value;
+            candle3DConfig.message = document.getElementById('inputMessage').value || '';
+            updateCanvasTextureContent();
+        }
+
+        function set3DVessel(type) {
+            candle3DConfig.vesselType = type;
+            document.querySelectorAll('.vessel-btn').forEach(b => {
+                b.classList.remove('border-2', 'border-stone-900', 'bg-stone-50');
+                b.classList.add('border', 'border-stone-300');
+            });
+            document.getElementById(`vesselBtn-${type}`).classList.add('border-2', 'border-stone-900', 'bg-stone-50');
+
+            if (type === 'amber') {
+                candle3DConfig.vesselExtra = 0;
+                candle3DConfig.vesselName = 'Thủy tinh hổ phách';
+            } else if (type === 'ceramic') {
+                candle3DConfig.vesselExtra = 25000;
+                candle3DConfig.vesselName = 'Gốm Bát Tràng';
+            } else if (type === 'terrazzo') {
+                candle3DConfig.vesselExtra = 35000;
+                candle3DConfig.vesselName = 'Khoáng Terrazzo';
+            }
+
+            vesselMesh.material = getVesselMaterial(type);
+            updateCustomizerPricing();
+        }
+
+        function set3DWick(type) {
+            candle3DConfig.wickType = type;
+            document.querySelectorAll('.wick-btn').forEach(b => {
+                b.classList.remove('border-2', 'border-stone-900', 'bg-stone-50');
+                b.classList.add('border', 'border-stone-300');
+            });
+            document.getElementById(`wickBtn-${type}`).classList.add('border-2', 'border-stone-900', 'bg-stone-50');
+            buildWickMesh();
+            buildFlameMesh();
+        }
+
+        function changeScentFormula(val) {
+            candle3DConfig.scentFormula = val;
+            updateCanvasTextureContent();
+        }
+
+        function updateCustomizerPricing() {
+            const total = candle3DConfig.basePrice + candle3DConfig.vesselExtra;
+            document.getElementById('customizerTotalPrice').innerText = `${total.toLocaleString('vi-VN')} đ`;
+        }
+
+        function toggle3DFlame() {
+            isFlameActive = !isFlameActive;
+            if (flameMesh) flameMesh.visible = isFlameActive;
+            if (candleLight) candleLight.intensity = isFlameActive ? 1.8 : 0.0;
+
+            const indicator = document.getElementById('flameIndicator');
+            const statusText = document.getElementById('flameStatusText');
+            if (isFlameActive) {
+                indicator.className = "w-2 h-2 rounded-full bg-amber-400 inline-block";
+                statusText.innerText = "Ngọn Lửa: Bật";
+            } else {
+                indicator.className = "w-2 h-2 rounded-full bg-stone-500 inline-block";
+                statusText.innerText = "Ngọn Lửa: Đã Tắt";
+            }
+        }
+
+        function reset3DCamera() {
+            camera.position.set(0, 1.3, 3.2);
+            controls.target.set(0, 0.45, 0);
+            controls.autoRotate = true;
+            controls.update();
+        }
+
+        function onWindowResize() {
+            const container = document.getElementById('webglCanvasContainer');
+            if (!container || !renderer || !camera) return;
+            const width = container.clientWidth;
+            const height = container.clientHeight || 480;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        let clock = new THREE.Clock();
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+
+            const elapsedTime = clock.getElapsedTime();
+
+            // Hiệu ứng nhấp nháy ngẫu nhiên của ngọn lửa và nguồn sáng PointLight
+            if (isFlameActive && flameMesh) {
+                const flickerScale = 1.0 + Math.sin(elapsedTime * 14) * 0.08 + (Math.random() - 0.5) * 0.06;
+                flameMesh.scale.set(flickerScale, flickerScale * 1.05, flickerScale);
+                flameMesh.position.x = Math.sin(elapsedTime * 10) * 0.005;
+
+                candleLight.intensity = 1.6 + Math.sin(elapsedTime * 16) * 0.25 + (Math.random() - 0.5) * 0.15;
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // ----------------------------------------------------
+        // B. INSPECTOR & THEME SYSTEM (TYPOGRAPHY, PALETTES)
+        // ----------------------------------------------------
+        function toggleInspector() {
+            document.getElementById('inspectorPanel').classList.toggle('hidden');
+        }
+
+        function switchInspectorTab(tab) {
+            const tabTheme = document.getElementById('tabContentTheme');
+            const tabLayout = document.getElementById('tabContentLayout');
+            const btnTheme = document.getElementById('tabBtnTheme');
+            const btnLayout = document.getElementById('tabBtnLayout');
+
+            if (tab === 'theme') {
+                tabTheme.classList.remove('hidden');
+                tabLayout.classList.add('hidden');
+                btnTheme.className = "flex-1 py-1.5 rounded-atelier bg-stone-700 text-stone-100 font-medium";
+                btnLayout.className = "flex-1 py-1.5 rounded-atelier text-stone-400 hover:text-stone-200";
+            } else {
+                tabTheme.classList.add('hidden');
+                tabLayout.classList.remove('hidden');
+                btnLayout.className = "flex-1 py-1.5 rounded-atelier bg-stone-700 text-stone-100 font-medium";
+                btnTheme.className = "flex-1 py-1.5 rounded-atelier text-stone-400 hover:text-stone-200";
+                renderDraggableList();
+            }
+        }
+
+        const palettes = {
+            atelier: { bg: '#f9f8f6', paper: '#f2eee9', border: '#e2ddd5', ink: '#1c1917', muted: '#78716c', accent: '#966a38' },
+            monochrome: { bg: '#fbfbfb', paper: '#f4f4f4', border: '#e5e5e5', ink: '#111111', muted: '#666666', accent: '#404040' },
+            sage: { bg: '#f6f7f5', paper: '#edf0eb', border: '#dbe0d8', ink: '#18241b', muted: '#5c6b5e', accent: '#4a5849' },
+            terracotta: { bg: '#faf6f3', paper: '#f5ebe4', border: '#e8dbd2', ink: '#2a1a14', muted: '#7d5c50', accent: '#b4533c' }
+        };
+
+        function applyPalette(key) {
+            const p = palettes[key];
+            if (!p) return;
+            const r = document.documentElement;
+            r.style.setProperty('--color-bg', p.bg);
+            r.style.setProperty('--color-paper', p.paper);
+            r.style.setProperty('--color-border', p.border);
+            r.style.setProperty('--color-ink', p.ink);
+            r.style.setProperty('--color-muted', p.muted);
+            r.style.setProperty('--color-accent', p.accent);
+
+            document.getElementById('primaryPicker').value = p.accent;
+            document.getElementById('accentHex').innerText = p.accent.toUpperCase();
+            document.getElementById('bgPicker').value = p.bg;
+            document.getElementById('bgHex').innerText = p.bg.toUpperCase();
+        }
+
+        function setCustomAccent(hex) {
+            document.documentElement.style.setProperty('--color-accent', hex);
+            document.getElementById('accentHex').innerText = hex.toUpperCase();
+        }
+
+        function setCustomBg(hex) {
+            document.documentElement.style.setProperty('--color-bg', hex);
+            document.getElementById('bgHex').innerText = hex.toUpperCase();
+        }
+
+        function setHeadingFont(fontVal) {
+            document.documentElement.style.setProperty('--font-serif', fontVal);
+        }
+
+        function setBodyFont(fontVal) {
+            document.documentElement.style.setProperty('--font-sans', fontVal);
+        }
+
+        function setRadius(rVal) {
+            document.documentElement.style.setProperty('--radius-atelier', rVal);
+        }
+
+        // ----------------------------------------------------
+        // C. DRAG & DROP SECTION REORDERING
+        // ----------------------------------------------------
+        const defaultSections = [
+            'sec-hero',
+            'section-customizer',
+            'section-quiz',
+            'section-bundle',
+            'section-delivery',
+            'section-reviews',
+            'section-story'
+        ];
+
+        let activeSections = [...defaultSections];
+        let dragSourceIndex = null;
+
+        function renderDraggableList() {
+            const listEl = document.getElementById('builderSectionList');
+            const container = document.getElementById('mainSectionsContainer');
+            activeSections = Array.from(container.children).map(c => c.id);
+
+            let html = '';
+            activeSections.forEach((id, idx) => {
+                const sec = document.getElementById(id);
+                if (!sec) return;
+                const name = sec.getAttribute('data-name') || id;
+                const isHidden = sec.classList.contains('hidden');
+
+                html += `
+                    <div id="dragItem-${id}" draggable="true"
+                         ondragstart="onDragStart(event, ${idx})"
+                         ondragover="onDragOver(event)"
+                         ondragleave="onDragLeave(event)"
+                         ondrop="onDrop(event, ${idx})"
+                         class="builder-drag-item flex items-center justify-between p-2 rounded-atelier bg-stone-800 border border-stone-700 text-[11px] font-mono hover:border-stone-500">
+                        <div class="flex items-center gap-2 truncate">
+                            <span class="text-stone-500 select-none cursor-grab">⋮⋮</span>
+                            <span class="${isHidden ? 'line-through text-stone-500' : 'text-stone-200'}">${name}</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="reorderSection(${idx}, -1)" title="Lên trên" class="p-1 hover:text-amber-400 ${idx === 0 ? 'opacity-30' : ''}">↑</button>
+                            <button onclick="reorderSection(${idx}, 1)" title="Xuống dưới" class="p-1 hover:text-amber-400 ${idx === activeSections.length - 1 ? 'opacity-30' : ''}">↓</button>
+                            <button onclick="toggleVisibility('${id}')" title="Ẩn/Hiện" class="p-1 hover:text-amber-400">
+                                <i data-lucide="${isHidden ? 'eye-off' : 'eye'}" class="w-3.5 h-3.5 ${isHidden ? 'text-red-400' : 'text-stone-400'}"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            listEl.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function onDragStart(e, idx) {
+            dragSourceIndex = idx;
+            e.currentTarget.classList.add('is-dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function onDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-target-hover');
+        }
+
+        function onDragLeave(e) {
+            e.currentTarget.classList.remove('drag-target-hover');
+        }
+
+        function onDrop(e, targetIdx) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-target-hover');
+            document.querySelectorAll('.builder-drag-item').forEach(el => el.classList.remove('is-dragging'));
+
+            if (dragSourceIndex === null || dragSourceIndex === targetIdx) return;
+            const item = activeSections.splice(dragSourceIndex, 1)[0];
+            activeSections.splice(targetIdx, 0, item);
+
+            syncDomSections();
+            renderDraggableList();
+        }
+
+        function reorderSection(idx, direction) {
+            const targetIdx = idx + direction;
+            if (targetIdx < 0 || targetIdx >= activeSections.length) return;
+            const item = activeSections.splice(idx, 1)[0];
+            activeSections.splice(targetIdx, 0, item);
+            syncDomSections();
+            renderDraggableList();
+        }
+
+        function syncDomSections() {
+            const container = document.getElementById('mainSectionsContainer');
+            activeSections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) container.appendChild(el);
+            });
+            onWindowResize(); // Đồng bộ lại canvas 3D
+        }
+
+        function toggleVisibility(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.toggle('hidden');
+                renderDraggableList();
+            }
+        }
+
+        function resetSectionOrder() {
+            activeSections = [...defaultSections];
+            activeSections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('hidden');
+            });
+            syncDomSections();
+            renderDraggableList();
+        }
+
+        let isCustomizerSwapped = false;
+        function toggleCustomizerColumns() {
+            const grid = document.getElementById('customizerGrid');
+            const formCol = document.getElementById('customizerFormCol');
+            const previewCol = document.getElementById('customizerPreviewCol');
+            isCustomizerSwapped = !isCustomizerSwapped;
+            if (isCustomizerSwapped) {
+                grid.insertBefore(previewCol, formCol);
+            } else {
+                grid.insertBefore(formCol, previewCol);
+            }
+            onWindowResize();
+        }
+
+        let isBoxedLayout = true;
+        function toggleLayoutWidth() {
+            const container = document.getElementById('mainSectionsContainer');
+            const btn = document.getElementById('btnLayoutWidth');
+            isBoxedLayout = !isBoxedLayout;
+            if (isBoxedLayout) {
+                container.className = "max-w-7xl mx-auto transition-all";
+                btn.innerText = "Boxed (1280px)";
+            } else {
+                container.className = "w-full px-4 transition-all";
+                btn.innerText = "Full-width (Tràn)";
+            }
+            onWindowResize();
+        }
+
+        // ----------------------------------------------------
+        // D. SCENT CONSULTATION QUIZ
+        // ----------------------------------------------------
+        let quizState = {};
+
+        function selectQuizAnswer(step, answer) {
+            quizState[`step${step}`] = answer;
+            if (step === 1) {
+                document.getElementById('quizStep1').classList.add('hidden');
+                document.getElementById('quizStep2').classList.remove('hidden');
+            } else if (step === 2) {
+                document.getElementById('quizStep2').classList.add('hidden');
+                document.getElementById('quizStep3').classList.remove('hidden');
+            } else if (step === 3) {
+                document.getElementById('quizStep3').classList.add('hidden');
+                computeQuizResult();
+                document.getElementById('quizResult').classList.remove('hidden');
+            }
+        }
+
+        function computeQuizResult() {
+            const ans1 = quizState.step1;
+            if (ans1 === 'stress' || ans1 === 'insomnia') {
+                document.getElementById('quizCompoundName').innerText = 'Formula 01: Oải Hương Provence & Gỗ Đàn Hương';
+                document.getElementById('quizTopNotes').innerText = 'Cam Bergamot & Cúc La Mã';
+                document.getElementById('quizHeartNotes').innerText = 'Oải hương Pháp & Xô thơm mộc';
+                document.getElementById('quizBaseNotes').innerText = 'Gỗ tuyết tùng & Hổ phách nhựa cây';
+                candle3DConfig.scentFormula = 'Formula 01: Oải Hương & Đàn Hương';
+            } else if (ans1 === 'focus') {
+                document.getElementById('quizCompoundName').innerText = 'Formula 03: Trà Trắng Núi Cao & Gỗ Tuyết Tùng';
+                document.getElementById('quizTopNotes').innerText = 'Vỏ bưởi xanh & Bạc hà mộc';
+                document.getElementById('quizHeartNotes').innerText = 'Trà trắng Shizuoka & Hoa nhài';
+                document.getElementById('quizBaseNotes').innerText = 'Gỗ tuyết tùng Atlas & Xạ hương trắng';
+                candle3DConfig.scentFormula = 'Formula 03: Trà Trắng & Tuyết Tùng';
+            } else {
+                document.getElementById('quizCompoundName').innerText = 'Formula 02: Vani Madagascar & Quế Cay';
+                document.getElementById('quizTopNotes').innerText = 'Quả mơ chín & Hạnh nhân đắng';
+                document.getElementById('quizHeartNotes').innerText = 'Vani nguyên quả & Nhục đậu khấu';
+                document.getElementById('quizBaseNotes').innerText = 'Vỏ quế Ceylon & Đậu Tonka';
+                candle3DConfig.scentFormula = 'Formula 02: Vani Madagascar & Quế Cay';
+            }
+        }
+
+        function applyQuizToStudio() {
+            document.getElementById('scentFormulaSelect').value = candle3DConfig.scentFormula;
+            changeScentFormula(candle3DConfig.scentFormula);
+            window.location.hash = '#section-customizer';
+        }
+
+        function resetQuiz() {
+            quizState = {};
+            document.getElementById('quizResult').classList.add('hidden');
+            document.getElementById('quizStep1').classList.remove('hidden');
+        }
+
+        // ----------------------------------------------------
+        // E. BUNDLE LOGIC
+        // ----------------------------------------------------
+        let bundleCart = {};
+
+        function toggleBundle(id, price, name) {
+            if (bundleCart[id]) {
+                delete bundleCart[id];
+            } else {
+                bundleCart[id] = { price, name };
+            }
+            updateBundleUI();
+        }
+
+        function updateBundleUI() {
+            const keys = Object.keys(bundleCart);
+            let sum = 0;
+            keys.forEach(k => sum += bundleCart[k].price);
+            document.getElementById('bundleTotalVal').innerText = `${sum.toLocaleString('vi-VN')} đ`;
+            if (keys.length === 0) {
+                document.getElementById('bundleSummaryText').innerText = 'Chưa có phụ kiện nào';
+            } else {
+                document.getElementById('bundleSummaryText').innerText = keys.map(k => bundleCart[k].name).join(' + ');
+            }
+        }
+
+        // ----------------------------------------------------
+        // F. WEB AUDIO SYNTHESIZER
+        // ----------------------------------------------------
+        let audioContext = null;
+        let isAudioPlaying = false;
+        let audioSource = null;
+
+        function toggleProceduralSound() {
+            if (!isAudioPlaying) {
+                startAcousticAudio();
+                document.getElementById('soundStatusIndicator').className = "w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block";
+                document.getElementById('soundLabel').innerText = "Acoustic Wick: On";
+            } else {
+                stopAcousticAudio();
+                document.getElementById('soundStatusIndicator').className = "w-1.5 h-1.5 rounded-full bg-stone-400 inline-block";
+                document.getElementById('soundLabel').innerText = "Acoustic Wick: Off";
+            }
+            isAudioPlaying = !isAudioPlaying;
+        }
+
+        function startAcousticAudio() {
+            try {
+                const Ctx = window.AudioContext || window.webkitAudioContext;
+                audioContext = new Ctx();
+                const bufferSize = audioContext.sampleRate * 2;
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const output = buffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    output[i] = Math.random() > 0.995 ? white * 0.7 : white * 0.02;
+                }
+
+                audioSource = audioContext.createBufferSource();
+                audioSource.buffer = buffer;
+                audioSource.loop = true;
+
+                const filter = audioContext.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 1000;
+
+                const gain = audioContext.createGain();
+                gain.gain.value = 0.2;
+
+                audioSource.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioContext.destination);
+
+                audioSource.start();
+            } catch (err) {
+                console.log("Audio permission error:", err);
+            }
+        }
+
+        function stopAcousticAudio() {
+            if (audioSource) {
+                audioSource.stop();
+                audioSource.disconnect();
+            }
+            if (audioContext) audioContext.close();
+        }
+
+        // ----------------------------------------------------
+        // G. CART & CHECKOUT VIETQR
+        // ----------------------------------------------------
+        let cartItems = [];
+        let activeDiscount = 0;
+
+        function addCustomCandleToCart() {
+            const item = {
+                id: 'candle-' + Date.now(),
+                title: `Hũ Nến Định Danh 3D: ${candle3DConfig.recipient}`,
+                desc: `${candle3DConfig.vesselName} • Bấc: ${candle3DConfig.wickType === 'wood' ? 'Bấc gỗ' : 'Bấc cotton'} • Mùi: ${candle3DConfig.scentFormula.split(':')[0]} • Cung: ${candle3DConfig.zodiac}`,
+                price: candle3DConfig.basePrice + candle3DConfig.vesselExtra
+            };
+            cartItems.push(item);
+            refreshCartUI();
+            toggleCartDrawer();
+        }
+
+        function addBundleToCart() {
+            const keys = Object.keys(bundleCart);
+            if (keys.length === 0) {
+                alert('Vui lòng chọn ít nhất 01 phụ kiện!');
+                return;
+            }
+            keys.forEach(k => {
+                cartItems.push({
+                    id: 'bundle-' + k + '-' + Date.now(),
+                    title: bundleCart[k].name,
+                    desc: 'Dụng cụ chăm sóc nến chuyên dụng',
+                    price: bundleCart[k].price
+                });
+            });
+            bundleCart = {};
+            document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+            updateBundleUI();
+            refreshCartUI();
+            toggleCartDrawer();
+        }
+
+        function removeCartItem(idx) {
+            cartItems.splice(idx, 1);
+            refreshCartUI();
+        }
+
+        function toggleCartDrawer() {
+            document.getElementById('cartDrawer').classList.toggle('hidden');
+        }
+
+        function refreshCartUI() {
+            document.getElementById('cartCountBadge').innerText = `[${cartItems.length}]`;
+            const container = document.getElementById('cartItemsList');
+
+            if (cartItems.length === 0) {
+                container.innerHTML = '<div class="text-center py-12 text-atelier-muted">Giỏ hàng chưa ghi nhận sản phẩm nào.</div>';
+                document.getElementById('cartSubtotalText').innerText = '0 đ';
+                document.getElementById('cartDiscountText').innerText = '-0 đ';
+                document.getElementById('cartFinalTotalText').innerText = '0 đ';
+                return;
+            }
+
+            let subtotal = 0;
+            let html = '';
+            cartItems.forEach((it, i) => {
+                subtotal += it.price;
+                html += `
+                    <div class="p-3 bg-stone-50 rounded-atelier hairline-border flex justify-between items-start">
+                        <div class="space-y-1">
+                            <div class="font-bold text-stone-900">${it.title}</div>
+                            <div class="text-[10px] text-atelier-muted leading-tight">${it.desc}</div>
+                            <div class="font-specs font-semibold text-stone-900 pt-1">${it.price.toLocaleString('vi-VN')} đ</div>
+                        </div>
+                        <button onclick="removeCartItem(${i})" class="text-stone-400 hover:text-red-600 p-1 text-[11px]">Xóa</button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            const discount = Math.round(subtotal * activeDiscount);
+            const finalVal = subtotal - discount;
+
+            document.getElementById('cartSubtotalText').innerText = `${subtotal.toLocaleString('vi-VN')} đ`;
+            document.getElementById('cartDiscountText').innerText = `-${discount.toLocaleString('vi-VN')} đ`;
+            document.getElementById('cartFinalTotalText').innerText = `${finalVal.toLocaleString('vi-VN')} đ`;
+            document.getElementById('qrFinalAmount').innerText = `${finalVal.toLocaleString('vi-VN')} đ`;
+        }
+
+        function applyVoucher() {
+            const code = document.getElementById('voucherCodeInput').value.trim().toUpperCase();
+            if (code === 'REFILL20') {
+                activeDiscount = 0.20;
+                refreshCartUI();
+                alert('Áp dụng thành công mã REFILL20 (Chiết khấu 20% cho chính sách tuần hoàn vỏ hũ).');
+            } else {
+                alert('Mã không hợp lệ. Vui lòng nhập [REFILL20]!');
+            }
+        }
+
+        function applyRefillVoucher(code) {
+            document.getElementById('voucherCodeInput').value = code;
+            toggleCartDrawer();
+            applyVoucher();
+        }
+
+        function openVietQRModal() {
+            if (cartItems.length === 0) {
+                alert('Giỏ hàng trống!');
+                return;
+            }
+            document.getElementById('vietqrModal').classList.remove('hidden');
+        }
+
+        function closeVietQRModal() {
+            document.getElementById('vietqrModal').classList.add('hidden');
+        }
+
+        function completePaymentSimulation() {
+            alert('Xác nhận giao dịch thành công. Thông tin cấu hình 3D đã được ghi nhận vào hàng đợi sản xuất thủ công.');
+            cartItems = [];
+            activeDiscount = 0;
+            refreshCartUI();
+            closeVietQRModal();
+            toggleCartDrawer();
+        }
+
+        // Tự động khởi tạo 3D Scene khi tải xong trang
+        window.addEventListener('DOMContentLoaded', () => {
+            init3DScene();
+        });
+    </script>
+</body>
+</html>
