@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATELIER LUMEN | Nến Thơm Thủ Công & Cá Nhân Hóa (Production 3D Engine)</title>
+    <title>ATELIER LUMEN | Nến Thơm Thủ Công & Cá Nhân Hóa (Advanced 3D & Acoustic)</title>
     <!-- Google Fonts: Hệ thống Typography Editorial & Technical Monospace -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,10 +75,9 @@
         .hairline-b { border-bottom: 1px solid var(--color-border); }
         .hairline-t { border-top: 1px solid var(--color-border); }
 
-        /* 3D Canvas Styling */
         #webglCanvasContainer {
             width: 100%;
-            height: 480px;
+            height: 520px;
             position: relative;
             cursor: grab;
             touch-action: none;
@@ -87,13 +86,12 @@
             cursor: grabbing;
         }
 
-        /* 3D Viewport Controls Overlay */
         .viewport-badge {
             position: absolute;
             top: 16px;
             left: 16px;
             pointer-events: none;
-            background: rgba(28, 25, 23, 0.75);
+            background: rgba(28, 25, 23, 0.85);
             backdrop-filter: blur(8px);
             padding: 6px 12px;
             border-radius: 4px;
@@ -102,16 +100,7 @@
             letter-spacing: 0.1em;
             text-transform: uppercase;
             color: #d6d0c7;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .viewport-actions {
-            position: absolute;
-            bottom: 16px;
-            right: 16px;
-            display: flex;
-            gap: 8px;
-            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.12);
         }
 
         .builder-drag-item {
@@ -269,12 +258,12 @@
     </div>
 
     <!-- ======================================================== -->
-    <!-- 1. HEADER (EDITORIAL MINIMALISM) -->
+    <!-- 1. HEADER & SOUNDSCAPE CONTROL (ADAPTIVE ACOUSTIC ENGINE) -->
     <!-- ======================================================== -->
     <header class="bg-atelier-bg hairline-b sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between text-[11px] font-mono text-atelier-muted hairline-b border-stone-200/60">
             <div class="flex items-center gap-4">
-                <span>SPEC: 100% HYDROGENATED SOY WAX</span>
+                <span>SPEC: 100% SOY WAX</span>
                 <span class="hidden sm:inline">ORIGIN: BEN TRE / VIETNAM</span>
                 <span class="hidden md:inline">CIRCULAR REFILL: -20% VOUCHER [REFILL20]</span>
             </div>
@@ -291,19 +280,28 @@
 
             <div class="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-wider text-stone-700">
                 <a href="#section-customizer" class="hover:text-atelier-accent transition-colors">01. Bespoke 3D Studio</a>
-                <a href="#section-quiz" class="hover:text-atelier-accent transition-colors">02. Scent Consultation</a>
+                <a href="#section-quiz" class="hover:text-atelier-accent transition-colors">02. Scent & Sound Consultation</a>
                 <a href="#section-bundle" class="hover:text-atelier-accent transition-colors">03. Tooling & Kits</a>
                 <a href="#section-delivery" class="hover:text-atelier-accent transition-colors">04. Dispatch Protocol</a>
                 <a href="#section-reviews" class="hover:text-atelier-accent transition-colors">05. Production Archive</a>
             </div>
 
             <div class="flex items-center gap-3">
-                <button id="soundToggleBtn" onclick="toggleProceduralSound()" class="px-3 py-1.5 rounded-atelier border border-stone-300 bg-white hover:border-stone-500 text-[11px] font-mono flex items-center gap-2">
-                    <span id="soundStatusIndicator" class="w-1.5 h-1.5 rounded-full bg-stone-400 inline-block"></span>
-                    <span id="soundLabel">Acoustic Wick: Off</span>
-                </button>
+                <!-- Bộ phát âm nhạc theo tính cách / tâm trạng (Soundscape Engine) -->
+                <div class="flex items-center border border-stone-300 rounded-atelier bg-white p-1">
+                    <select id="soundscapeSelector" onchange="changeSoundscape(this.value)" class="text-[10px] font-mono bg-transparent text-stone-800 pr-2 border-r border-stone-200">
+                        <option value="sleep">Mood 1: 432Hz Deep Slumber</option>
+                        <option value="focus">Mood 2: Alpha Focus Flow</option>
+                        <option value="cozy">Mood 3: Acoustic Warmth</option>
+                        <option value="dawn">Mood 4: Ambient Dawn</option>
+                    </select>
+                    <button id="soundToggleBtn" onclick="toggleSoundscapePlay()" class="px-2.5 py-1 text-[11px] font-mono flex items-center gap-1.5 hover:text-amber-700">
+                        <span id="soundStatusIndicator" class="w-2 h-2 rounded-full bg-stone-400 inline-block"></span>
+                        <span id="soundLabel">Play</span>
+                    </button>
+                </div>
 
-                <button onclick="toggleCartDrawer()" class="px-3.5 py-1.5 rounded-atelier bg-stone-900 text-white text-[11px] font-mono uppercase tracking-wider flex items-center gap-2 hover:bg-stone-800">
+                <button onclick="toggleCartDrawer()" class="px-3.5 py-2 rounded-atelier bg-stone-900 text-white text-[11px] font-mono uppercase tracking-wider flex items-center gap-2 hover:bg-stone-800">
                     <span>Cart</span>
                     <span id="cartCountBadge" class="font-specs font-semibold text-amber-300">[0]</span>
                 </button>
@@ -321,46 +319,46 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
                 <div class="lg:col-span-8 space-y-6">
                     <div class="font-mono text-xs uppercase tracking-[0.25em] text-atelier-muted">
-                        TMA306 E-Commerce Model / Direct-to-Consumer / Interactive 3D Lab
+                        TMA306 E-Commerce Model / Evan Wallace Graphics Paradigm / Sensory Marketing
                     </div>
                     <h1 class="font-editorial text-4xl sm:text-6xl lg:text-7xl font-normal leading-[1.05] tracking-tight">
                         Hương thơm bản thể, <br>
-                        <span class="italic font-normal">định danh qua mô hình 3D đa chiều.</span>
+                        <span class="italic font-normal">định danh bằng quang học và thanh âm.</span>
                     </h1>
                     <p class="text-base sm:text-lg text-atelier-muted max-w-2xl font-normal leading-relaxed">
-                        Mỗi hũ nến tại xưởng được đổ tay từ 100% sáp đậu nành thực vật nguyên chất, bấc gỗ không xử lý hóa chất và tinh dầu tự nhiên. Trải nghiệm trực quan hóa 3D 360 độ cho phép bạn tùy chỉnh vật liệu, khắc tên riêng và kiểm tra bản in trước khi xuất xưởng.
+                        Ứng dụng kỹ thuật đồ họa WebGL tiên tiến (Image-Based Lighting & Subsurface Scattering) kết hợp hệ thống âm nhạc đa cảm xúc nhằm bù đắp rào cản khứu giác trong môi trường thương mại điện tử.
                     </p>
                     <div class="flex flex-wrap items-center gap-4 pt-4">
                         <a href="#section-customizer" class="px-6 py-3 rounded-atelier bg-stone-900 text-stone-100 hover:bg-stone-800 text-xs font-mono uppercase tracking-wider">
                             Khởi Chạy 3D Studio
                         </a>
                         <a href="#section-quiz" class="px-6 py-3 rounded-atelier border border-stone-300 hover:border-stone-800 text-stone-900 text-xs font-mono uppercase tracking-wider">
-                            Trắc Nghiệm Khứu Giác
+                            Trắc Nghiệm Khứu Giác & Âm Nhạc
                         </a>
                     </div>
                 </div>
 
                 <div class="lg:col-span-4 bg-atelier-paper p-6 rounded-atelier hairline-border space-y-4">
                     <div class="flex justify-between items-center text-[10px] font-mono text-atelier-muted uppercase pb-3 hairline-b">
-                        <span>3D Interactive Specifications</span>
-                        <span>v2.4 Production</span>
+                        <span>Physical Shading Specifications</span>
+                        <span>Evan Wallace Paradigm</span>
                     </div>
                     <div class="font-specs text-xs space-y-2 text-stone-700 leading-relaxed">
                         <div class="flex justify-between">
-                            <span class="text-atelier-muted">Khung dựng 3D:</span>
-                            <span class="font-medium text-stone-900">WebGL / Three.js PBR Engine</span>
+                            <span class="text-atelier-muted">Phản xạ môi trường:</span>
+                            <span class="font-medium text-stone-900">Equirectangular Studio IBL</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-atelier-muted">Vật liệu mô phỏng:</span>
-                            <span class="font-medium text-stone-900">Physical Amber / Ceramic / Terrazzo</span>
+                            <span class="text-atelier-muted">Tán xạ sáp nến:</span>
+                            <span class="font-medium text-stone-900">Subsurface Light Attenuation</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-atelier-muted">Nhãn in động:</span>
-                            <span class="font-medium text-stone-900">2K Dynamic Canvas Texture Map</span>
+                            <span class="text-atelier-muted">Ngọn lửa quang sai:</span>
+                            <span class="font-medium text-stone-900">Blue Combustion Base + Smoke</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-atelier-muted">Mô phỏng ngọn lửa:</span>
-                            <span class="font-medium text-stone-900">Raycast Flicker Lighting</span>
+                            <span class="text-atelier-muted">Âm thanh tính cách:</span>
+                            <span class="font-medium text-stone-900">Harmonic Web Audio Synthesis</span>
                         </div>
                     </div>
                     <div class="pt-3 hairline-t text-[11px] text-atelier-muted italic">
@@ -373,7 +371,7 @@
         <!-- SECTION 2: EXTENSION 1 - FULL 3D INTERACTIVE CANDLE STUDIO -->
         <section id="section-customizer" data-name="02. Extension 1: Bespoke 3D Studio" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
             <div class="max-w-3xl mb-12">
-                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-2">Extension 01 / Three.js 3D Production Studio</span>
+                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-2">Extension 01 / Three.js 3D Studio</span>
                 <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Bespoke 3D Studio: Trực Quan Hóa Hũ Nến Đơn Bản</h2>
                 <p class="text-sm text-atelier-muted mt-2 leading-relaxed">
                     Xoay đa góc nhìn 360 độ, chọn chất liệu phôi hũ thực tế và quan sát nhãn in cá nhân hóa được ánh xạ trực tiếp lên bề mặt hình trụ theo thời gian thực.
@@ -388,7 +386,7 @@
                     <div>
                         <div class="flex justify-between items-center mb-2.5">
                             <label class="font-mono text-[11px] uppercase tracking-wider text-stone-700 font-semibold">1. Lựa chọn chất liệu phôi hũ 3D</label>
-                            <span class="font-mono text-[10px] text-atelier-muted">PBR Physical Shaders</span>
+                            <span class="font-mono text-[10px] text-atelier-muted">Physical PBR Shaders</span>
                         </div>
                         <div class="grid grid-cols-3 gap-3">
                             <button onclick="set3DVessel('amber')" id="vesselBtn-amber" class="vessel-btn p-3 rounded-atelier border-2 border-stone-900 bg-stone-50 text-left">
@@ -435,7 +433,7 @@
                         </select>
                     </div>
 
-                    <!-- Bước 4: Nhãn in cá nhân hóa (Ánh xạ trực tiếp lên mô hình 3D) -->
+                    <!-- Bước 4: Nhãn in cá nhân hóa -->
                     <div class="p-4 rounded-atelier bg-atelier-paper hairline-border space-y-3">
                         <div class="flex justify-between items-center">
                             <span class="font-mono text-[11px] uppercase tracking-wider text-stone-800 font-semibold">4. Định danh nhãn in (Live Dynamic Texture 3D)</span>
@@ -485,19 +483,14 @@
                 </div>
 
                 <!-- Cột Khung Render WebGL 3D Tương Tác 360 độ -->
-                <div id="customizerPreviewCol" class="lg:col-span-6 bg-stone-950 text-stone-100 rounded-atelier hairline-border border-stone-800 relative overflow-hidden flex flex-col justify-between">
+                <div id="customizerPreviewCol" class="lg:col-span-6 bg-[#0f0e0d] text-stone-100 rounded-atelier hairline-border border-stone-800 relative overflow-hidden flex flex-col justify-between">
                     
-                    <!-- Viewport Header Badge -->
                     <div class="viewport-badge">
-                        <span>Interactive 3D Engine • 360° Drag & Zoom</span>
+                        <span>Photorealistic WebGL Lab • Evan Wallace Paradigm</span>
                     </div>
 
-                    <!-- Canvas 3D Viewport -->
-                    <div id="webglCanvasContainer">
-                        <!-- Canvas Three.js sẽ được inject tự động vào đây -->
-                    </div>
+                    <div id="webglCanvasContainer"></div>
 
-                    <!-- Viewport Footer Actions -->
                     <div class="p-4 bg-stone-900/90 hairline-t border-stone-800 flex items-center justify-between text-[11px] font-mono text-stone-400">
                         <div class="flex items-center gap-3">
                             <button onclick="toggle3DFlame()" id="flameToggleBtn" class="px-3 py-1.5 rounded-atelier bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 flex items-center gap-1.5">
@@ -509,7 +502,7 @@
                             </button>
                         </div>
                         <div class="hidden sm:flex items-center gap-2 text-[10px] text-stone-500">
-                            <span>Kéo chuột để xoay</span>
+                            <span>Kéo chuột để xoay 360°</span>
                             <span>•</span>
                             <span>Lăn chuột để zoom</span>
                         </div>
@@ -519,13 +512,13 @@
             </div>
         </section>
 
-        <!-- SECTION 3: EXTENSION 2 - SCENT CONSULTATION QUIZ -->
-        <section id="section-quiz" data-name="03. Extension 2: Scent Consultation" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b bg-atelier-paper">
+        <!-- SECTION 3: EXTENSION 2 - SCENT & SOUNDSCAPE CONSULTATION -->
+        <section id="section-quiz" data-name="03. Extension 2: Scent & Sound" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b bg-atelier-paper">
             <div class="max-w-3xl mx-auto text-center space-y-3 mb-10">
-                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted">Extension 02 / Olfactory Consultation</span>
-                <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Chẩn Đoán Khứu Giác Theo Trạng Thái Thần Kinh</h2>
+                <span class="font-mono text-xs uppercase tracking-[0.2em] text-atelier-muted">Extension 02 / Sensory Consultation</span>
+                <h2 class="font-editorial text-3xl sm:text-4xl font-normal">Chẩn Đoán Khứu Giác & Tần Số Âm Thanh Tính Cách</h2>
                 <p class="text-sm text-atelier-muted leading-relaxed">
-                    Hệ thống phân tích 3 bước dựa trên bảng phân loại trị liệu tinh dầu tự nhiên để đưa ra công thức tương thích với nhu cầu phục hồi năng lượng của bạn.
+                    Đồng bộ tầng hương với tần số sóng não tương ứng nhằm tối ưu hóa trạng thái thư giãn và kích hoạt phản xạ xúc cảm theo nghiên cứu của Krishna (2012).
                 </p>
             </div>
 
@@ -538,24 +531,24 @@
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                         <button onclick="selectQuizAnswer(1, 'stress')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[10px] text-atelier-muted block">Profile A</span>
+                            <span class="font-mono text-[10px] text-atelier-muted block">Profile A / Water & Earth</span>
                             <span class="font-medium text-xs text-stone-900 block mt-1">Căng thẳng trí não, quá tải thông tin</span>
-                            <span class="text-[11px] text-atelier-muted block mt-1">Cần hạ dịu xung thần kinh</span>
+                            <span class="text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: 432Hz Theta Healing</span>
                         </button>
                         <button onclick="selectQuizAnswer(1, 'insomnia')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[10px] text-atelier-muted block">Profile B</span>
+                            <span class="font-mono text-[10px] text-atelier-muted block">Profile B / Evening Calm</span>
                             <span class="font-medium text-xs text-stone-900 block mt-1">Trằn trọc, giấc ngủ không sâu</span>
-                            <span class="text-[11px] text-atelier-muted block mt-1">Cần tầng hương trầm ấm vỗ về</span>
+                            <span class="text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Deep Slumber Ambient</span>
                         </button>
                         <button onclick="selectQuizAnswer(1, 'focus')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[10px] text-atelier-muted block">Profile C</span>
+                            <span class="font-mono text-[10px] text-atelier-muted block">Profile C / Air Mind</span>
                             <span class="font-medium text-xs text-stone-900 block mt-1">Mất tập trung, uể oải giữa giờ</span>
-                            <span class="text-[11px] text-atelier-muted block mt-1">Cần thanh lọc, kích thích sáng tạo</span>
+                            <span class="text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Alpha Focus Flow</span>
                         </button>
                         <button onclick="selectQuizAnswer(1, 'warmth')" class="p-4 rounded-atelier border border-stone-200 hover:border-stone-800 text-left">
-                            <span class="font-mono text-[10px] text-atelier-muted block">Profile D</span>
+                            <span class="font-mono text-[10px] text-atelier-muted block">Profile D / Fire Heart</span>
                             <span class="font-medium text-xs text-stone-900 block mt-1">Cần cảm giác thân thuộc, ấm cúng</span>
-                            <span class="text-[11px] text-atelier-muted block mt-1">Không gian riêng tư hoặc đọc sách</span>
+                            <span class="text-[11px] text-atelier-muted block mt-1">Âm thanh đề xuất: Acoustic Warmth</span>
                         </button>
                     </div>
                 </div>
@@ -607,15 +600,18 @@
                 <!-- Kết quả chẩn đoán -->
                 <div id="quizResult" class="hidden space-y-5 text-left">
                     <div class="flex justify-between items-center font-mono text-[11px] text-atelier-muted uppercase pb-2 hairline-b">
-                        <span>Diagnosis Complete</span>
-                        <span class="text-emerald-700 font-semibold">[Matched 98%]</span>
+                        <span>Sensory Diagnosis Complete</span>
+                        <span class="text-emerald-700 font-semibold">[Matched 99%]</span>
                     </div>
 
                     <div>
-                        <span class="font-mono text-[10px] uppercase text-atelier-muted tracking-wider block">Recommended Compound</span>
+                        <span class="font-mono text-[10px] uppercase text-atelier-muted tracking-wider block">Recommended Compound & Soundscape</span>
                         <h3 id="quizCompoundName" class="font-editorial text-2xl sm:text-3xl font-medium text-stone-900 mt-0.5">
                             Formula 01: Oải Hương Provence & Gỗ Đàn Hương
                         </h3>
+                        <p id="quizSoundscapeRecommendation" class="font-mono text-xs text-amber-800 mt-1">
+                            Âm thanh đồng bộ: Mood 1 (432Hz Deep Slumber)
+                        </p>
                     </div>
 
                     <div class="bg-atelier-bg p-4 rounded-atelier hairline-border font-specs text-xs space-y-2">
@@ -1006,19 +1002,20 @@
     </footer>
 
     <!-- ======================================================== -->
-    <!-- LOGIC SCRIPTS: THREE.JS 3D ENGINE & ATELIER SYSTEMS -->
+    <!-- LOGIC SCRIPTS: ADVANCED THREE.JS 3D & ADAPTIVE SOUNDSCAPE -->
     <!-- ======================================================== -->
     <script>
         lucide.createIcons();
 
         // ----------------------------------------------------
-        // A. THREE.JS 3D CANDLE ENGINE (PRODUCTION GRADE)
+        // A. THREE.JS ADVANCED 3D ENGINE (EVAN WALLACE INSPIRATION)
         // ----------------------------------------------------
         let scene, camera, renderer, controls;
-        let candleGroup, vesselMesh, waxMesh, wickMesh, flameMesh, labelMesh;
-        let candleLight, ambientLight, keyLight, fillLight;
+        let candleGroup, vesselMesh, waxMesh, wickMesh, flameMesh, labelMesh, smokeParticles;
+        let candleLight, waxInnerLight, ambientLight, keyLight, fillLight;
         let labelTexture;
         let isFlameActive = true;
+        let pmremGenerator;
 
         const candle3DConfig = {
             vesselType: 'amber',
@@ -1035,21 +1032,23 @@
         function init3DScene() {
             const container = document.getElementById('webglCanvasContainer');
             const width = container.clientWidth;
-            const height = container.clientHeight || 480;
+            const height = container.clientHeight || 520;
 
             // 1. Scene
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x121110); // Warm studio dark tone
+            scene.background = new THREE.Color(0x0e0d0c);
 
             // 2. Camera
-            camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-            camera.position.set(0, 1.3, 3.2);
+            camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
+            camera.position.set(0, 1.4, 3.4);
 
             // 3. Renderer
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
             renderer.setSize(width, height);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.05;
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             container.appendChild(renderer.domElement);
@@ -1058,85 +1057,132 @@
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
-            controls.maxPolarAngle = Math.PI / 2 + 0.1; // Khống chế góc nhìn không xuyên sàn
-            controls.minDistance = 1.8;
+            controls.maxPolarAngle = Math.PI / 2 + 0.1;
+            controls.minDistance = 1.6;
             controls.maxDistance = 5.0;
             controls.target.set(0, 0.45, 0);
             controls.autoRotate = true;
-            controls.autoRotateSpeed = 1.2;
+            controls.autoRotateSpeed = 1.0;
 
-            // Dừng tự xoay khi người dùng thao tác
             container.addEventListener('pointerdown', () => { controls.autoRotate = false; });
 
-            // 5. Lighting Setup (Studio Lighting Rig)
-            ambientLight = new THREE.AmbientLight(0xfff8f0, 0.7);
+            // 5. Procedural Studio Environment Map (Image-Based Lighting - IBL)
+            setupStudioEnvironment();
+
+            // 6. Lighting Setup
+            ambientLight = new THREE.AmbientLight(0xfff8f0, 0.6);
             scene.add(ambientLight);
 
-            keyLight = new THREE.DirectionalLight(0xffeedd, 1.4);
-            keyLight.position.set(3, 5, 4);
+            keyLight = new THREE.DirectionalLight(0xffeedd, 1.6);
+            keyLight.position.set(3, 6, 4);
             keyLight.castShadow = true;
-            keyLight.shadow.mapSize.width = 1024;
-            keyLight.shadow.mapSize.height = 1024;
-            keyLight.shadow.bias = -0.001;
+            keyLight.shadow.mapSize.width = 2048;
+            keyLight.shadow.mapSize.height = 2048;
+            keyLight.shadow.bias = -0.0005;
             scene.add(keyLight);
 
-            fillLight = new THREE.DirectionalLight(0xb0c4de, 0.4);
-            fillLight.position.set(-4, 2, -3);
+            fillLight = new THREE.DirectionalLight(0xa0b8d0, 0.45);
+            fillLight.position.set(-4, 3, -3);
             scene.add(fillLight);
 
-            // PointLight ánh nến nhấp nháy phát quang
-            candleLight = new THREE.PointLight(0xffaa33, 1.8, 3.5);
+            // Candle flame point light
+            candleLight = new THREE.PointLight(0xff9933, 2.0, 3.8);
             candleLight.position.set(0, 1.05, 0);
             candleLight.castShadow = true;
             scene.add(candleLight);
 
-            // 6. Ground Shadow Plane
-            const groundGeo = new THREE.PlaneGeometry(10, 10);
-            const groundMat = new THREE.ShadowMaterial({ opacity: 0.4 });
+            // Subsurface Scattering (SSS) inner light inside wax pool
+            waxInnerLight = new THREE.PointLight(0xff7711, 0.9, 1.2);
+            waxInnerLight.position.set(0, 0.72, 0);
+            scene.add(waxInnerLight);
+
+            // Ground Shadow Plane
+            const groundGeo = new THREE.PlaneGeometry(12, 12);
+            const groundMat = new THREE.ShadowMaterial({ opacity: 0.5 });
             const groundMesh = new THREE.Mesh(groundGeo, groundMat);
             groundMesh.rotation.x = -Math.PI / 2;
             groundMesh.position.y = 0;
             groundMesh.receiveShadow = true;
             scene.add(groundMesh);
 
-            // 7. Group Hũ Nến
+            // Group Hũ Nến
             candleGroup = new THREE.Group();
             scene.add(candleGroup);
 
+            // Smoke particle system setup
+            setupSmokeParticles();
+
             buildCandleModel();
 
-            // 8. Resize Listener
             window.addEventListener('resize', onWindowResize);
-
-            // 9. Animation Loop
             animate3D();
         }
 
-        // Tạo vật liệu hũ PBR tương ứng
+        // Tạo bản đồ ánh sáng môi trường Studio (Procedural Equirectangular IBL)
+        function setupStudioEnvironment() {
+            const envCanvas = document.createElement('canvas');
+            envCanvas.width = 1024;
+            envCanvas.height = 512;
+            const ctx = envCanvas.getContext('2d');
+
+            // Nền tối studio ấm
+            ctx.fillStyle = '#181614';
+            ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
+
+            // Vùng sáng softbox trên trần
+            const gradTop = ctx.createLinearGradient(0, 0, 0, 200);
+            gradTop.addColorStop(0, '#ffffff');
+            gradTop.addColorStop(1, '#181614');
+            ctx.fillStyle = gradTop;
+            ctx.fillRect(200, 0, 624, 140);
+
+            // Hai dải sáng bên hông phản chiếu thân kính
+            ctx.fillStyle = '#f0e6d6';
+            ctx.fillRect(80, 160, 120, 240);
+            ctx.fillRect(820, 160, 120, 240);
+
+            // Mặt sàn ấm phản chiếu chân nến
+            const gradFloor = ctx.createLinearGradient(0, 360, 0, 512);
+            gradFloor.addColorStop(0, '#181614');
+            gradFloor.addColorStop(1, '#4a3828');
+            ctx.fillStyle = gradFloor;
+            ctx.fillRect(0, 360, envCanvas.width, 152);
+
+            const envTexture = new THREE.CanvasTexture(envCanvas);
+            envTexture.mapping = THREE.EquirectangularReflectionMapping;
+
+            pmremGenerator = new THREE.PMREMGenerator(renderer);
+            pmremGenerator.compileEquirectangularShader();
+            const envMap = pmremGenerator.fromEquirectangular(envTexture).texture;
+            scene.environment = envMap;
+        }
+
+        // Vật liệu PBR cao cấp cho hũ nến
         function getVesselMaterial(type) {
             if (type === 'amber') {
                 return new THREE.MeshPhysicalMaterial({
-                    color: new THREE.Color(0x6e350f),
-                    emissive: new THREE.Color(0x1a0a02),
-                    roughness: 0.15,
-                    metalness: 0.05,
-                    transmission: 0.65,
-                    opacity: 0.95,
+                    color: new THREE.Color(0x6a300d),
+                    emissive: new THREE.Color(0x1a0902),
+                    roughness: 0.12,
+                    metalness: 0.04,
+                    transmission: 0.72,
+                    opacity: 0.98,
                     transparent: true,
                     ior: 1.54,
-                    reflectivity: 0.7,
-                    clearcoat: 0.5,
-                    clearcoatRoughness: 0.1
+                    reflectivity: 0.85,
+                    clearcoat: 0.8,
+                    clearcoatRoughness: 0.08,
+                    thickness: 0.9
                 });
             } else if (type === 'ceramic') {
                 return new THREE.MeshStandardMaterial({
-                    color: new THREE.Color(0xebe5dc),
-                    roughness: 0.88,
+                    color: new THREE.Color(0xebe4da),
+                    roughness: 0.86,
                     metalness: 0.02
                 });
             } else if (type === 'terrazzo') {
                 return new THREE.MeshStandardMaterial({
-                    color: new THREE.Color(0x615c56),
+                    color: new THREE.Color(0x635e58),
                     roughness: 0.92,
                     metalness: 0.05
                 });
@@ -1144,7 +1190,6 @@
         }
 
         function buildCandleModel() {
-            // Xóa cũ nếu có
             while (candleGroup.children.length > 0) {
                 const obj = candleGroup.children[0];
                 candleGroup.remove(obj);
@@ -1153,8 +1198,8 @@
             const vesselRadius = 0.55;
             const vesselHeight = 0.85;
 
-            // 1. Thân hũ nến (Vessel Outer Cylinder)
-            const vesselGeo = new THREE.CylinderGeometry(vesselRadius, vesselRadius, vesselHeight, 48, 1, false);
+            // 1. Thân hũ nến
+            const vesselGeo = new THREE.CylinderGeometry(vesselRadius, vesselRadius, vesselHeight, 64, 1, false);
             const vesselMat = getVesselMaterial(candle3DConfig.vesselType);
             vesselMesh = new THREE.Mesh(vesselGeo, vesselMat);
             vesselMesh.position.y = vesselHeight / 2;
@@ -1162,52 +1207,54 @@
             vesselMesh.receiveShadow = true;
             candleGroup.add(vesselMesh);
 
-            // Đáy hũ dày dặn
+            // Đáy hũ
             const baseGeo = new THREE.CylinderGeometry(vesselRadius * 0.98, vesselRadius * 0.98, 0.04, 32);
             const baseMesh = new THREE.Mesh(baseGeo, vesselMat);
             baseMesh.position.y = 0.02;
             candleGroup.add(baseMesh);
 
-            // 2. Khối sáp đậu nành (Soy Wax Pool)
+            // 2. Sáp đậu nành với hiệu ứng tán xạ ánh sáng (Subsurface Scattering approximation)
             const waxRadius = vesselRadius * 0.94;
             const waxHeight = vesselHeight * 0.82;
-            const waxGeo = new THREE.CylinderGeometry(waxRadius, waxRadius * 0.96, waxHeight, 36);
-            const waxMat = new THREE.MeshStandardMaterial({
-                color: new THREE.Color(0xf6f1e8),
-                roughness: 0.45,
-                metalness: 0.0
+            const waxGeo = new THREE.CylinderGeometry(waxRadius, waxRadius * 0.96, waxHeight, 48);
+            const waxMat = new THREE.MeshPhysicalMaterial({
+                color: new THREE.Color(0xfbf6ec),
+                roughness: 0.38,
+                metalness: 0.0,
+                transmission: 0.22,
+                thickness: 0.6,
+                transparent: true,
+                opacity: 0.96
             });
             waxMesh = new THREE.Mesh(waxGeo, waxMat);
             waxMesh.position.y = (waxHeight / 2) + 0.04;
             waxMesh.receiveShadow = true;
             candleGroup.add(waxMesh);
 
-            // 3. Bấc nến (Wick)
+            // 3. Bấc nến
             buildWickMesh();
 
-            // 4. Ngọn lửa 3D phát quang (Flame Mesh)
-            buildFlameMesh();
+            // 4. Ngọn lửa quang sai chuyển sắc (Custom GLSL Flame)
+            buildShaderFlameMesh();
 
-            // 5. Nhãn dán Dynamic Canvas Texture bao quanh mặt trước hũ
+            // 5. Nhãn in dập Dynamic Canvas Texture
             buildDynamicLabelMesh();
         }
 
         function buildWickMesh() {
             if (wickMesh) candleGroup.remove(wickMesh);
 
-            const waxSurfaceY = (0.85 * 0.82) + 0.04; // Chiều cao mặt sáp
+            const waxSurfaceY = (0.85 * 0.82) + 0.04;
 
             if (candle3DConfig.wickType === 'wood') {
-                // Bấc gỗ phẳng tự nhiên
                 const wickGeo = new THREE.BoxGeometry(0.12, 0.16, 0.015);
                 const wickMat = new THREE.MeshStandardMaterial({
-                    color: new THREE.Color(0x2a1b12),
+                    color: new THREE.Color(0x28190f),
                     roughness: 0.95
                 });
                 wickMesh = new THREE.Mesh(wickGeo, wickMat);
                 wickMesh.position.set(0, waxSurfaceY + 0.07, 0);
             } else {
-                // Bấc bông tròn
                 const wickGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.14, 16);
                 const wickMat = new THREE.MeshStandardMaterial({
                     color: new THREE.Color(0x222222),
@@ -1220,22 +1267,130 @@
             candleGroup.add(wickMesh);
         }
 
-        function buildFlameMesh() {
+        // Ngọn lửa 3D với Custom GLSL Shader (Gốc xanh lam + Thân vàng ấm)
+        function buildShaderFlameMesh() {
             if (flameMesh) candleGroup.remove(flameMesh);
 
-            const flameGeo = new THREE.ConeGeometry(0.06, 0.22, 16);
-            const flameMat = new THREE.MeshBasicMaterial({
-                color: 0xffdd66,
+            const flameGeo = new THREE.ConeGeometry(0.065, 0.26, 24, 8);
+
+            const flameVertexShader = `
+                varying vec2 vUv;
+                varying vec3 vNormal;
+                uniform float uTime;
+                void main() {
+                    vUv = uv;
+                    vNormal = normal;
+                    vec3 pos = position;
+                    // Lắc lư ngọn lửa theo thời gian
+                    float wave = sin(uTime * 8.0 + pos.y * 12.0) * 0.018 * pos.y;
+                    pos.x += wave;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                }
+            `;
+
+            const flameFragmentShader = `
+                varying vec2 vUv;
+                varying vec3 vNormal;
+                uniform float uTime;
+                void main() {
+                    float y = vUv.y;
+                    // Gốc xanh lam (quá trình đốt cháy bấc)
+                    vec3 blueBase = vec3(0.15, 0.35, 0.95);
+                    // Thân ngọn lửa vàng rực
+                    vec3 goldenCore = vec3(1.0, 0.88, 0.35);
+                    // Đỉnh ngọn lửa cam ấm
+                    vec3 amberTip = vec3(0.95, 0.35, 0.05);
+
+                    vec3 color;
+                    if (y < 0.2) {
+                        color = mix(blueBase, goldenCore, y / 0.2);
+                    } else {
+                        color = mix(goldenCore, amberTip, (y - 0.2) / 0.8);
+                    }
+
+                    // Độ mờ viền ngoài
+                    float alpha = smoothstep(0.0, 0.15, y) * smoothstep(1.0, 0.7, y) * 0.92;
+                    gl_FragColor = vec4(color, alpha);
+                }
+            `;
+
+            const flameMat = new THREE.ShaderMaterial({
+                vertexShader: flameVertexShader,
+                fragmentShader: flameFragmentShader,
+                uniforms: {
+                    uTime: { value: 0 }
+                },
                 transparent: true,
-                opacity: 0.92
+                side: THREE.DoubleSide,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
             });
+
             flameMesh = new THREE.Mesh(flameGeo, flameMat);
-            flameMesh.position.set(0, wickMesh.position.y + 0.12, 0);
+            flameMesh.position.set(0, wickMesh.position.y + 0.13, 0);
             flameMesh.visible = isFlameActive;
             candleGroup.add(flameMesh);
         }
 
-        // Vẽ 2D Canvas rồi map thành Dynamic Texture dán lên hũ 3D
+        // Hệ thống khói mờ khi thổi tắt nến (Extinguish Smoke System)
+        function setupSmokeParticles() {
+            const count = 30;
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const opacities = new Float32Array(count);
+
+            for (let i = 0; i < count; i++) {
+                positions[i * 3] = 0;
+                positions[i * 3 + 1] = -10; // Giấu dưới sàn khi chưa kích hoạt
+                positions[i * 3 + 2] = 0;
+                opacities[i] = 0;
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const mat = new THREE.PointsMaterial({
+                color: 0xcccccc,
+                size: 0.06,
+                transparent: true,
+                opacity: 0.4,
+                blending: THREE.NormalBlending
+            });
+
+            smokeParticles = new THREE.Points(geo, mat);
+            scene.add(smokeParticles);
+        }
+
+        let smokeTime = 0;
+        let isSmokeEmitting = false;
+
+        function triggerExtinguishSmoke() {
+            isSmokeEmitting = true;
+            smokeTime = 0;
+        }
+
+        function updateSmoke(delta) {
+            if (!isSmokeEmitting || !smokeParticles) return;
+            smokeTime += delta;
+
+            const pos = smokeParticles.geometry.attributes.position.array;
+            const originY = wickMesh.position.y + 0.05;
+
+            for (let i = 0; i < 30; i++) {
+                const progress = (smokeTime * 1.5 + (i * 0.08)) % 2.5;
+                pos[i * 3] = Math.sin(progress * 4.0 + i) * 0.04 * progress;
+                pos[i * 3 + 1] = originY + progress * 0.4;
+                pos[i * 3 + 2] = Math.cos(progress * 3.5 + i) * 0.04 * progress;
+            }
+
+            smokeParticles.geometry.attributes.position.needsUpdate = true;
+            smokeParticles.material.opacity = Math.max(0, 0.4 - (smokeTime * 0.12));
+
+            if (smokeTime > 3.0) {
+                isSmokeEmitting = false;
+                smokeParticles.material.opacity = 0;
+            }
+        }
+
         function buildDynamicLabelMesh() {
             if (labelMesh) candleGroup.remove(labelMesh);
 
@@ -1244,14 +1399,13 @@
             labelTexture = new THREE.CanvasTexture(document.getElementById('hiddenLabelCanvas'));
             labelTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
-            // Dựng một mảng cong cung tròn ôm sát bề mặt hũ nến
-            const labelRadius = 0.552; // Lớn hơn bán kính hũ 0.002 để không bị z-fighting
+            const labelRadius = 0.552;
             const labelHeight = 0.52;
-            const thetaLength = Math.PI * 0.72; // Góc bao phủ 130 độ mặt trước
+            const thetaLength = Math.PI * 0.72;
             const thetaStart = -thetaLength / 2;
 
             const labelGeo = new THREE.CylinderGeometry(
-                labelRadius, labelRadius, labelHeight, 32, 1, true, thetaStart, thetaLength
+                labelRadius, labelRadius, labelHeight, 40, 1, true, thetaStart, thetaLength
             );
 
             const labelMat = new THREE.MeshStandardMaterial({
@@ -1263,7 +1417,7 @@
             });
 
             labelMesh = new THREE.Mesh(labelGeo, labelMat);
-            labelMesh.position.y = 0.42; // Căn giữa thân hũ
+            labelMesh.position.y = 0.42;
             candleGroup.add(labelMesh);
         }
 
@@ -1271,11 +1425,9 @@
             const canvas = document.getElementById('hiddenLabelCanvas');
             const ctx = canvas.getContext('2d');
 
-            // 1. Nền giấy mộc dệt sợi (Typewriter Paper)
             ctx.fillStyle = '#f3ede3';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 2. Viền hairline 2 lớp chuẩn in ấn thủ công
             ctx.strokeStyle = '#3a3530';
             ctx.lineWidth = 4;
             ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
@@ -1283,7 +1435,6 @@
             ctx.lineWidth = 1.5;
             ctx.strokeRect(28, 28, canvas.width - 56, canvas.height - 56);
 
-            // 3. Header thông số
             ctx.fillStyle = '#2b2622';
             ctx.font = 'bold 22px "IBM Plex Mono", monospace';
             ctx.fillText('LUMEN ATELIER', 50, 75);
@@ -1298,7 +1449,6 @@
             ctx.lineTo(canvas.width - 50, 95);
             ctx.stroke();
 
-            // 4. Recipient Name
             ctx.fillStyle = '#6b635b';
             ctx.font = '20px "IBM Plex Mono", monospace';
             ctx.fillText('COMPOUNDED & LABELED FOR:', 50, 145);
@@ -1307,13 +1457,11 @@
             ctx.font = 'bold 46px "IBM Plex Mono", monospace';
             ctx.fillText((candle3DConfig.recipient || 'HOÀNG LAN').toUpperCase(), 50, 205);
 
-            // 5. Inscription Message
             ctx.fillStyle = '#2d2824';
             ctx.font = 'italic 26px "Newsreader", serif';
             const msg = `"${candle3DConfig.message || 'Mong mọi áp lực đều tan biến theo làn hương an yên.'}"`;
             wrapText(ctx, msg, 50, 265, canvas.width - 100, 36);
 
-            // 6. Footer Metadata
             ctx.strokeStyle = '#b0a89d';
             ctx.lineWidth = 1.5;
             ctx.beginPath();
@@ -1391,7 +1539,7 @@
             });
             document.getElementById(`wickBtn-${type}`).classList.add('border-2', 'border-stone-900', 'bg-stone-50');
             buildWickMesh();
-            buildFlameMesh();
+            buildShaderFlameMesh();
         }
 
         function changeScentFormula(val) {
@@ -1407,21 +1555,24 @@
         function toggle3DFlame() {
             isFlameActive = !isFlameActive;
             if (flameMesh) flameMesh.visible = isFlameActive;
-            if (candleLight) candleLight.intensity = isFlameActive ? 1.8 : 0.0;
+            if (candleLight) candleLight.intensity = isFlameActive ? 2.0 : 0.0;
+            if (waxInnerLight) waxInnerLight.intensity = isFlameActive ? 0.9 : 0.0;
 
             const indicator = document.getElementById('flameIndicator');
             const statusText = document.getElementById('flameStatusText');
+
             if (isFlameActive) {
                 indicator.className = "w-2 h-2 rounded-full bg-amber-400 inline-block";
                 statusText.innerText = "Ngọn Lửa: Bật";
             } else {
                 indicator.className = "w-2 h-2 rounded-full bg-stone-500 inline-block";
                 statusText.innerText = "Ngọn Lửa: Đã Tắt";
+                triggerExtinguishSmoke(); // Kích hoạt dải khói mờ bốc lên
             }
         }
 
         function reset3DCamera() {
-            camera.position.set(0, 1.3, 3.2);
+            camera.position.set(0, 1.4, 3.4);
             controls.target.set(0, 0.45, 0);
             controls.autoRotate = true;
             controls.update();
@@ -1431,7 +1582,7 @@
             const container = document.getElementById('webglCanvasContainer');
             if (!container || !renderer || !camera) return;
             const width = container.clientWidth;
-            const height = container.clientHeight || 480;
+            const height = container.clientHeight || 520;
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
             renderer.setSize(width, height);
@@ -1441,23 +1592,162 @@
         function animate3D() {
             requestAnimationFrame(animate3D);
 
+            const delta = clock.getDelta();
             const elapsedTime = clock.getElapsedTime();
 
-            // Hiệu ứng nhấp nháy ngẫu nhiên của ngọn lửa và nguồn sáng PointLight
-            if (isFlameActive && flameMesh) {
-                const flickerScale = 1.0 + Math.sin(elapsedTime * 14) * 0.08 + (Math.random() - 0.5) * 0.06;
-                flameMesh.scale.set(flickerScale, flickerScale * 1.05, flickerScale);
-                flameMesh.position.x = Math.sin(elapsedTime * 10) * 0.005;
+            // Cập nhật ngọn lửa Shader
+            if (isFlameActive && flameMesh && flameMesh.material.uniforms) {
+                flameMesh.material.uniforms.uTime.value = elapsedTime;
 
-                candleLight.intensity = 1.6 + Math.sin(elapsedTime * 16) * 0.25 + (Math.random() - 0.5) * 0.15;
+                // Dao động ánh sáng tán xạ sáp nến
+                const flicker = Math.sin(elapsedTime * 14.0) * 0.2 + (Math.random() - 0.5) * 0.1;
+                candleLight.intensity = 2.0 + flicker;
+                waxInnerLight.intensity = 0.9 + flicker * 0.4;
             }
+
+            // Cập nhật khói bốc lên khi tắt nến
+            updateSmoke(delta);
 
             controls.update();
             renderer.render(scene, camera);
         }
 
         // ----------------------------------------------------
-        // B. INSPECTOR & THEME SYSTEM (TYPOGRAPHY, PALETTES)
+        // B. ADAPTIVE ACOUSTIC SOUNDSCAPE ENGINE (WEB AUDIO API)
+        // ----------------------------------------------------
+        let audioCtx = null;
+        let isSoundscapePlaying = false;
+        let activeOscillators = [];
+        let crackleNoiseNode = null;
+        let currentSoundscape = 'sleep';
+
+        // Tần số hòa âm theo từng tính cách / tâm trạng
+        const soundscapeProfiles = {
+            sleep: {
+                freqs: [108, 216, 432, 540], // Tần số 432Hz theta healing
+                type: 'sine',
+                crackle: 0.15,
+                name: 'Mood 1: 432Hz Deep Slumber'
+            },
+            focus: {
+                freqs: [136.1, 272.2, 408.3], // Tần số Om / Alpha Focus
+                type: 'triangle',
+                crackle: 0.08,
+                name: 'Mood 2: Alpha Focus Flow'
+            },
+            cozy: {
+                freqs: [196, 246.9, 293.7, 392], // Hợp âm G Major ấm cúng
+                type: 'sine',
+                crackle: 0.28,
+                name: 'Mood 3: Acoustic Warmth'
+            },
+            dawn: {
+                freqs: [220, 330, 440, 660], // Thanh lọc năng lượng ban mai
+                type: 'sine',
+                crackle: 0.05,
+                name: 'Mood 4: Ambient Dawn'
+            }
+        };
+
+        function changeSoundscape(val) {
+            currentSoundscape = val;
+            if (isSoundscapePlaying) {
+                stopSoundscape();
+                startSoundscape();
+            }
+        }
+
+        function toggleSoundscapePlay() {
+            if (!isSoundscapePlaying) {
+                startSoundscape();
+                document.getElementById('soundStatusIndicator').className = "w-2 h-2 rounded-full bg-emerald-500 inline-block";
+                document.getElementById('soundLabel').innerText = "Pause";
+            } else {
+                stopSoundscape();
+                document.getElementById('soundStatusIndicator').className = "w-2 h-2 rounded-full bg-stone-400 inline-block";
+                document.getElementById('soundLabel').innerText = "Play";
+            }
+            isSoundscapePlaying = !isSoundscapePlaying;
+        }
+
+        function startSoundscape() {
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContextClass();
+
+                const profile = soundscapeProfiles[currentSoundscape];
+
+                // 1. Tạo các tầng sóng âm hòa âm êm dịu
+                activeOscillators = [];
+                const masterGain = audioCtx.createGain();
+                masterGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+
+                profile.freqs.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    osc.type = profile.type;
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+                    const oscGain = audioCtx.createGain();
+                    oscGain.gain.setValueAtTime(1.0 / (idx + 1.2), audioCtx.currentTime);
+
+                    osc.connect(oscGain);
+                    oscGain.connect(masterGain);
+                    osc.start();
+                    activeOscillators.push(osc);
+                });
+
+                masterGain.connect(audioCtx.destination);
+
+                // 2. Tầng âm thanh bấc gỗ tí tách (Wood Crackle)
+                const bufferSize = audioCtx.sampleRate * 2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    data[i] = Math.random() > 0.994 ? white * profile.crackle * 2.5 : white * 0.02;
+                }
+
+                crackleNoiseNode = audioCtx.createBufferSource();
+                crackleNoiseNode.buffer = buffer;
+                crackleNoiseNode.loop = true;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 1100;
+
+                const crackleGain = audioCtx.createGain();
+                crackleGain.gain.value = 0.22;
+
+                crackleNoiseNode.connect(filter);
+                filter.connect(crackleGain);
+                crackleGain.connect(audioCtx.destination);
+
+                crackleNoiseNode.start();
+            } catch (err) {
+                console.log("Web Audio initialisation:", err);
+            }
+        }
+
+        function stopSoundscape() {
+            activeOscillators.forEach(osc => {
+                try { osc.stop(); osc.disconnect(); } catch (e) {}
+            });
+            activeOscillators = [];
+
+            if (crackleNoiseNode) {
+                try { crackleNoiseNode.stop(); crackleNoiseNode.disconnect(); } catch (e) {}
+                crackleNoiseNode = null;
+            }
+
+            if (audioCtx) {
+                audioCtx.close();
+                audioCtx = null;
+            }
+        }
+
+        // ----------------------------------------------------
+        // C. INSPECTOR & THEME SYSTEM (TYPOGRAPHY, PALETTES)
         // ----------------------------------------------------
         function toggleInspector() {
             document.getElementById('inspectorPanel').classList.toggle('hidden');
@@ -1530,7 +1820,7 @@
         }
 
         // ----------------------------------------------------
-        // C. DRAG & DROP SECTION REORDERING
+        // D. DRAG & DROP SECTION REORDERING
         // ----------------------------------------------------
         const defaultSections = [
             'sec-hero',
@@ -1626,7 +1916,7 @@
                 const el = document.getElementById(id);
                 if (el) container.appendChild(el);
             });
-            onWindowResize(); // Đồng bộ lại canvas 3D
+            onWindowResize();
         }
 
         function toggleVisibility(id) {
@@ -1677,7 +1967,7 @@
         }
 
         // ----------------------------------------------------
-        // D. SCENT CONSULTATION QUIZ
+        // E. SCENT & SOUND CONSULTATION QUIZ
         // ----------------------------------------------------
         let quizState = {};
 
@@ -1700,22 +1990,31 @@
             const ans1 = quizState.step1;
             if (ans1 === 'stress' || ans1 === 'insomnia') {
                 document.getElementById('quizCompoundName').innerText = 'Formula 01: Oải Hương Provence & Gỗ Đàn Hương';
+                document.getElementById('quizSoundscapeRecommendation').innerText = 'Âm thanh đồng bộ: Mood 1 (432Hz Deep Slumber)';
                 document.getElementById('quizTopNotes').innerText = 'Cam Bergamot & Cúc La Mã';
                 document.getElementById('quizHeartNotes').innerText = 'Oải hương Pháp & Xô thơm mộc';
                 document.getElementById('quizBaseNotes').innerText = 'Gỗ tuyết tùng & Hổ phách nhựa cây';
                 candle3DConfig.scentFormula = 'Formula 01: Oải Hương & Đàn Hương';
+                document.getElementById('soundscapeSelector').value = 'sleep';
+                changeSoundscape('sleep');
             } else if (ans1 === 'focus') {
                 document.getElementById('quizCompoundName').innerText = 'Formula 03: Trà Trắng Núi Cao & Gỗ Tuyết Tùng';
+                document.getElementById('quizSoundscapeRecommendation').innerText = 'Âm thanh đồng bộ: Mood 2 (Alpha Focus Flow)';
                 document.getElementById('quizTopNotes').innerText = 'Vỏ bưởi xanh & Bạc hà mộc';
                 document.getElementById('quizHeartNotes').innerText = 'Trà trắng Shizuoka & Hoa nhài';
                 document.getElementById('quizBaseNotes').innerText = 'Gỗ tuyết tùng Atlas & Xạ hương trắng';
                 candle3DConfig.scentFormula = 'Formula 03: Trà Trắng & Tuyết Tùng';
+                document.getElementById('soundscapeSelector').value = 'focus';
+                changeSoundscape('focus');
             } else {
                 document.getElementById('quizCompoundName').innerText = 'Formula 02: Vani Madagascar & Quế Cay';
+                document.getElementById('quizSoundscapeRecommendation').innerText = 'Âm thanh đồng bộ: Mood 3 (Acoustic Warmth)';
                 document.getElementById('quizTopNotes').innerText = 'Quả mơ chín & Hạnh nhân đắng';
                 document.getElementById('quizHeartNotes').innerText = 'Vani nguyên quả & Nhục đậu khấu';
                 document.getElementById('quizBaseNotes').innerText = 'Vỏ quế Ceylon & Đậu Tonka';
                 candle3DConfig.scentFormula = 'Formula 02: Vani Madagascar & Quế Cay';
+                document.getElementById('soundscapeSelector').value = 'cozy';
+                changeSoundscape('cozy');
             }
         }
 
@@ -1732,7 +2031,7 @@
         }
 
         // ----------------------------------------------------
-        // E. BUNDLE LOGIC
+        // F. BUNDLE LOGIC
         // ----------------------------------------------------
         let bundleCart = {};
 
@@ -1755,68 +2054,6 @@
             } else {
                 document.getElementById('bundleSummaryText').innerText = keys.map(k => bundleCart[k].name).join(' + ');
             }
-        }
-
-        // ----------------------------------------------------
-        // F. WEB AUDIO SYNTHESIZER
-        // ----------------------------------------------------
-        let audioContext = null;
-        let isAudioPlaying = false;
-        let audioSource = null;
-
-        function toggleProceduralSound() {
-            if (!isAudioPlaying) {
-                startAcousticAudio();
-                document.getElementById('soundStatusIndicator').className = "w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block";
-                document.getElementById('soundLabel').innerText = "Acoustic Wick: On";
-            } else {
-                stopAcousticAudio();
-                document.getElementById('soundStatusIndicator').className = "w-1.5 h-1.5 rounded-full bg-stone-400 inline-block";
-                document.getElementById('soundLabel').innerText = "Acoustic Wick: Off";
-            }
-            isAudioPlaying = !isAudioPlaying;
-        }
-
-        function startAcousticAudio() {
-            try {
-                const Ctx = window.AudioContext || window.webkitAudioContext;
-                audioContext = new Ctx();
-                const bufferSize = audioContext.sampleRate * 2;
-                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-                const output = buffer.getChannelData(0);
-
-                for (let i = 0; i < bufferSize; i++) {
-                    const white = Math.random() * 2 - 1;
-                    output[i] = Math.random() > 0.995 ? white * 0.7 : white * 0.02;
-                }
-
-                audioSource = audioContext.createBufferSource();
-                audioSource.buffer = buffer;
-                audioSource.loop = true;
-
-                const filter = audioContext.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 1000;
-
-                const gain = audioContext.createGain();
-                gain.gain.value = 0.2;
-
-                audioSource.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioContext.destination);
-
-                audioSource.start();
-            } catch (err) {
-                console.log("Audio permission error:", err);
-            }
-        }
-
-        function stopAcousticAudio() {
-            if (audioSource) {
-                audioSource.stop();
-                audioSource.disconnect();
-            }
-            if (audioContext) audioContext.close();
         }
 
         // ----------------------------------------------------
@@ -1943,7 +2180,6 @@
             toggleCartDrawer();
         }
 
-        // Tự động khởi tạo 3D Scene khi tải xong trang
         window.addEventListener('DOMContentLoaded', () => {
             init3DScene();
         });
