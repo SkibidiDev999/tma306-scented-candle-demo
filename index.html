@@ -63,6 +63,56 @@
             --radius-atelier: 4px;
         }
 
+        html.dark {
+            --color-bg: #0c0a09;
+            --color-paper: #171513;
+            --color-surface: #1c1917;
+            --color-border: #292524;
+            --color-ink: #f5f5f4;
+            --color-muted: #a8a29e;
+            --color-accent: #d4a373;
+            --color-accent-hover: #e5b98f;
+            color-scheme: dark;
+        }
+
+        html.dark body {
+            background-color: var(--color-bg);
+            color: var(--color-ink);
+        }
+
+        /* Seamless Dark Mode overrides for utility classes */
+        html.dark .bg-white { background-color: #171513 !important; }
+        html.dark .bg-stone-50 { background-color: #0c0a09 !important; }
+        html.dark .bg-stone-100 { background-color: #1c1917 !important; }
+        html.dark .bg-stone-200 { background-color: #292524 !important; }
+        html.dark .border-stone-200, html.dark .border-stone-300 { border-color: #292524 !important; }
+        html.dark .border-stone-100 { border-color: #1c1917 !important; }
+        html.dark .text-stone-900, html.dark .text-stone-800 { color: #f5f5f4 !important; }
+        html.dark .text-stone-700, html.dark .text-stone-600 { color: #d6d3d1 !important; }
+        html.dark .text-stone-500 { color: #a8a29e !important; }
+        html.dark .text-stone-400 { color: #78716c !important; }
+        html.dark .shadow-md, html.dark .shadow-lg, html.dark .shadow-2xl {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6) !important;
+        }
+        html.dark #hiddenLabelCanvas { background: #1c1917; }
+        html.dark select option { background-color: #1c1917; color: #f5f5f4; }
+
+        /* Command Palette & Toast keyframes */
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.97) translateY(-8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-cmd-palette {
+            animation: fadeInScale 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translateY(-12px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-toast {
+            animation: toastSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
         body {
             background-color: var(--color-bg);
             color: var(--color-ink);
@@ -292,14 +342,17 @@
     <!-- 1. HEADER & SOUNDSCAPE CONTROL (ADAPTIVE ACOUSTIC ENGINE) -->
     <!-- ======================================================== -->
     <header class="bg-atelier-bg hairline-b sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-1.5 sm:py-2 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-atelier-muted hairline-b border-stone-200/60">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-1.5 sm:py-2 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-atelier-muted hairline-b border-stone-200/60 dark:border-stone-800">
             <div class="flex items-center gap-3 sm:gap-4 truncate">
-                <span class="truncate">SPEC: 100% SOY WAX</span>
-                <span class="hidden sm:inline">ORIGIN: BEN TRE / VIETNAM</span>
-                <span class="hidden md:inline">CIRCULAR REFILL: -20% VOUCHER [REFILL20]</span>
+                <span class="truncate" data-i18n="announcement_wax">SPEC: 100% SOY WAX</span>
+                <span class="hidden sm:inline" data-i18n="announcement_origin">ORIGIN: BEN TRE / VIETNAM</span>
+                <button onclick="copyVoucherCode('REFILL20')" title="Nhấp để sao chép mã giảm 20%" class="hidden md:inline-flex items-center gap-1 hover:text-amber-700 dark:hover:text-amber-400 transition-colors cursor-pointer group">
+                    <span data-i18n="announcement_voucher">CIRCULAR REFILL: -20% VOUCHER [REFILL20]</span>
+                    <i data-lucide="copy" class="w-3 h-3 text-stone-400 group-hover:text-amber-600 inline"></i>
+                </button>
             </div>
-            <div class="flex items-center gap-2 sm:gap-3 shrink-0 text-stone-700">
-                <span>HAND-POURED ATELIER</span>
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0 text-stone-700 dark:text-stone-300">
+                <span data-i18n="announcement_craft">HAND-POURED ATELIER</span>
             </div>
         </div>
 
@@ -308,18 +361,34 @@
                 <span class="font-editorial text-xl sm:text-2xl md:text-3xl font-medium tracking-tight uppercase leading-none">LUMEN ATELIER</span>
             </a>
 
-            <div class="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-mono uppercase tracking-wider text-stone-700">
-                <a href="#section-customizer" class="hover:text-atelier-accent transition-colors">01. Bespoke 3D Studio</a>
-                <a href="#section-quiz" class="hover:text-atelier-accent transition-colors">02. Scent & Sound Consultation</a>
-                <a href="#section-bundle" class="hover:text-atelier-accent transition-colors">03. Tooling & Kits</a>
-                <a href="#section-delivery" class="hover:text-atelier-accent transition-colors">04. Dispatch Protocol</a>
-                <a href="#section-reviews" class="hover:text-atelier-accent transition-colors">05. Production Archive</a>
+            <div class="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-mono uppercase tracking-wider text-stone-700 dark:text-stone-300">
+                <a href="#section-customizer" data-i18n="nav_01" class="hover:text-atelier-accent transition-colors">01. Bespoke 3D Studio</a>
+                <a href="#section-quiz" data-i18n="nav_02" class="hover:text-atelier-accent transition-colors">02. Scent & Sound Consultation</a>
+                <a href="#section-bundle" data-i18n="nav_03" class="hover:text-atelier-accent transition-colors">03. Tooling & Kits</a>
+                <a href="#section-delivery" data-i18n="nav_04" class="hover:text-atelier-accent transition-colors">04. Dispatch Protocol</a>
+                <a href="#section-reviews" data-i18n="nav_05" class="hover:text-atelier-accent transition-colors">05. Production Archive</a>
             </div>
 
-            <div class="flex items-center gap-2 sm:gap-3">
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <!-- Command Palette Shortcut Button (Desktop) -->
+                <button onclick="toggleCommandPalette()" class="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-atelier border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-[10px] font-mono text-stone-700 dark:text-stone-300 hover:border-amber-600 transition-colors shadow-xs" title="Tìm nhanh (Ctrl+K)">
+                    <i data-lucide="command" class="w-3 h-3 text-stone-400"></i>
+                    <span class="font-specs font-semibold">K</span>
+                </button>
+
+                <!-- Language Toggle Button [VI | EN] -->
+                <button id="langToggleBtn" onclick="toggleLanguage()" class="px-2 py-1.5 rounded-atelier border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-[10px] font-mono uppercase font-semibold text-stone-700 dark:text-stone-300 hover:text-amber-700 dark:hover:text-amber-400 transition-colors" title="Chuyển đổi ngôn ngữ / Switch Language">
+                    <span id="langLabel">EN</span>
+                </button>
+
+                <!-- Dark / Light Theme Toggle Button -->
+                <button id="themeToggleBtn" onclick="toggleTheme()" class="p-1.5 sm:p-2 rounded-atelier border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:text-amber-600 transition-colors" title="Chuyển chế độ Sáng / Tối">
+                    <i data-lucide="moon" class="w-3.5 h-3.5" id="themeIcon"></i>
+                </button>
+
                 <!-- Bộ phát âm nhạc theo tính cách / tâm trạng (Desktop Soundscape Engine) -->
-                <div class="hidden sm:flex items-center border border-stone-300 rounded-atelier bg-white p-1">
-                    <select id="soundscapeSelector" onchange="changeSoundscape(this.value)" class="text-[10px] font-mono bg-transparent text-stone-800 pr-2 border-r border-stone-200">
+                <div class="hidden sm:flex items-center border border-stone-300 dark:border-stone-700 rounded-atelier bg-white dark:bg-stone-800 p-1">
+                    <select id="soundscapeSelector" onchange="changeSoundscape(this.value)" class="text-[10px] font-mono bg-transparent text-stone-800 dark:text-stone-200 pr-2 border-r border-stone-200 dark:border-stone-700">
                         <option value="jazz">Mood 1: Midnight Noir Jazz</option>
                         <option value="lofi">Mood 2: Lofi Rain & Vinyl</option>
                         <option value="bossa">Mood 3: Acoustic Fireside</option>
@@ -327,19 +396,19 @@
                         <option value="zen">Mood 5: Ambient Zen & Bowls</option>
                         <option value="sleep">Mood 6: 432Hz Deep Slumber</option>
                     </select>
-                    <button id="soundToggleBtn" onclick="toggleSoundscapePlay()" class="px-2.5 py-1 text-[11px] font-mono flex items-center gap-1.5 hover:text-amber-700">
+                    <button id="soundToggleBtn" onclick="toggleSoundscapePlay()" class="px-2.5 py-1 text-[11px] font-mono flex items-center gap-1.5 hover:text-amber-700 dark:hover:text-amber-400">
                         <span id="soundStatusIndicator" class="w-2 h-2 rounded-full bg-stone-400 inline-block"></span>
                         <span id="soundLabel">Play</span>
                     </button>
                 </div>
 
-                <button onclick="toggleCartDrawer()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-atelier bg-stone-900 text-white text-[10px] sm:text-[11px] font-mono uppercase tracking-wider flex items-center gap-1.5 sm:gap-2 hover:bg-stone-800 shrink-0">
-                    <span>Cart</span>
-                    <span id="cartCountBadge" class="font-specs font-semibold text-amber-300">[0]</span>
+                <button onclick="toggleCartDrawer()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-atelier bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 text-[10px] sm:text-[11px] font-mono uppercase tracking-wider flex items-center gap-1.5 sm:gap-2 hover:bg-stone-800 dark:hover:bg-white shrink-0">
+                    <span data-i18n="cart_button">Cart</span>
+                    <span id="cartCountBadge" class="font-specs font-semibold text-amber-300 dark:text-amber-600">[0]</span>
                 </button>
 
                 <!-- Mobile Hamburger Button -->
-                <button onclick="toggleMobileNav()" class="md:hidden p-2 rounded-atelier border border-stone-300 text-stone-700 hover:bg-stone-100 flex items-center justify-center" aria-label="Menu">
+                <button onclick="toggleMobileNav()" class="md:hidden p-2 rounded-atelier border border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-center" aria-label="Menu">
                     <i data-lucide="menu" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -366,11 +435,28 @@
                 05. Production Archive (Lưu Trữ Kiểm Định)
             </a>
 
+            <!-- Mobile Quick Preferences: Theme, Language, Quick Search -->
+            <div class="pt-2 flex items-center justify-between border-t border-stone-200 dark:border-stone-700 pb-1">
+                <span class="text-[10px] text-atelier-muted" data-i18n="mobile_settings">Cài đặt giao diện:</span>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleLanguage()" class="px-2.5 py-1 rounded-atelier border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-[11px] font-mono font-semibold">
+                        <span class="mobileLangLabel">EN</span>
+                    </button>
+                    <button onclick="toggleTheme()" class="p-1.5 rounded-atelier border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300">
+                        <i data-lucide="moon" class="w-3.5 h-3.5 mobileThemeIcon"></i>
+                    </button>
+                    <button onclick="toggleCommandPalette(); toggleMobileNav();" class="px-2 py-1 rounded-atelier border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-[10px] font-mono flex items-center gap-1">
+                        <i data-lucide="command" class="w-3 h-3 text-stone-400"></i>
+                        <span>Tìm kiếm</span>
+                    </button>
+                </div>
+            </div>
+
             <!-- Mobile Soundscape Controls -->
             <div class="pt-2 flex flex-col gap-2">
-                <span class="text-[10px] text-atelier-muted">Âm thanh tính cách (Web Audio):</span>
+                <span class="text-[10px] text-atelier-muted" data-i18n="mobile_sound">Âm thanh tính cách (Web Audio):</span>
                 <div class="flex items-center gap-2">
-                    <select id="mobileSoundscapeSelector" onchange="changeSoundscape(this.value)" class="flex-1 p-2 rounded-atelier border border-stone-300 text-xs font-mono bg-white text-stone-800">
+                    <select id="mobileSoundscapeSelector" onchange="changeSoundscape(this.value)" class="flex-1 p-2 rounded-atelier border border-stone-300 dark:border-stone-700 text-xs font-mono bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-200">
                         <option value="jazz">Mood 1: Midnight Noir Jazz</option>
                         <option value="lofi">Mood 2: Lofi Rain & Vinyl</option>
                         <option value="bossa">Mood 3: Acoustic Fireside</option>
@@ -378,7 +464,7 @@
                         <option value="zen">Mood 5: Ambient Zen & Bowls</option>
                         <option value="sleep">Mood 6: 432Hz Deep Slumber</option>
                     </select>
-                    <button onclick="toggleSoundscapePlay()" class="px-3 py-2 bg-stone-900 text-white rounded-atelier text-xs font-mono uppercase">
+                    <button onclick="toggleSoundscapePlay()" class="px-3 py-2 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 rounded-atelier text-xs font-mono uppercase">
                         <span class="mobileSoundLabel">Play</span>
                     </button>
                 </div>
@@ -399,17 +485,17 @@
                         TMA306 E-Commerce Model / Evan Wallace Graphics Paradigm / Sensory Marketing
                     </div>
                     <h1 class="font-editorial text-3xl sm:text-5xl lg:text-7xl font-normal leading-[1.1] sm:leading-[1.05] tracking-tight">
-                        Hương thơm bản thể, <br>
-                        <span class="italic font-normal">định danh bằng quang học và thanh âm.</span>
+                        <span data-i18n="hero_title_1">Hương thơm bản thể,</span> <br>
+                        <span class="italic font-normal" data-i18n="hero_title_2">định danh bằng quang học và thanh âm.</span>
                     </h1>
-                    <p class="text-sm sm:text-lg text-atelier-muted max-w-2xl font-normal leading-relaxed">
+                    <p class="text-sm sm:text-lg text-atelier-muted max-w-2xl font-normal leading-relaxed" data-i18n="hero_desc">
                         Ứng dụng kỹ thuật đồ họa WebGL tiên tiến (Image-Based Lighting & Subsurface Scattering) kết hợp hệ thống âm nhạc đa cảm xúc nhằm bù đắp rào cản khứu giác trong môi trường thương mại điện tử.
                     </p>
                     <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-2 sm:pt-4">
-                        <a href="#section-customizer" class="px-5 sm:px-6 py-2.5 sm:py-3 text-center rounded-atelier bg-stone-900 text-stone-100 hover:bg-stone-800 text-xs font-mono uppercase tracking-wider">
+                        <a href="#section-customizer" data-i18n="hero_btn_3d" class="px-5 sm:px-6 py-2.5 sm:py-3 text-center rounded-atelier bg-stone-900 dark:bg-stone-100 text-stone-100 dark:text-stone-900 hover:bg-stone-800 dark:hover:bg-white text-xs font-mono uppercase tracking-wider shadow-sm">
                             Khởi Chạy 3D Studio
                         </a>
-                        <a href="#section-quiz" class="px-5 sm:px-6 py-2.5 sm:py-3 text-center rounded-atelier border border-stone-300 hover:border-stone-800 text-stone-900 text-xs font-mono uppercase tracking-wider">
+                        <a href="#section-quiz" data-i18n="hero_btn_quiz" class="px-5 sm:px-6 py-2.5 sm:py-3 text-center rounded-atelier border border-stone-300 dark:border-stone-700 hover:border-stone-800 dark:hover:border-stone-300 text-stone-900 dark:text-stone-100 text-xs font-mono uppercase tracking-wider">
                             Trắc Nghiệm Khứu Giác & Âm Nhạc
                         </a>
                     </div>
@@ -449,8 +535,8 @@
         <section id="section-customizer" data-name="02. Extension 1: Bespoke 3D Studio" class="py-12 md:py-24 px-4 sm:px-6 lg:px-8 hairline-b">
             <div class="max-w-3xl mb-8 sm:mb-12">
                 <span class="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-atelier-muted block mb-1.5 sm:mb-2">Extension 01 / Three.js 3D Studio</span>
-                <h2 class="font-editorial text-2xl sm:text-4xl font-normal">Bespoke 3D Studio: Trực Quan Hóa Hũ Nến Đơn Bản</h2>
-                <p class="text-xs sm:text-sm text-atelier-muted mt-2 leading-relaxed">
+                <h2 class="font-editorial text-2xl sm:text-4xl font-normal" data-i18n="customizer_title">Bespoke 3D Studio: Trực Quan Hóa Hũ Nến Đơn Bản</h2>
+                <p class="text-xs sm:text-sm text-atelier-muted mt-2 leading-relaxed" data-i18n="customizer_desc">
                     Xoay đa góc nhìn 360 độ, chọn chất liệu phôi hũ thực tế và quan sát nhãn in cá nhân hóa được ánh xạ trực tiếp lên bề mặt hình trụ theo thời gian thực.
                 </p>
             </div>
@@ -480,7 +566,7 @@
                                 <span id="flameIndicator" class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
                                 <span id="flameStatusText">Lửa: Bật</span>
                             </button>
-                            <button onclick="reset3DCamera()" class="px-2.5 sm:px-3 py-1.5 rounded-atelier bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 text-[10px] sm:text-[11px]">
+                            <button onclick="reset3DCamera()" data-i18n="reset_camera" class="px-2.5 sm:px-3 py-1.5 rounded-atelier bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 text-[10px] sm:text-[11px]">
                                 Đặt Lại Góc
                             </button>
                             <!-- Nút chuyển đổi cử chỉ cảm ứng trên điện thoại (Gesture Lock toggle) -->
@@ -1345,10 +1431,16 @@
         // ----------------------------------------------------
         let scene, camera, renderer, controls;
         let candleGroup, vesselMesh, waxMesh, wickMesh, flameMesh, labelMesh, smokeParticles;
+        let moltenWaxMesh, wickEmberMesh, sparksMesh, contactShadowMesh, rimLight;
         let candleLight, waxInnerLight, ambientLight, keyLight, fillLight;
-        let labelTexture;
+        let labelTexture, terrazzoTexture = null;
         let isFlameActive = true;
         let pmremGenerator;
+
+        // Evan Wallace Fluid Inertia Flame Physics
+        let lastAzimuth = 0;
+        let flameTiltZ = 0;
+        let sparksData = { count: 24, pos: null, vel: null, life: null };
 
         const candle3DConfig = {
             vesselType: 'amber',
@@ -1443,14 +1535,14 @@
             waxInnerLight.position.set(0, 0.72, 0);
             scene.add(waxInnerLight);
 
-            // Ground Shadow Plane
-            const groundGeo = new THREE.PlaneGeometry(12, 12);
-            const groundMat = new THREE.ShadowMaterial({ opacity: 0.5 });
-            const groundMesh = new THREE.Mesh(groundGeo, groundMat);
-            groundMesh.rotation.x = -Math.PI / 2;
-            groundMesh.position.y = 0;
-            groundMesh.receiveShadow = true;
-            scene.add(groundMesh);
+            // Soft Contact Shadow Plane (Baked Radial Ambient Occlusion)
+            contactShadowMesh = createContactShadowMesh();
+            scene.add(contactShadowMesh);
+
+            // Directional Rim Light để viền kính hổ phách và sáp tách biệt khỏi nền tối
+            rimLight = new THREE.DirectionalLight(0xffa855, 0.9);
+            rimLight.position.set(0.5, 3.0, -3.2);
+            scene.add(rimLight);
 
             // Group Hũ Nến
             candleGroup = new THREE.Group();
@@ -1458,6 +1550,9 @@
 
             // Smoke particle system setup
             setupSmokeParticles();
+
+            // Flying sparks / embers particle system setup
+            setupFlyingSparks();
 
             buildCandleModel();
 
@@ -1474,25 +1569,34 @@
             const ctx = envCanvas.getContext('2d');
 
             // Nền tối studio ấm
-            ctx.fillStyle = '#181614';
+            ctx.fillStyle = '#141210';
             ctx.fillRect(0, 0, envCanvas.width, envCanvas.height);
 
-            // Vùng sáng softbox trên trần
-            const gradTop = ctx.createLinearGradient(0, 0, 0, 200);
+            // Vùng sáng softbox trên trần studio
+            const gradTop = ctx.createLinearGradient(0, 0, 0, 220);
             gradTop.addColorStop(0, '#ffffff');
-            gradTop.addColorStop(1, '#181614');
+            gradTop.addColorStop(0.5, '#e0d8cc');
+            gradTop.addColorStop(1, '#141210');
             ctx.fillStyle = gradTop;
-            ctx.fillRect(200, 0, 624, 140);
+            ctx.fillRect(180, 0, 664, 150);
 
-            // Hai dải sáng bên hông phản chiếu thân kính
-            ctx.fillStyle = '#f0e6d6';
-            ctx.fillRect(80, 160, 120, 240);
-            ctx.fillRect(820, 160, 120, 240);
+            // Dải sáng bên trái và phải (Studio Rim Strips)
+            const gradLeft = ctx.createLinearGradient(60, 0, 200, 0);
+            gradLeft.addColorStop(0, '#ffffff');
+            gradLeft.addColorStop(1, '#141210');
+            ctx.fillStyle = gradLeft;
+            ctx.fillRect(60, 140, 140, 260);
 
-            // Mặt sàn ấm phản chiếu chân nến
+            const gradRight = ctx.createLinearGradient(964, 0, 824, 0);
+            gradRight.addColorStop(0, '#ffeedd');
+            gradRight.addColorStop(1, '#141210');
+            ctx.fillStyle = gradRight;
+            ctx.fillRect(824, 140, 140, 260);
+
+            // Mặt sàn phản chiếu ấm
             const gradFloor = ctx.createLinearGradient(0, 360, 0, 512);
-            gradFloor.addColorStop(0, '#181614');
-            gradFloor.addColorStop(1, '#4a3828');
+            gradFloor.addColorStop(0, '#141210');
+            gradFloor.addColorStop(1, '#3b2c20');
             ctx.fillStyle = gradFloor;
             ctx.fillRect(0, 360, envCanvas.width, 152);
 
@@ -1505,34 +1609,141 @@
             scene.environment = envMap;
         }
 
-        // Vật liệu PBR cao cấp cho hũ nến
+        // Tạo bóng tiếp xúc mềm mại (Contact Ambient Occlusion Shadow)
+        function createContactShadowMesh() {
+            const sCanvas = document.createElement('canvas');
+            sCanvas.width = 512;
+            sCanvas.height = 512;
+            const sCtx = sCanvas.getContext('2d');
+            const grad = sCtx.createRadialGradient(256, 256, 30, 256, 256, 240);
+            grad.addColorStop(0, 'rgba(8, 6, 5, 0.92)');
+            grad.addColorStop(0.35, 'rgba(10, 8, 7, 0.65)');
+            grad.addColorStop(0.7, 'rgba(12, 10, 9, 0.22)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            sCtx.fillStyle = grad;
+            sCtx.fillRect(0, 0, 512, 512);
+
+            const sTex = new THREE.CanvasTexture(sCanvas);
+            const planeGeo = new THREE.PlaneGeometry(2.6, 2.6);
+            const planeMat = new THREE.MeshBasicMaterial({
+                map: sTex,
+                transparent: true,
+                depthWrite: false
+            });
+            const mesh = new THREE.Mesh(planeGeo, planeMat);
+            mesh.rotation.x = -Math.PI / 2;
+            mesh.position.y = 0.002;
+            return mesh;
+        }
+
+        // Tạo Texture đá Terrazzo đa khoáng thạch procedural thời gian thực
+        function getOrCreateTerrazzoTexture() {
+            if (terrazzoTexture) return terrazzoTexture;
+            const tCanvas = document.createElement('canvas');
+            tCanvas.width = 1024;
+            tCanvas.height = 1024;
+            const ctx = tCanvas.getContext('2d');
+
+            // Nền đá vôi ấm mộc
+            ctx.fillStyle = '#655f58';
+            ctx.fillRect(0, 0, 1024, 1024);
+
+            // Hạt mịn noise micro-grit
+            const imgData = ctx.getImageData(0, 0, 1024, 1024);
+            const d = imgData.data;
+            for (let i = 0; i < d.length; i += 4) {
+                const n = (Math.random() - 0.5) * 18;
+                d[i] = Math.min(255, Math.max(0, d[i] + n));
+                d[i+1] = Math.min(255, Math.max(0, d[i+1] + n));
+                d[i+2] = Math.min(255, Math.max(0, d[i+2] + n));
+            }
+            ctx.putImageData(imgData, 0, 0);
+
+            // Khoáng thạch tự nhiên: Hắc diện thạch (Obsidian), Thạch anh ngà (Quartz), Đất nung (Terracotta)
+            const flecks = ['#1a1816', '#25211e', '#f5f1ea', '#ded6cb', '#b8633b', '#7e3e26', '#a19280'];
+            for (let i = 0; i < 750; i++) {
+                ctx.fillStyle = flecks[Math.floor(Math.random() * flecks.length)];
+                ctx.beginPath();
+                const cx = Math.random() * 1024;
+                const cy = Math.random() * 1024;
+                const r = Math.random() * 8 + 2;
+                const pts = Math.floor(Math.random() * 4) + 4;
+                for (let p = 0; p < pts; p++) {
+                    const angle = (p / pts) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+                    const rad = r * (0.6 + Math.random() * 0.8);
+                    const px = cx + Math.cos(angle) * rad;
+                    const py = cy + Math.sin(angle) * rad;
+                    if (p === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            terrazzoTexture = new THREE.CanvasTexture(tCanvas);
+            terrazzoTexture.wrapS = THREE.RepeatWrapping;
+            terrazzoTexture.wrapT = THREE.RepeatWrapping;
+            terrazzoTexture.repeat.set(2, 2);
+            return terrazzoTexture;
+        }
+
+        // Hình học Hũ nến 2 lớp thành kính có độ dày lòng trong & đáy đặc (Double-Walled Apothecary Jar)
+        function createApothecaryVesselGeometry() {
+            const points = [];
+            // Đáy ngoài phẳng & bo góc đế
+            points.push(new THREE.Vector2(0, 0));
+            points.push(new THREE.Vector2(0.48, 0));
+            points.push(new THREE.Vector2(0.53, 0.018));
+            points.push(new THREE.Vector2(0.55, 0.045));
+            // Thành ngoài hũ nến
+            points.push(new THREE.Vector2(0.55, 0.81));
+            // Miệng hũ bo tròn (Curved Lip Rim)
+            points.push(new THREE.Vector2(0.54, 0.842));
+            points.push(new THREE.Vector2(0.525, 0.85));
+            points.push(new THREE.Vector2(0.51, 0.842));
+            // Thành trong lòng hũ (độ dày thành 0.045 đơn vị)
+            points.push(new THREE.Vector2(0.50, 0.81));
+            points.push(new THREE.Vector2(0.50, 0.10));
+            // Đáy trong đúc đặc dầy dặn
+            points.push(new THREE.Vector2(0.47, 0.08));
+            points.push(new THREE.Vector2(0, 0.08));
+
+            const lathe = new THREE.LatheGeometry(points, 64);
+            lathe.computeVertexNormals();
+            return lathe;
+        }
+
+        // Vật liệu PBR cao cấp chuẩn Evan Wallace
         function getVesselMaterial(type) {
             if (type === 'amber') {
                 return new THREE.MeshPhysicalMaterial({
-                    color: new THREE.Color(0x6a300d),
-                    emissive: new THREE.Color(0x1a0902),
-                    roughness: 0.12,
-                    metalness: 0.04,
-                    transmission: 0.72,
+                    color: new THREE.Color(0x4a1f05),
+                    emissive: new THREE.Color(0x120601),
+                    roughness: 0.06,
+                    metalness: 0.0,
+                    transmission: 0.92,
                     opacity: 0.98,
                     transparent: true,
-                    ior: 1.54,
-                    reflectivity: 0.85,
-                    clearcoat: 0.8,
-                    clearcoatRoughness: 0.08,
-                    thickness: 0.9
+                    ior: 1.52,
+                    reflectivity: 0.9,
+                    clearcoat: 1.0,
+                    clearcoatRoughness: 0.03,
+                    thickness: 0.95,
+                    attenuationColor: new THREE.Color(0xd47526),
+                    attenuationDistance: 0.42
                 });
             } else if (type === 'ceramic') {
                 return new THREE.MeshStandardMaterial({
-                    color: new THREE.Color(0xebe4da),
-                    roughness: 0.86,
+                    color: new THREE.Color(0xeae3d8),
+                    roughness: 0.84,
                     metalness: 0.02
                 });
             } else if (type === 'terrazzo') {
+                const tex = getOrCreateTerrazzoTexture();
                 return new THREE.MeshStandardMaterial({
-                    color: new THREE.Color(0x635e58),
-                    roughness: 0.92,
-                    metalness: 0.05
+                    map: tex,
+                    roughness: 0.80,
+                    metalness: 0.03
                 });
             }
         }
@@ -1543,56 +1754,65 @@
                 candleGroup.remove(obj);
             }
 
-            const vesselRadius = 0.55;
-            const vesselHeight = 0.85;
-
-            // 1. Thân hũ nến
-            const vesselGeo = new THREE.CylinderGeometry(vesselRadius, vesselRadius, vesselHeight, 64, 1, false);
+            // 1. Thân hũ nến 2 lớp thành dày cao cấp (Lathe Geometry)
+            const vesselGeo = createApothecaryVesselGeometry();
             const vesselMat = getVesselMaterial(candle3DConfig.vesselType);
             vesselMesh = new THREE.Mesh(vesselGeo, vesselMat);
-            vesselMesh.position.y = vesselHeight / 2;
+            vesselMesh.position.y = 0;
             vesselMesh.castShadow = true;
             vesselMesh.receiveShadow = true;
             candleGroup.add(vesselMesh);
 
-            // Đáy hũ
-            const baseGeo = new THREE.CylinderGeometry(vesselRadius * 0.98, vesselRadius * 0.98, 0.04, 32);
-            const baseMesh = new THREE.Mesh(baseGeo, vesselMat);
-            baseMesh.position.y = 0.02;
-            candleGroup.add(baseMesh);
-
-            // 2. Sáp đậu nành với hiệu ứng tán xạ ánh sáng (Subsurface Scattering approximation)
-            const waxRadius = vesselRadius * 0.94;
-            const waxHeight = vesselHeight * 0.82;
-            const waxGeo = new THREE.CylinderGeometry(waxRadius, waxRadius * 0.96, waxHeight, 48);
+            // 2. Khối sáp đậu nành trong lòng hũ
+            const waxRadius = 0.495;
+            const waxHeight = 0.64;
+            const waxGeo = new THREE.CylinderGeometry(waxRadius, waxRadius * 0.97, waxHeight, 48);
             const waxMat = new THREE.MeshPhysicalMaterial({
                 color: new THREE.Color(0xfbf6ec),
-                roughness: 0.38,
+                roughness: 0.32,
                 metalness: 0.0,
-                transmission: 0.22,
-                thickness: 0.6,
+                transmission: 0.18,
+                thickness: 0.65,
                 transparent: true,
-                opacity: 0.96
+                opacity: 0.98
             });
             waxMesh = new THREE.Mesh(waxGeo, waxMat);
-            waxMesh.position.y = (waxHeight / 2) + 0.04;
+            waxMesh.position.y = 0.08 + (waxHeight / 2);
             waxMesh.receiveShadow = true;
             candleGroup.add(waxMesh);
 
-            // 3. Bấc nến
+            // 3. Vũng sáp lỏng nóng chảy quanh bấc phản chiếu ánh lửa (Molten Wax Pool)
+            const moltenGeo = new THREE.CircleGeometry(0.24, 32);
+            const moltenMat = new THREE.MeshPhysicalMaterial({
+                color: new THREE.Color(0xf6ebc4),
+                roughness: 0.03,
+                metalness: 0.05,
+                transmission: 0.45,
+                ior: 1.48,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.02
+            });
+            moltenWaxMesh = new THREE.Mesh(moltenGeo, moltenMat);
+            moltenWaxMesh.rotation.x = -Math.PI / 2;
+            moltenWaxMesh.position.set(0, 0.722, 0);
+            moltenWaxMesh.visible = isFlameActive;
+            candleGroup.add(moltenWaxMesh);
+
+            // 4. Bấc nến & than hồng phát quang
             buildWickMesh();
 
-            // 4. Ngọn lửa quang sai chuyển sắc (Custom GLSL Flame)
+            // 5. Ngọn lửa quang sai chuyển sắc (Custom GLSL Flame)
             buildShaderFlameMesh();
 
-            // 5. Nhãn in dập Dynamic Canvas Texture
+            // 6. Nhãn in dập Dynamic Canvas Texture
             buildDynamicLabelMesh();
         }
 
         function buildWickMesh() {
             if (wickMesh) candleGroup.remove(wickMesh);
+            if (wickEmberMesh) candleGroup.remove(wickEmberMesh);
 
-            const waxSurfaceY = (0.85 * 0.82) + 0.04;
+            const waxSurfaceY = 0.72;
 
             if (candle3DConfig.wickType === 'wood') {
                 const wickGeo = new THREE.BoxGeometry(0.12, 0.16, 0.015);
@@ -1602,6 +1822,16 @@
                 });
                 wickMesh = new THREE.Mesh(wickGeo, wickMat);
                 wickMesh.position.set(0, waxSurfaceY + 0.07, 0);
+
+                // Than hồng bấc gỗ (Wood Wick Glowing Ember)
+                const emberGeo = new THREE.BoxGeometry(0.122, 0.025, 0.018);
+                const emberMat = new THREE.MeshBasicMaterial({
+                    color: 0xff3b00
+                });
+                wickEmberMesh = new THREE.Mesh(emberGeo, emberMat);
+                wickEmberMesh.position.set(0, waxSurfaceY + 0.145, 0);
+                wickEmberMesh.visible = isFlameActive;
+                candleGroup.add(wickEmberMesh);
             } else {
                 const wickGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.14, 16);
                 const wickMat = new THREE.MeshStandardMaterial({
@@ -1610,6 +1840,16 @@
                 });
                 wickMesh = new THREE.Mesh(wickGeo, wickMat);
                 wickMesh.position.set(0, waxSurfaceY + 0.06, 0);
+
+                // Than hồng bấc bông
+                const emberGeo = new THREE.SphereGeometry(0.022, 12, 12);
+                const emberMat = new THREE.MeshBasicMaterial({
+                    color: 0xff4800
+                });
+                wickEmberMesh = new THREE.Mesh(emberGeo, emberMat);
+                wickEmberMesh.position.set(0, waxSurfaceY + 0.13, 0);
+                wickEmberMesh.visible = isFlameActive;
+                candleGroup.add(wickEmberMesh);
             }
             wickMesh.castShadow = true;
             candleGroup.add(wickMesh);
@@ -1678,6 +1918,87 @@
             flameMesh.position.set(0, wickMesh.position.y + 0.13, 0);
             flameMesh.visible = isFlameActive;
             candleGroup.add(flameMesh);
+        }
+
+        // Hệ thống tàn lửa bay (Flying Sparks / Embers Particle Engine)
+        function setupFlyingSparks() {
+            const count = sparksData.count;
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const velocities = new Float32Array(count * 3);
+            const lives = new Float32Array(count);
+
+            for (let i = 0; i < count; i++) {
+                resetSpark(i, positions, velocities, lives);
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            // Texture đóm lửa mềm phát sáng
+            const sCanvas = document.createElement('canvas');
+            sCanvas.width = 32;
+            sCanvas.height = 32;
+            const sCtx = sCanvas.getContext('2d');
+            const grad = sCtx.createRadialGradient(16, 16, 0, 16, 16, 16);
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(0.3, '#ffaa33');
+            grad.addColorStop(0.75, '#ff3300');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            sCtx.fillStyle = grad;
+            sCtx.fillRect(0, 0, 32, 32);
+            const sTex = new THREE.CanvasTexture(sCanvas);
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.038,
+                map: sTex,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            sparksMesh = new THREE.Points(geo, mat);
+            scene.add(sparksMesh);
+            sparksData.pos = positions;
+            sparksData.vel = velocities;
+            sparksData.life = lives;
+        }
+
+        function resetSpark(i, pos, vel, life) {
+            const wickTopY = 0.85;
+            pos[i * 3] = (Math.random() - 0.5) * 0.06;
+            pos[i * 3 + 1] = wickTopY + Math.random() * 0.05;
+            pos[i * 3 + 2] = (Math.random() - 0.5) * 0.06;
+
+            vel[i * 3] = (Math.random() - 0.5) * 0.05;
+            vel[i * 3 + 1] = 0.12 + Math.random() * 0.18;
+            vel[i * 3 + 2] = (Math.random() - 0.5) * 0.05;
+
+            life[i] = 0.6 + Math.random() * 1.2;
+        }
+
+        function updateSparks(delta, elapsedTime) {
+            if (!sparksMesh || !isFlameActive) {
+                if (sparksMesh) sparksMesh.visible = false;
+                return;
+            }
+            sparksMesh.visible = true;
+
+            const pos = sparksData.pos;
+            const vel = sparksData.vel;
+            const life = sparksData.life;
+            const count = sparksData.count;
+
+            for (let i = 0; i < count; i++) {
+                life[i] -= delta;
+                if (life[i] <= 0) {
+                    resetSpark(i, pos, vel, life);
+                } else {
+                    pos[i * 3] += vel[i * 3] * delta + Math.sin(elapsedTime * 6.0 + i) * 0.001;
+                    pos[i * 3 + 1] += vel[i * 3 + 1] * delta;
+                    pos[i * 3 + 2] += vel[i * 3 + 2] * delta + Math.cos(elapsedTime * 5.0 + i) * 0.001;
+                }
+            }
+            sparksMesh.geometry.attributes.position.needsUpdate = true;
         }
 
         // Hệ thống khói mờ khi thổi tắt nến (Extinguish Smoke System)
@@ -1956,6 +2277,9 @@
         function toggle3DFlame() {
             isFlameActive = !isFlameActive;
             if (flameMesh) flameMesh.visible = isFlameActive;
+            if (moltenWaxMesh) moltenWaxMesh.visible = isFlameActive;
+            if (wickEmberMesh) wickEmberMesh.visible = isFlameActive;
+            if (sparksMesh) sparksMesh.visible = isFlameActive;
             if (candleLight) candleLight.intensity = isFlameActive ? 2.0 : 0.0;
             if (waxInnerLight) waxInnerLight.intensity = isFlameActive ? 0.9 : 0.0;
 
@@ -1964,11 +2288,13 @@
 
             if (isFlameActive) {
                 indicator.className = "w-2 h-2 rounded-full bg-amber-400 inline-block";
-                statusText.innerText = "Lửa: Bật";
+                statusText.innerText = currentLanguage === 'en' ? "Flame: Lit" : "Lửa: Bật";
+                showToast(currentLanguage === 'en' ? "Candle wick ignited." : "Đã thắp lửa bấc nến.", "flame");
             } else {
                 indicator.className = "w-2 h-2 rounded-full bg-stone-500 inline-block";
-                statusText.innerText = "Lửa: Đã Tắt";
+                statusText.innerText = currentLanguage === 'en' ? "Flame: Out" : "Lửa: Đã Tắt";
                 triggerExtinguishSmoke(); // Kích hoạt dải khói mờ bốc lên
+                showToast(currentLanguage === 'en' ? "Candle extinguished." : "Đã dập tắt ngọn nến.", "wind");
             }
         }
 
@@ -1999,15 +2325,43 @@
             const delta = clock.getDelta();
             const elapsedTime = clock.getElapsedTime();
 
-            // Cập nhật ngọn lửa Shader
+            // Cập nhật ngọn lửa Shader & Vật lý quán tính Evan Wallace
             if (isFlameActive && flameMesh && flameMesh.material.uniforms) {
                 flameMesh.material.uniforms.uTime.value = elapsedTime;
+
+                // Tính toán vận tốc góc xoay của camera/mô hình (Angular Velocity Drag)
+                const currentAzimuth = controls.getAzimuthalAngle();
+                let deltaAzimuth = currentAzimuth - lastAzimuth;
+                if (deltaAzimuth > Math.PI) deltaAzimuth -= Math.PI * 2;
+                if (deltaAzimuth < -Math.PI) deltaAzimuth += Math.PI * 2;
+                lastAzimuth = currentAzimuth;
+
+                const angularVelocity = deltaAzimuth / Math.max(delta, 0.001);
+
+                // Ngọn lửa nghiêng ngược chiều xoay do lực cản không khí
+                const targetTiltZ = -angularVelocity * 0.065;
+                const clampedTargetTiltZ = Math.max(-0.35, Math.min(0.35, targetTiltZ));
+                flameTiltZ += (clampedTargetTiltZ - flameTiltZ) * 0.14;
+
+                // Dao động luồng khí hữu cơ (Organic Air Draft)
+                const airDraft = Math.sin(elapsedTime * 5.5) * 0.02 + Math.cos(elapsedTime * 9.0) * 0.015;
+                flameMesh.rotation.z = flameTiltZ + airDraft;
+                flameMesh.rotation.x = Math.sin(elapsedTime * 6.0) * 0.025;
 
                 // Dao động ánh sáng tán xạ sáp nến
                 const flicker = Math.sin(elapsedTime * 14.0) * 0.2 + (Math.random() - 0.5) * 0.1;
                 candleLight.intensity = 2.0 + flicker;
                 waxInnerLight.intensity = 0.9 + flicker * 0.4;
+
+                // Nhịp thở của than hồng bấc gỗ
+                if (wickEmberMesh) {
+                    const emberPulse = 0.8 + Math.sin(elapsedTime * 12.0) * 0.2;
+                    wickEmberMesh.scale.set(1.0, emberPulse, 1.0);
+                }
             }
+
+            // Cập nhật tàn lửa bay (Sparks)
+            updateSparks(delta, elapsedTime);
 
             // Cập nhật khói bốc lên khi tắt nến
             updateSmoke(delta);
@@ -3005,10 +3359,324 @@
             });
         }
 
+
+        // ----------------------------------------------------
+        // J. HỆ THỐNG ĐA NGÔN NGỮ (BILINGUAL I18N: VI & EN)
+        // ----------------------------------------------------
+        let currentLanguage = localStorage.getItem('lumen_lang') || 'vi';
+
+        const I18N_DICTIONARY = {
+            vi: {
+                announcement_wax: "SPEC: 100% SÁP ĐẬU NÀNH",
+                announcement_origin: "XUẤT XỨ: BẾN TRE / VIỆT NAM",
+                announcement_voucher: "CHÍNH SÁCH REFILL: VOUCHER -20% [REFILL20]",
+                announcement_craft: "HAND-POURED ATELIER",
+                nav_01: "01. Bespoke 3D Studio",
+                nav_02: "02. Scent & Sound Consultation",
+                nav_03: "03. Tooling & Kits",
+                nav_04: "04. Dispatch Protocol",
+                nav_05: "05. Production Archive",
+                hero_title_1: "Hương thơm bản thể,",
+                hero_title_2: "định danh bằng quang học và thanh âm.",
+                hero_desc: "Ứng dụng kỹ thuật đồ họa WebGL tiên tiến (Image-Based Lighting & Subsurface Scattering) kết hợp hệ thống âm nhạc đa cảm xúc nhằm bù đắp rào cản khứu giác trong môi trường thương mại điện tử.",
+                hero_btn_3d: "Khởi Chạy 3D Studio",
+                hero_btn_quiz: "Trắc Nghiệm Khứu Giác & Âm Nhạc",
+                customizer_title: "Bespoke 3D Studio: Trực Quan Hóa Hũ Nến Đơn Bản",
+                customizer_desc: "Xoay đa góc nhìn 360 độ, chọn chất liệu phôi hũ thực tế và quan sát nhãn in cá nhân hóa được ánh xạ trực tiếp lên bề mặt hình trụ theo thời gian thực.",
+                reset_camera: "Đặt Lại Góc",
+                cart_button: "Giỏ hàng",
+                mobile_settings: "Cài đặt giao diện:",
+                mobile_sound: "Âm thanh tính cách (Web Audio):",
+                toast_voucher_copied: "Đã sao chép mã [REFILL20] (Giảm 20%) vào bộ nhớ tạm!",
+                cmd_palette_placeholder: "Tìm tính năng, điều hướng hoặc gõ phím tắt...",
+            },
+            en: {
+                announcement_wax: "SPEC: 100% SOY WAX",
+                announcement_origin: "ORIGIN: BEN TRE / VIETNAM",
+                announcement_voucher: "CIRCULAR REFILL: -20% VOUCHER [REFILL20]",
+                announcement_craft: "HAND-POURED ATELIER",
+                nav_01: "01. Bespoke 3D Studio",
+                nav_02: "02. Scent & Sound Consultation",
+                nav_03: "03. Tooling & Kits",
+                nav_04: "04. Dispatch Protocol",
+                nav_05: "05. Production Archive",
+                hero_title_1: "Signature Scent,",
+                hero_title_2: "defined by light and sound.",
+                hero_desc: "Advanced WebGL graphics (Image-Based Lighting & Subsurface Scattering) coupled with multi-mood acoustic soundscapes to overcome olfactory boundaries in e-commerce.",
+                hero_btn_3d: "Launch 3D Studio",
+                hero_btn_quiz: "Scent & Music Consultation",
+                customizer_title: "Bespoke 3D Studio: Single-Batch Candle Customizer",
+                customizer_desc: "Rotate 360 degrees, select authentic vessel materials, and watch your personalized label map onto the cylinder in real time.",
+                reset_camera: "Reset View",
+                cart_button: "Cart",
+                mobile_settings: "Interface Settings:",
+                mobile_sound: "Atmospheric Audio (Web Audio):",
+                toast_voucher_copied: "Voucher code [REFILL20] (-20%) copied to clipboard!",
+                cmd_palette_placeholder: "Type a command, navigate, or use hotkeys...",
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('lumen_lang', lang);
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (I18N_DICTIONARY[lang] && I18N_DICTIONARY[lang][key]) {
+                    el.textContent = I18N_DICTIONARY[lang][key];
+                }
+            });
+
+            const langLabel = document.getElementById('langLabel');
+            if (langLabel) langLabel.textContent = lang === 'vi' ? 'EN' : 'VI';
+            document.querySelectorAll('.mobileLangLabel').forEach(el => {
+                el.textContent = lang === 'vi' ? 'EN' : 'VI';
+            });
+
+            const cmdInput = document.getElementById('commandPaletteInput');
+            if (cmdInput && I18N_DICTIONARY[lang]) {
+                cmdInput.placeholder = I18N_DICTIONARY[lang].cmd_palette_placeholder;
+            }
+
+            const statusText = document.getElementById('flameStatusText');
+            if (statusText) {
+                statusText.innerText = isFlameActive 
+                    ? (lang === 'en' ? "Flame: Lit" : "Lửa: Bật")
+                    : (lang === 'en' ? "Flame: Out" : "Lửa: Đã Tắt");
+            }
+        }
+
+        function toggleLanguage() {
+            const nextLang = currentLanguage === 'vi' ? 'en' : 'vi';
+            setLanguage(nextLang);
+            showToast(nextLang === 'en' ? "Language switched to English." : "Đã chuyển sang Tiếng Việt.");
+        }
+
+        // ----------------------------------------------------
+        // K. HỆ THỐNG DARK THEME (MIDNIGHT NOIR / OBSIDIAN ATELIER)
+        // ----------------------------------------------------
+        let currentTheme = localStorage.getItem('lumen_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('lumen_theme', theme);
+
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                themeIcon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
+            }
+            document.querySelectorAll('.mobileThemeIcon').forEach(icon => {
+                icon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
+            });
+
+            if (scene) {
+                scene.background = new THREE.Color(theme === 'dark' ? 0x0c0a09 : 0x0f0e0d);
+            }
+
+            lucide.createIcons();
+        }
+
+        function toggleTheme() {
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(nextTheme);
+            showToast(nextTheme === 'dark' 
+                ? (currentLanguage === 'en' ? "Obsidian Dark Mode enabled." : "Đã bật chế độ Midnight Dark.") 
+                : (currentLanguage === 'en' ? "Daylight Mode enabled." : "Đã bật chế độ Sáng."));
+        }
+
+        // ----------------------------------------------------
+        // L. TOAST NOTIFICATION ENGINE
+        // ----------------------------------------------------
+        function showToast(message, iconName = 'check') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = "flex items-center gap-2.5 px-3.5 py-2.5 rounded-atelier bg-stone-900 text-stone-100 dark:bg-stone-100 dark:text-stone-900 border border-stone-700 dark:border-stone-300 shadow-xl text-xs font-mono animate-toast pointer-events-auto transition-opacity";
+            toast.innerHTML = '<i data-lucide="' + iconName + '" class="w-3.5 h-3.5 text-amber-400 dark:text-amber-600 shrink-0"></i><span>' + message + '</span>';
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 250);
+            }, 3200);
+        }
+
+        function copyVoucherCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                showToast(currentLanguage === 'en' ? ('Voucher code [' + code + '] copied!') : ('Đã sao chép mã [' + code + '] giảm 20%!'), 'copy');
+            }).catch(() => {
+                showToast('Mã voucher: ' + code, 'ticket');
+            });
+        }
+
+        // ----------------------------------------------------
+        // M. COMMAND PALETTE (CTRL+K / CMD+K)
+        // ----------------------------------------------------
+        const COMMAND_ACTIONS = [
+            { id: 'customizer', title: '01. Bespoke 3D Studio', desc: 'Tùy biến hũ nến 3D PBR & nhãn in cá nhân', icon: 'box', hotkey: '1', action: () => { window.location.hash = '#section-customizer'; } },
+            { id: 'quiz', title: '02. Scent & Sound Consultation', desc: 'Trắc nghiệm tâm lý học khứu giác 6 câu hỏi', icon: 'sparkles', hotkey: '2', action: () => { window.location.hash = '#section-quiz'; } },
+            { id: 'bundle', title: '03. Tooling & Kits', desc: 'Bộ công cụ chăm sóc nến & hộp quà chiết khấu', icon: 'package', hotkey: '3', action: () => { window.location.hash = '#section-bundle'; } },
+            { id: 'delivery', title: '04. Dispatch Protocol', desc: 'Đặt lịch giao quà bưu cục hẹn giờ giấu tên', icon: 'truck', hotkey: '4', action: () => { window.location.hash = '#section-delivery'; } },
+            { id: 'reviews', title: '05. Production Archive', desc: 'Biên bản kiểm định & phản hồi thực tế', icon: 'archive', hotkey: '5', action: () => { window.location.hash = '#section-reviews'; } },
+            { id: 'flame', title: 'Thắp / Dập ngọn lửa nến 3D', desc: 'Bật/tắt lửa và hiệu ứng khói bấc', icon: 'flame', hotkey: 'Space', action: () => { toggle3DFlame(); } },
+            { id: 'audio', title: 'Bật / Chuyển âm cảnh nhạc', desc: 'Đổi thể loại Web Audio (Jazz, Lofi, Zen, Sleep)', icon: 'music', hotkey: 'M', action: () => { toggleSoundscapePlay(); } },
+            { id: 'voucher', title: 'Sao chép mã giảm giá [REFILL20]', desc: 'Nhận voucher -20% kinh tế tuần hoàn', icon: 'ticket', hotkey: 'V', action: () => { copyVoucherCode('REFILL20'); } },
+            { id: 'theme', title: 'Chuyển chế độ Sáng / Tối', desc: 'Đổi theme Midnight Noir / Daylight', icon: 'moon', hotkey: 'T', action: () => { toggleTheme(); } },
+            { id: 'lang', title: 'Chuyển ngôn ngữ (VI / EN)', desc: 'Switch interface language', icon: 'globe', hotkey: 'L', action: () => { toggleLanguage(); } },
+            { id: 'cart', title: 'Mở giỏ hàng', desc: 'Xem chi tiết đơn hàng & thanh toán VietQR', icon: 'shopping-bag', hotkey: 'C', action: () => { toggleCartDrawer(); } },
+        ];
+
+        function renderCommandPalette(items = COMMAND_ACTIONS) {
+            const list = document.getElementById('commandPaletteList');
+            if (!list) return;
+            list.innerHTML = '';
+            if (items.length === 0) {
+                list.innerHTML = '<div class="p-4 text-center text-stone-400">Không tìm thấy lệnh phù hợp.</div>';
+                return;
+            }
+
+            items.forEach((cmd) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-2.5 rounded-atelier hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-between text-stone-800 dark:text-stone-200 transition-colors";
+                btn.onclick = () => {
+                    cmd.action();
+                    toggleCommandPalette(false);
+                };
+                btn.innerHTML = '<div class="flex items-center gap-2.5"><i data-lucide="' + cmd.icon + '" class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0"></i><div><span class="font-medium text-xs block">' + cmd.title + '</span><span class="text-[10px] text-atelier-muted block">' + cmd.desc + '</span></div></div><kbd class="px-1.5 py-0.5 rounded border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-[10px] font-mono text-stone-500">' + cmd.hotkey + '</kbd>';
+                list.appendChild(btn);
+            });
+            lucide.createIcons();
+        }
+
+        function filterCommandPalette(query) {
+            const q = query.toLowerCase().trim();
+            if (!q) {
+                renderCommandPalette(COMMAND_ACTIONS);
+                return;
+            }
+            const filtered = COMMAND_ACTIONS.filter(c => 
+                c.title.toLowerCase().includes(q) || 
+                c.desc.toLowerCase().includes(q) || 
+                c.hotkey.toLowerCase().includes(q)
+            );
+            renderCommandPalette(filtered);
+        }
+
+        function toggleCommandPalette(forceState) {
+            const modal = document.getElementById('commandPaletteModal');
+            if (!modal) return;
+            const isHidden = modal.classList.contains('hidden');
+            const shouldOpen = forceState !== undefined ? forceState : isHidden;
+
+            if (shouldOpen) {
+                modal.classList.remove('hidden');
+                renderCommandPalette(COMMAND_ACTIONS);
+                const input = document.getElementById('commandPaletteInput');
+                if (input) {
+                    input.value = '';
+                    setTimeout(() => input.focus(), 50);
+                }
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function handleCommandPaletteBackdrop(e) {
+            if (e.target.id === 'commandPaletteModal') {
+                toggleCommandPalette(false);
+            }
+        }
+
+        // ----------------------------------------------------
+        // N. TỰ ĐỘNG BẮT PHÍM TẮT & CUỘN LÊN ĐẦU TRANG
+        // ----------------------------------------------------
+        window.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                toggleCommandPalette();
+                return;
+            }
+
+            if (e.key === 'Escape') {
+                toggleCommandPalette(false);
+                const cartDrawer = document.getElementById('cartDrawer');
+                if (cartDrawer && !cartDrawer.classList.contains('translate-x-full')) {
+                    toggleCartDrawer();
+                }
+                closeVietQRModal();
+                closeComplianceModal();
+                return;
+            }
+
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+                return;
+            }
+
+            if (e.code === 'Space') {
+                e.preventDefault();
+                toggle3DFlame();
+            }
+
+            if (e.key.toLowerCase() === 'm') {
+                toggleSoundscapePlay();
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scrollToTopBtn');
+            if (!btn) return;
+            if (window.scrollY > 350) {
+                btn.classList.remove('opacity-0', 'pointer-events-none');
+                btn.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                btn.classList.add('opacity-0', 'pointer-events-none');
+                btn.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+        }, { passive: true });
+
         window.addEventListener('DOMContentLoaded', () => {
             init3DScene();
+            applyTheme(currentTheme);
+            setLanguage(currentLanguage);
             lucide.createIcons();
         });
     </script>
+    <!-- ======================================================== -->
+    <!-- MICRO-INTERACTIONS: TOAST, SCROLL-TO-TOP & COMMAND PALETTE -->
+    <!-- ======================================================== -->
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none"></div>
+
+    <!-- Scroll-to-Top Button -->
+    <button id="scrollToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-20 left-4 sm:bottom-6 sm:left-6 z-40 p-2.5 sm:p-3 rounded-atelier bg-stone-900 text-stone-100 dark:bg-stone-100 dark:text-stone-900 shadow-xl border border-stone-700 dark:border-stone-300 opacity-0 pointer-events-none transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center group" aria-label="Scroll to top" title="Cuộn lên đầu trang">
+        <i data-lucide="arrow-up" class="w-4 h-4 group-hover:-translate-y-0.5 transition-transform"></i>
+    </button>
+
+    <!-- Command Palette Modal (Ctrl+K / Cmd+K) -->
+    <div id="commandPaletteModal" class="hidden fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-stone-900/60 dark:bg-black/80 backdrop-blur-sm" onclick="handleCommandPaletteBackdrop(event)">
+        <div class="w-full max-w-xl bg-white dark:bg-stone-900 rounded-atelier shadow-2xl border border-stone-300 dark:border-stone-700 overflow-hidden font-sans animate-cmd-palette">
+            <div class="p-3 sm:p-4 hairline-b border-stone-200 dark:border-stone-700 flex items-center gap-3">
+                <i data-lucide="search" class="w-4 h-4 text-stone-400"></i>
+                <input id="commandPaletteInput" type="text" placeholder="Tìm tính năng, điều hướng hoặc gõ phím tắt..." oninput="filterCommandPalette(this.value)" class="flex-1 bg-transparent text-sm font-sans text-stone-900 dark:text-stone-100 outline-none placeholder:text-stone-400">
+                <kbd class="px-2 py-0.5 rounded border border-stone-200 dark:border-stone-700 bg-stone-100 dark:bg-stone-800 text-[10px] font-mono text-stone-500">ESC</kbd>
+            </div>
+            <div id="commandPaletteList" class="max-h-80 overflow-y-auto p-2 space-y-1 text-xs font-mono">
+                <!-- Commands populated dynamically by JavaScript -->
+            </div>
+            <div class="px-4 py-2 hairline-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 flex items-center justify-between text-[10px] font-mono text-stone-400">
+                <span>Dùng phím <kbd class="px-1 border rounded bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300">↑</kbd> <kbd class="px-1 border rounded bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300">↓</kbd> để di chuyển, <kbd class="px-1 border rounded bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300">Enter</kbd> để chọn</span>
+                <span>LUMEN ATELIER OSINT</span>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
