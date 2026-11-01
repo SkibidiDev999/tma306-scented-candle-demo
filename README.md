@@ -17,15 +17,17 @@ Dự án nghiên cứu và triển khai website thương mại điện tử Dire
 ---
 
 ## 2. Các Tiện Ích Web Chuyên Sâu (5 Web Extensions)
-1. **Extension 1 (Bespoke 3D Studio):** Trực quan hóa mô hình hũ nến 3D bằng Three.js (r128), hỗ trợ xoay 360 độ, đổi vật liệu PBR (thủy tinh hổ phách, gốm Bát Tràng, khoáng terrazzo), đổi bấc và ánh xạ nhãn dán thời gian thực.
-2. **Extension 2 (Olfactory Consultation Quiz):** Trắc nghiệm khứu giác 3 bước chẩn đoán nhu cầu phục hồi tinh thần và đề xuất công thức 3 tầng hương.
-3. **Extension 3 (Tooling & Preservation Bundle):** Bộ công cụ chăm sóc nến mạ đồng thau và hộp quà giấy dệt có thanh tính giá chiết khấu động.
-4. **Extension 4 (Acoustic Wick Synthesizer):** Bộ giả lập âm thanh lửa cháy tí tách qua Web Audio API trên trình duyệt.
-5. **Extension 5 (Dispatch Protocol Scheduler):** Bộ chọn ngày giờ bàn giao bưu phẩm chính xác và tùy chọn gửi giấu tên tạo bất ngờ.
+1. **Extension 1 (Bespoke 3D Studio):** Trực quan hóa mô hình hũ nến 3D bằng Three.js (r128), hỗ trợ xoay 360 độ, đổi vật liệu PBR (thủy tinh hổ phách, gốm Bát Tràng, khoáng terrazzo), đổi bấc (bấc gỗ phong, cotton hữu cơ) và ánh xạ nhãn dán thủ công thời gian thực (Dynamic Canvas Texture Mapping với thẻ `HAND-POURED ATELIER`).
+2. **Extension 2 (Olfactory Consultation Quiz):** Trắc nghiệm tâm lý học khứu giác 6 câu hỏi chuyên sâu với thanh tiến trình trực quan, chẩn đoán nhu cầu phục hồi cảm xúc và tự động đề xuất 6 công thức hương Niche Perfumery độc bản (đầy đủ Kim tự tháp 3 tầng Top - Heart - Base notes, độ tỏa Sillage và thời lượng cháy 50h).
+3. **Extension 3 (Tooling & Preservation Bundle):** Bộ công cụ chăm sóc nến mạ đồng thau cổ điển và hộp quà giấy dệt thủ công có thanh tính giá chiết khấu động và quà tặng mẻ nến thử nghiệm.
+4. **Extension 4 (Acoustic Multi-Genre Synthesizer):** Động cơ âm thanh Web Audio API tổng hợp thời gian thực tiếng bấc gỗ tí tách kèm 6 thể loại âm cảnh thư giãn (Midnight Noir Jazz, Lofi Rain, Acoustic Bossa, Neo-Classical Piano, Ambient Zen, 432Hz Sleepwave) bù đắp rào cản giác quan trực tuyến.
+5. **Extension 5 (Dispatch Protocol Scheduler):** Bộ chọn ngày giờ bàn giao bưu phẩm chính xác, tùy chọn đóng dấu niêm phong sáp và chế độ gửi quà ẩn danh tạo bất ngờ cho người nhận.
 
 ---
 
-## 3. Bản Quyền & Xác Thực
-* Sinh viên thực hiện: Nhóm đồ án môn Thương mại điện tử TMA306.
-* Giảng dạy: Bộ môn Thương mại điện tử - Đại học Ngoại Thương.
-* Nền tảng công nghệ: HTML5, Tailwind CSS, Three.js (WebGL), Lucide Icons, Web Audio API.
+## 3. Bản Quyền & Triển Khai Thực Nghiệm
+* **Sinh viên thực hiện:** Nhóm đồ án môn Thương mại điện tử TMA306.
+* **Giảng dạy:** Bộ môn Thương mại điện tử - Đại học Ngoại Thương.
+* **Nền tảng công nghệ:** HTML5 Semantic, Tailwind CSS, Three.js (WebGL PBR Shader), Lucide Icons, Web Audio API, Canvas Confetti.
+* **Tiêu chuẩn bảo mật:** CSP nghiêm ngặt, xử lý DOM XSS an toàn, tạo mã VietQR Napas247 offline bằng thuật toán SVG nội bộ, không phụ thuộc dịch vụ theo dõi bên thứ ba.
+* **Demo trực tuyến (Live Demo):** [https://skibididev999.github.io/tma306-scented-candle-demo/](https://skibididev999.github.io/tma306-scented-candle-demo/)
